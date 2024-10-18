@@ -42,8 +42,8 @@ After compiling, run the executable with:
 The program reads routes from a CSV file (graph_data.csv) formatted as follows:
 
 SRC, DST, DISTANCE, FEE
-HAN, DAD, 606, 100   # Hà Nội - Đà Nẵng, 606 km, $100
-DAD, SGN, 961, 150   # Đà Nẵng - Ho Chi Minh, 961 km, $150
+HAN, DAD, 606, 100   // Hà Nội - Đà Nẵng, 606 km, $100
+DAD, SGN, 961, 150   // Đà Nẵng - Ho Chi Minh, 961 km, $150
 ...
 
 Each line represents a route between two airports, including the distance in kilometers and the travel fee in dollars.
