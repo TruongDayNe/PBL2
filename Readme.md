@@ -2,10 +2,6 @@
 
 This project implements Dijkstra's algorithm to find the shortest route between airports in Southeast Asia (SEA), including functionalities for travel distances and fees.
 
-## Project Structure
-
-project/ │ ├── src/ │ ├── main.cpp # Main program file │ └── utils/ │ ├── Graph.cpp # Graph class definition │ └── Graph.h # Graph class declaration │ ├── include/ │ └── utils/ │ └── Graph.h # Header file for the Graph class │ ├── graph_data.csv # CSV file containing airport routes ├── Makefile # Makefile for compiling the project └── README.md # This README file
-
 ## Compilation Instructions
 
 To compile the code, you can use either a `Makefile` for convenience or compile manually using the `g++` compiler.
@@ -31,10 +27,10 @@ If you prefer to compile manually, use the following command:
 ```bash
     g++ src/main.cpp src/utils/Graph.cpp -I include -o program
 ```
-    > src/main.cpp: The main program file.
-    > src/utils/Graph.cpp: The implementation of the Graph class.
-    > -I include: This option tells the compiler where to find the header files.
-    > -o program: This specifies the name of the output executable.
+src/main.cpp: The main program file.
+src/utils/Graph.cpp: The implementation of the Graph class.
+-I include: This option tells the compiler where to find the header files.
+-o program: This specifies the name of the output executable.
 
 ### Running the Program
 After compiling, run the executable with:
