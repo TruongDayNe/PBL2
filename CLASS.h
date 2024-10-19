@@ -1,6 +1,7 @@
 #ifndef CLASS_H
 #define CLASS_H
 #include<iostream>
+#include "Graph.h"
 using namespace std;
 
 class ChuyenBay {
@@ -13,7 +14,7 @@ private:
     string diemDen;
 
 protected:
-    DuongBay duongBay;  
+    Airport duongBay[5];  
     void chinhSuaThongTin();// Protected: Chỉ có quản lý mới cần chỉnh sửa thông tin
 
 public:
@@ -104,3 +105,5 @@ public:
     void kiemTraThanhToan();  
     void hoanVe();           
 };
+
+#endif
