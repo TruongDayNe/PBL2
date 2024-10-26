@@ -1,6 +1,6 @@
 #ifndef CLASS_H
 #define CLASS_H
-#include<iostream>
+#include <iostream>
 #include "Graph.h"
 using namespace std;
 
