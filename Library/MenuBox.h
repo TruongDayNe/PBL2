@@ -80,23 +80,7 @@ void textcolor(int x)
     mau = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleTextAttribute(mau, x);
 }
-int inputKey1(int key)
-{
-    if (key == 224)
-    {
-        key = _getch();
-        return key + 1000;
-    }
-    else
-        return key;
-    // }
-    // else
-    // {
-    //     return KEY_NONE;
-    // }
 
-    return KEY_NONE;
-}
 void ToMau(int x, int y, char *a, int color)
 {
     gotoXY(x, y);
