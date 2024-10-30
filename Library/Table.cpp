@@ -125,24 +125,24 @@ private:
 	unsigned glyphLength(const string &s) const
 	{
 		unsigned int _byteLength = s.length();
-#ifdef TEXTTABLE_ENCODE_MULTIBYTE_STRINGS
-#ifdef TEXTTABLE_USE_EN_US_UTF8
-		setlocale(LC_ALL, "en_US.utf8");
-#else
-#error You need to specify the encoding if the TextTable library uses multybyte string encoding!
-#endif
-		unsigned int u = 0;
-		const char *c_str = s.c_str();
-		unsigned _glyphLength = 0;
-		while (u < _byteLength)
-		{
-			u += mblen(&c_str[u], _byteLength - u);
-			_glyphLength += 1;
-		}
-		return _glyphLength;
-#else
-		return _byteLength;
-#endif
+		#ifdef TEXTTABLE_ENCODE_MULTIBYTE_STRINGS
+		#ifdef TEXTTABLE_USE_EN_US_UTF8
+				setlocale(LC_ALL, "en_US.utf8");
+		#else
+		#error You need to specify the encoding if the TextTable library uses multybyte string encoding!
+		#endif
+				unsigned int u = 0;
+				const char *c_str = s.c_str();
+				unsigned _glyphLength = 0;
+				while (u < _byteLength)
+				{
+					u += mblen(&c_str[u], _byteLength - u);
+					_glyphLength += 1;
+				}
+				return _glyphLength;
+		#else
+				return _byteLength;
+		#endif
 	}
 
 	void determineWidths() const

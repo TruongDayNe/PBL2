@@ -2,6 +2,8 @@
 #define CLASS_H
 #include <iostream>
 #include "Graph.h"
+#include "LinkedList.h"
+
 using namespace std;
 
 class ChuyenBay {
@@ -14,7 +16,7 @@ private:
     string diemDen;
 
 protected:
-    Airport duongBay[5];  
+    LinkedList<Airport> duongBay;  
     void chinhSuaThongTin();// Protected: Chỉ có quản lý mới cần chỉnh sửa thông tin
 
 public:
@@ -53,31 +55,6 @@ public:
 class vePhoThong : public Ve {
 public:
     void giaRe();   
-};
-
-class Nguoi {
-private:
-    string ten;
-    string email;
-    string soDienThoai;
-
-public:
-    bool capNhatThongTin();  
-};
-
-class KhachHang : public Nguoi {
-public:
-    void datVe();         
-    void huyVe();        
-    void xemVe();         
-    bool kiemTraVe();     
-    void thanhToan();    
-};
-
-class Admin : public Nguoi {
-public:
-    void chinhSuaVe();    
-    void xemVe();         
 };
 
 class ThongTinVe {
