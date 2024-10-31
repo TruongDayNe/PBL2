@@ -38,9 +38,11 @@ void addTicketToDatabase(Ticket &ticket)
     outFile << ticket.getID_ve() << endl;
     outFile << ticket.getID_chuyenBay() << endl;
     outFile << ticket.getloaiVe() << endl;
+    outFile << ticket.getdiemDi() << endl;
+    outFile << ticket.getdiemDen() << endl;
+    outFile << ticket.getngayKhoiHanh() << endl;
     outFile << ticket.getsoLuongVe() << endl;
     outFile << ticket.getgiaVe() << endl;
-    outFile << ticket.getsoGhe() << endl;
 
     if (!isValidTicketId(ticket.getID_ve()))
     {
@@ -58,12 +60,13 @@ void addNewTicketToDataBase()
     cout << spaceLineChoice + "New ticket:\n";
     string ID_chuyenBay = getStringInput("ID chuyến bay");
     string loaiVe = getStringInput("Loại vé");
-    int soLuongVe = getIntInput("Số lượng vé");
+    string diemDi = getStringInput("Điểm đi");
+    string diemDen = getStringInput("Điểm đến");
+    string ngayKhoiHanh = getStringInput("Ngày giờ khởi hành (dd-mm-yy hh:mm:ss)");
+    unsigned int soLuongVe = getIntInput("Số lượng vé");
     int giaVe = getIntInput("Giá vé");
-    int soGhe = getIntInput("Số ghế");
-
     // Create new Ticket object
-    Ticket ticket = Ticket(updateLastTicketId(), ID_chuyenBay, loaiVe, soLuongVe, giaVe, soGhe);
+    Ticket ticket = Ticket(updateLastTicketId(), ID_chuyenBay, diemDi, diemDen, loaiVe, ngayKhoiHanh, soLuongVe, giaVe );
 
     // Save to database
     addTicketToDatabase(ticket);
@@ -71,10 +74,10 @@ void addNewTicketToDataBase()
     // Update new Ticket id range
     updateLine("./Database/lastID.txt", 0, updateLastTicketId());
 
-    // Generate sale and write to sale file
-    ofstream outFilesale("./Database/saleSummary.txt", ios::app);
-    outFilesale << ticket.getID_ve() << " " << ticket.getsoGhe() << endl;
-    outFilesale.close();
+    // // Generate sale and write to sale file
+    // ofstream outFilesale("./Database/saleSummary.txt", ios::app);
+    // outFilesale << ticket.getID_ve() << " " << ticket.getsoGhe() << endl;
+    // outFilesale.close();
 }
 
 Ticket getTicketFromDatabase(int ticketID)
@@ -86,10 +89,13 @@ Ticket getTicketFromDatabase(int ticketID)
     string line;
 
     string ID_chuyenBay;
+    string diemDi;
+    string diemDen;
     string loaiVe;
+    string ngayKhoiHanh;
     int soLuongVe;
     int giaVe;
-    int soGhe;
+
 
     getline(inFile, line);
     ticketID = stoi(line);
@@ -98,7 +104,16 @@ Ticket getTicketFromDatabase(int ticketID)
     ID_chuyenBay = line;
 
     getline(inFile, line);
+    diemDi = line;
+
+    getline(inFile, line);
+    diemDen = line;
+
+    getline(inFile, line);
     loaiVe = line;
+
+    getline(inFile, line);
+    ngayKhoiHanh = line;
 
     getline(inFile, line);
     soLuongVe = stoi(line);
@@ -106,10 +121,7 @@ Ticket getTicketFromDatabase(int ticketID)
     getline(inFile, line);
     giaVe = stoi(line);
 
-    getline(inFile, line);
-    soGhe = stoi(line);
-
-    return  Ticket(updateLastTicketId(), ID_chuyenBay, loaiVe, soLuongVe, giaVe, soGhe);
+    return  Ticket(updateLastTicketId(), ID_chuyenBay, diemDi, diemDen, loaiVe, ngayKhoiHanh, soLuongVe, giaVe);
 }
 void deleteTicketFromDatabase(int ticketID)
 {
@@ -144,18 +156,22 @@ void updateTicketInDatabase(int ticketID)
 
     int status = remove(char_filePath);
 
-    string getID_chuyenBay = updateComponent("ID chuyến bay", ticket.getID_chuyenBay());
+    string ID_chuyenBay = updateComponent("ID chuyến bay", ticket.getID_chuyenBay());
+    string diemDi = updateComponent("Điểm đi", ticket.getdiemDi());
+    string diemDen = updateComponent("Điểm đến", ticket.getdiemDen());
     string loaiVe = updateComponent("Loại vé", ticket.getloaiVe());
+    string ngayKhoiHanh = updateComponent("Ngày khởi hành (dd-mm-yy hh:mm:ss)", ticket.getngayKhoiHanh());
     int soLuongVe = updateIntComponent("Số lượng vé", ticket.getsoLuongVe());
     int giaVe = updateIntComponent("Giá vé", ticket.getgiaVe());
-    int soGhe = updateIntComponent("Số ghế", ticket.getsoGhe());
 
     ticket.setID_ve(ticketID);
-    ticket.setID_chuyenBay(getID_chuyenBay);
+    ticket.setID_chuyenBay(ID_chuyenBay);
+    ticket.setdiemDi(diemDi);
+    ticket.setdiemDen(diemDen);
     ticket.setloaiVe(loaiVe);
+    ticket.setngayKhoiHanh(ngayKhoiHanh);
     ticket.setsoLuongVe(soLuongVe);
     ticket.setgiaVe(giaVe);
-    ticket.setsoGhe(soGhe);
 
     addTicketToDatabase(ticket);
     printSuccess("Succesfully update!");
@@ -190,6 +206,8 @@ void printTicket(Ticket ticket)
 
     table.add("ID vé");
     table.add("ID chuyến bay");
+    table.add("Điểm đi");
+    table.add("Điểm đến");
     table.add("Loại vé");
     table.add("Số lượng vé");
     table.add("Giá vé");
@@ -197,6 +215,8 @@ void printTicket(Ticket ticket)
 
     table.add(to_string(ticket.getID_ve()));
     table.add(ticket.getID_chuyenBay());
+    table.add(ticket.getdiemDi());
+    table.add(ticket.getdiemDen());
     table.add(ticket.getloaiVe());
     table.add(to_string(ticket.getsoLuongVe()));
     table.add(formatCurrency(ticket.getgiaVe()));
@@ -212,6 +232,8 @@ void printAllTickets(LinkedList<Ticket> tickets = getAllTicket())
 
     table.add("ID vé");
     table.add("ID chuyến bay");
+    table.add("Điểm đi");
+    table.add("Điểm đến");
     table.add("Loại vé");
     table.add("Số lượng vé");
     table.add("Giá vé");
@@ -222,6 +244,8 @@ void printAllTickets(LinkedList<Ticket> tickets = getAllTicket())
         Ticket ticket = tickets.get(i);
         table.add(to_string(ticket.getID_ve()));
         table.add(ticket.getID_chuyenBay());
+        table.add(ticket.getdiemDi());
+        table.add(ticket.getdiemDen());
         table.add(ticket.getloaiVe());
         table.add(to_string(ticket.getsoLuongVe()));
         table.add(formatCurrency(ticket.getgiaVe()));
@@ -245,14 +269,15 @@ void searchByTicketsID()
     }
 }
 
-LinkedList<Ticket> searchByTicketCase(string toSearch)
+LinkedList<Ticket> searchByTicketCase(string StarttoSearch, string EndtoSearch)
 {
     LinkedList<Ticket> res;
     LinkedList<Ticket> tickets = getAllTicket();
 
     for (int i = 0; i < tickets.length(); i++)
     {
-        if (findCaseInsensitive(tickets.get(i).getID_chuyenBay(), toSearch) != string::npos)
+        if (findCaseInsensitive(tickets.get(i).getdiemDen(), StarttoSearch) != string::npos &&
+            findCaseInsensitive(tickets.get(i).getdiemDi(), EndtoSearch) != string::npos)
         {
             res.addLast(tickets.get(i));
         }
@@ -260,19 +285,20 @@ LinkedList<Ticket> searchByTicketCase(string toSearch)
     return res;
 }
 
-void searchByTicketsName()
+void searchByTicketsPath()
 {
-    string name = getStringInput("Enter name: ");
-    LinkedList<Ticket> tickets = searchByTicketCase(name);
+    string diemDi = getStringInput("Điểm đi: ");
+    string diemDen = getStringInput("Điểm đến: ");
+    LinkedList<Ticket> tickets = searchByTicketCase(diemDi, diemDen);
 
     if (tickets.length())
     {
-        printSuccess("Succesfully search!");
+        printSuccess("Tìm thấy vé!");
         printAllTickets(tickets);
     }
     else
     {
-        printError("Invalid Name, please enter again!");
+        printError("Không có chuyến bay nào!");
     }
 }
 void updateTicketQuantityInDatabase(int id, int quantity)
