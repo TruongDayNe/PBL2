@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 using namespace std;
-// #include "../Business/Patient.h"
+#include "../Business/KhachHang.h"
 // #include "../Business/Doctor.h"
 #include "../Library/MenuBox.cpp"
 class Home
@@ -23,7 +23,7 @@ public:
     // static void orderDrugHistory(Patient &);   // Lịch sử mua bán thuốc
     // static void bookAppointment(Patient &);    // Đặt lịch hẹn
     // static void viewMedicalHistory(Patient &); // Xem lịch sử khám
-    // static void menu(Patient &);               // Thực hiện các chức năng menu, switchcase
+    static void menu(KhachHang &);               // Thực hiện các chức năng menu, switchcase
     static void login();
     static void signUp();
     static void main();
