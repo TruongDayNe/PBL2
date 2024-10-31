@@ -3,11 +3,14 @@
 #include <iostream>
 #include <windows.h>
 #include <string>
+#include <sstream>
+#include <iomanip>
 #include <ctime>
 #include <set>
 #include <fstream>
 #include <algorithm>
 #include <conio.h>
+#include "../LinkedList.h"
 
 using namespace std;
 
@@ -15,16 +18,29 @@ string spaceLine = "\t\t         ";
 string spaceLineChoice = "\t    ";
 // Get current datetime
 // real time
-string currentDateTime()
-{
+// Hàm lấy thời gian hiện tại dưới dạng chuỗi
+string currentDateTime() {
     time_t now = time(0);
     struct tm tstruct;
     char buf[80];
     tstruct = *localtime(&now);
     strftime(buf, sizeof(buf), "%d-%m-%Y %X", &tstruct);
-
     return buf;
 }
+
+// Hàm chuyển đổi chuỗi thời gian thành time_t
+time_t convertToTimeT(const string& dateTime) {
+    struct tm t = {};
+    istringstream ss(dateTime);
+    ss >> get_time(&t, "%d-%m-%Y %H:%M:%S");
+    return mktime(&t);
+}
+
+// Hàm so sánh thời gian hiện tại với thời gian đầu vào
+bool isExpired(const string& dateTime) {
+    return (difftime(time(0), convertToTimeT(dateTime)) > 0.0);
+}
+
 // Change text color in terminal
 void printLineColor(string line, int color_code)
 {
@@ -366,4 +382,130 @@ string getPasswordInput(string title)
 
     cout << endl;
     return pwd;
+}
+
+LinkedList<string> getAllEmail()
+{
+    LinkedList<string> list;
+    set<string> emails;
+
+    ifstream inFile("./Database/UserDB/user_ID.txt");
+    string line;
+    int first, last;
+
+    while (getline(inFile, line))
+    {
+        first = line.find_first_of(" ");
+        last = line.find_last_of(" ");
+
+        string email = line.substr(first + 1, last - first - 1);
+        emails.insert(email);
+    }
+
+    set<string>::iterator it;
+    for (it = emails.begin(); it != emails.end(); ++it)
+    {
+        string mail = *it;
+        list.addLast(mail);
+    }
+
+    inFile.close();
+    return list;
+}
+
+bool isUniqueEmail(string emailToCheck)
+{
+    LinkedList<string> emails = getAllEmail();
+    for (int i = 0; i < emails.length(); i++)
+    {
+        string email = emails.get(i);
+        if (emailToCheck == email)
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+int getLastKhachHangId()
+{
+    ifstream inFile("./Database/lastID.txt");
+
+    string x;
+    getline(inFile, x);
+    getline(inFile, x);
+    return stoi(x) + 1;
+}
+
+int getLastTicketId()
+{
+    ifstream inFile("./Database/lastID.txt");
+
+    string x;
+    getline(inFile, x);
+
+    return stoi(x) + 1;
+}
+
+string getReceiptDateTime(int patientID, string recID)
+{
+    ifstream inFile("./Database/ReceiptDB/" + to_string(patientID) + "_" + recID + ".txt");
+
+    string x;
+    getline(inFile, x);
+
+    return x;
+}
+
+int getReceiptTotal(int patientID, string recID)
+{
+    ifstream inFile("./Database/ReceiptDB/" + to_string(patientID) + "_" + recID + ".txt");
+
+    string x;
+    getline(inFile, x);
+    getline(inFile, x);
+
+    return stoi(x);
+}
+
+// Update price
+// old_price: current price
+int updatePrice(int old_price)
+{
+    printLineColor(spaceLineChoice + "Price: ", 6);
+    printLineColor(to_string(old_price) + "\n", 7);
+    int new_price = old_price;
+
+    string yn = getYesNoInput(spaceLineChoice + "Update Price (y/n)");
+
+    if (yn == "y" || yn == "Y")
+    {
+        new_price = getIntInput("Price");
+    }
+
+    return new_price;
+}
+
+// Update password
+// old_pass: current password value
+string updatePassword(string old_pass)
+{
+    string yn = getYesNoInput(spaceLineChoice + "Update Password (y/n)");
+
+    if (yn == "n" || yn == "N")
+    {
+        return old_pass;
+    }
+
+    string old_pass_input = getPasswordInput("Enter old password");
+
+    while (old_pass != old_pass_input)
+    {
+        printError("Wrong password!");
+        old_pass_input = getPasswordInput("Enter old password");
+    }
+
+    string new_password = getPasswordInput("Enter new password");
+
+    return new_password;
 }
