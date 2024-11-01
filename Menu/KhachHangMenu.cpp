@@ -1,6 +1,6 @@
 #include "KhachHangMenu.h"
 
-void KhachHangMenu::main()
+void KhachHangMenu::KH_main()
 {
     system("cls");
     // ifstream inFile("./Page/KhachHang.txt");
@@ -72,7 +72,7 @@ void KhachHangMenu::login()
             {
                 printError("You have reached maximum login attempts, please try again later!");
                 system("pause");
-                KhachHangMenu::main();
+                KhachHangMenu::KH_main();
             }
         }
         else
@@ -132,7 +132,7 @@ void KhachHangMenu::menu(KhachHang &khachHang)
 
         case 4:
         {
-            khachHang.printAllTicket(); // Business/User
+            printAllTickets();
             system("pause");
             KhachHangMenu::menu(khachHang);
         }
@@ -170,7 +170,7 @@ int KhachHangMenu::printTask()
             "\t  Update account information",
             "\t  View your ticket order history",
             "\t  View all tickets",
-            "\t  Purchase drug",
+            "\t  Purchase ticket",
             "\t  Log out",
         };
 
@@ -181,15 +181,14 @@ int KhachHangMenu::printTask()
 
 void KhachHangMenu::purchaseTicket(KhachHang &khachHang)
 {
-    system("cls");
-
-    khachHang.printAllTicket();
-
     int ID_ve, soLuongMua, new_soLuongVe;
     std::string request;
 
     do
     {
+        system("cls");
+        printAllTickets();
+        
         ID_ve = getIntInput("Please enter the Ticket ID that you want to purchase");
         while (!isValidTicketId(ID_ve))
         {
@@ -210,23 +209,6 @@ void KhachHangMenu::purchaseTicket(KhachHang &khachHang)
     } while (request == "y" || request == "Y");
 
     khachHang.purchase();
-}
-
-void printKhachHang(KhachHang &khachHang)
-{
-    TextTable table;
-
-    table.add("ID");
-    table.add("Name");
-    table.add("Email");
-    table.endOfRow();
-
-    table.add(std::to_string(khachHang.getID()));
-    table.add(khachHang.getName());
-    table.add(khachHang.getEmail());
-    table.endOfRow();
-
-    std::cout << table << std::endl;
 }
 
 void KhachHangMenu::orderTicketHistory(KhachHang &khachHang)

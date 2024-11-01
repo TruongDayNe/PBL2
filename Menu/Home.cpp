@@ -42,12 +42,12 @@ void Home::menu()
     switch (key)
     {
     case 1:
-        KhachHangMenu::main();
+        KhachHangMenu::KH_main();
         system("pause");
         break;
 
     case 2:
-        AdminMenu::main();
+        AdminMenu::AD_main();
         system("pause");
         break;
 

@@ -1,8 +1,8 @@
 #pragma once
 #include <iostream>
 #include <fstream>
-#include "../Library/Console.h"
-#include "../Library/MenuBox.h"
+#include "D:/Code/PBL2/Library/Console.h"
+#include "D:/Code/PBL2/Library/MenuBox.h"
 #include "KhachHangMenu.h"
 #include "AdminMenu.h"
 

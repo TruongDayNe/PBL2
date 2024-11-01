@@ -7,7 +7,7 @@
 //======= lấy tọa độ x của con trỏ hiện tại =============
 #define KEY_NONE -1
 
-int whereX()
+inline int whereX()
 {
     CONSOLE_SCREEN_BUFFER_INFO csbi;
     if (GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi))
@@ -15,7 +15,7 @@ int whereX()
     return -1;
 }
 //========= lấy tọa độ y của con trỏ hiện tại =======
-int whereY()
+inline int whereY()
 {
     CONSOLE_SCREEN_BUFFER_INFO csbi;
     if (GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi))
@@ -23,7 +23,7 @@ int whereY()
     return -1;
 }
 //============== dịch con trỏ hiện tại đến điểm có tọa độ (x,y) ==========
-void gotoXY(int x, int y)
+inline void gotoXY(int x, int y)
 {
     HANDLE hConsoleOutput;
     COORD Cursor_an_Pos = {(short)x, (short)y}; // Lỗi
@@ -31,7 +31,7 @@ void gotoXY(int x, int y)
     SetConsoleCursorPosition(hConsoleOutput, Cursor_an_Pos);
 }
 //============= đặt màu cho chữ =========
-void SetColor(WORD color)
+inline void SetColor(WORD color)
 {
     HANDLE hConsoleOutput;
     hConsoleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -47,14 +47,14 @@ void SetColor(WORD color)
     SetConsoleTextAttribute(hConsoleOutput, wAttributes);
 }
 //============== làm ẩn trỏ chuột ===========
-void ShowCur(bool CursorVisibility)
+inline void ShowCur(bool CursorVisibility)
 {
     HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
     CONSOLE_CURSOR_INFO cursor = {1, CursorVisibility};
     SetConsoleCursorInfo(handle, &cursor);
 }
 //======= trả về mã phím người dùng bấm =========
-int inputKey()
+inline int inputKey()
 {
     if (_kbhit()) // true
     {
@@ -74,24 +74,46 @@ int inputKey()
     }
     return KEY_NONE;
 }
-void textcolor(int x)
+inline void textcolor(int x)
 {
     HANDLE mau;
     mau = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleTextAttribute(mau, x);
 }
 
-void ToMau(int x, int y, char *a, int color)
+inline void ToMau(int x, int y, char *a, int color)
 {
     gotoXY(x, y);
     textcolor(color);
     std::cout << a;
     textcolor(7);
 }
-void resizeConsole(int width, int heigth)
+inline void resizeConsole(int width, int heigth)
 {
     HWND console = GetConsoleWindow();
     RECT r;
     GetWindowRect(console, &r);
     MoveWindow(console, r.left, r.top, width, heigth, TRUE);
 }
+
+#ifndef MENUBOX_H
+#define MENUBOX_H
+class MenuBox
+{
+private:
+    int xx = 60, yy = 10, choose = 0;
+    int idx = 1;
+    int id = 0;
+    char **Option;
+    int num;
+
+public:
+    MenuBox(int, char[200][200]);
+    inline void box(int xx, int yy, int w, int h, int t_color, int b_color, char **content, int idx);
+    inline void boxes(int xx, int yy, int w, int h, int t_color, int b_color, char **content, int count);
+    inline void lightBox(int xx, int yy, int w, int h, int b_color, char **content, int idx);
+    void print(int idx, char **content);
+    int getChoose(int choose);
+    int menu();
+};
+#endif

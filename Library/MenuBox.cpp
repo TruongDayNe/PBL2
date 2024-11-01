@@ -1,27 +1,5 @@
 #include "MenuBox.h"
 
-#ifndef MENUBOX_H
-#define MENUBOX_H
-class MenuBox
-{
-private:
-    int xx = 60, yy = 10, choose = 0;
-    int idx = 1;
-    int id = 0;
-    char **Option;
-    int num;
-
-public:
-    MenuBox(int, char[200][200]);
-    void box(int xx, int yy, int w, int h, int t_color, int b_color, char **content, int idx);
-    void boxes(int xx, int yy, int w, int h, int t_color, int b_color, char **content, int count);
-    void lightBox(int xx, int yy, int w, int h, int b_color, char **content, int idx);
-    void print(int idx, char **content);
-    int getChoose(int choose);
-    int menu();
-};
-#endif
-
 MenuBox::MenuBox(int num, char data[200][200])
 {
     this->num = num;

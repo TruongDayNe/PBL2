@@ -2,8 +2,6 @@
 
 #include "User.h"
 #include "Cart.h"
-#include "../LinkedList.h"
-#include "Ticket.h"
 #include "../Management/QuanLiVe.h"
 #include "../Management/QuanLiReceipt.h"
 #include <iostream>

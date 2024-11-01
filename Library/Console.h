@@ -1,6 +1,9 @@
 // utils.h
 #pragma once
 
+#ifndef CONSOLE_H
+#define CONSOLE_H
+
 #include <iostream>
 #include <windows.h>
 #include <string>
@@ -50,3 +53,4 @@ int getReceiptTotal(int patientID, std::string recID);
 int updatePrice(int old_price);
 std::string updatePassword(std::string old_pass);
 
+#endif

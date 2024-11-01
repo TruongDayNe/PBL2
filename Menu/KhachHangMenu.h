@@ -1,18 +1,18 @@
 #pragma once
 #include <iostream>
 #include <fstream>
-#include "../Library/Console.h"
-#include "../Business/KhachHang.h"
-#include "../Library/MenuBox.h"
-#include "../Library/MenuBox.cpp"
-#include "../Management/QuanLiKhachHang.h"
-#include "../Management/QuanLiVe.h"
-#include "../Management/QuanLiNguoiDung.h"
-#include "../Management/QuanLiReceipt.h"
-#include "../Library/Table.cpp"
+#include "D:/Code/PBL2/Library/Console.h"
+#include "D:/Code/PBL2/Business/KhachHang.h"
+#include "D:/Code/PBL2/Library/MenuBox.h"
+#include "D:/Code/PBL2/Management/QuanLiKhachHang.h"
+#include "D:/Code/PBL2/Management/QuanLiVe.h"
+#include "D:/Code/PBL2/Management/QuanLiNguoiDung.h"
+#include "D:/Code/PBL2/Management/QuanLiReceipt.h"
+#include "D:/Code/PBL2/Library/Table.cpp"
 #include <string>
 #include "Home.h"
 
+class KhachHang;
 class KhachHangMenu
 {
 public:
@@ -25,5 +25,5 @@ public:
     static void menu(KhachHang &);               // Thực hiện các chức năng menu, switchcase
     static void login();
     static void signUp();
-    static void main();
+    static void KH_main();
 };

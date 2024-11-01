@@ -1,8 +1,8 @@
 #pragma once
-#include "../Business/Ticket.h"
-#include "../LinkedList.h"
-#include "../Library/Console.h"
-#include "../Library/Table.cpp"
+#include "D:/Code/PBL2/Business/Ticket.h"
+#include "D:/Code/PBL2/LinkedList.h"
+#include "D:/Code/PBL2/Library/Console.h"
+#include "D:/Code/PBL2/Library/Table.cpp"
 #include <fstream>
 #include <string>
 #include <iostream>

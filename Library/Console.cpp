@@ -298,7 +298,7 @@ std::string formatCurrency(int price)
 // data: string
 // toSearch: string need to search
 // pos: start position to search in data
-size_t findCaseInsensitive(std::string data, std::string toSearch, size_t pos = 0)
+size_t findCaseInsensitive(std::string data, std::string toSearch, size_t pos)
 {
     transform(data.begin(), data.end(), data.begin(), ::tolower);
     transform(toSearch.begin(), toSearch.end(), toSearch.begin(), ::tolower);

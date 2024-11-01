@@ -56,7 +56,7 @@ KhachHang addNewKhachHang()
     {
         printError("Email already exists, please login instead!");
         system("pause");
-        KhachHangMenu::main();
+        KhachHangMenu::KH_main();
     }
     std::string pwd = getPasswordInput("Password");
 
@@ -159,4 +159,21 @@ void updateKhachHangInDatabase(int KhachHangID)
 
     addKhachHangToDatabase(khachHang);
     updateLine("./Database/UserDB/user_ID.txt", std::to_string(oldkhachHang.getID()) + " " + oldkhachHang.getEmail() + " " + oldkhachHang.getPassword(), std::to_string(khachHang.getID()) + " " + khachHang.getEmail() + " " + khachHang.getPassword());
+}
+
+void printKhachHang(KhachHang &khachHang)
+{
+    TextTable table;
+
+    table.add("ID");
+    table.add("Name");
+    table.add("Email");
+    table.endOfRow();
+
+    table.add(std::to_string(khachHang.getID()));
+    table.add(khachHang.getName());
+    table.add(khachHang.getEmail());
+    table.endOfRow();
+
+    std::cout << table << std::endl;
 }

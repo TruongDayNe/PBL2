@@ -27,9 +27,9 @@ void addTicketToDatabase(Ticket &ticket)
     // outFile << computer.ID() << endl;
     outFile << ticket.getID_ve() << std::endl;
     outFile << ticket.getID_chuyenBay() << std::endl;
-    outFile << ticket.getloaiVe() << std::endl;
     outFile << ticket.getdiemDi() << std::endl;
     outFile << ticket.getdiemDen() << std::endl;
+    outFile << ticket.getloaiVe() << std::endl;
     outFile << ticket.getngayKhoiHanh() << std::endl;
     outFile << ticket.getsoLuongVe() << std::endl;
     outFile << ticket.getgiaVe() << std::endl;
@@ -88,7 +88,7 @@ Ticket getTicketFromDatabase(int ticketID)
 
 
     getline(inFile, line);
-    ticketID = stoi(line);
+    ticketID = std::stoi(line);
 
     getline(inFile, line);
     ID_chuyenBay = line;
@@ -106,10 +106,10 @@ Ticket getTicketFromDatabase(int ticketID)
     ngayKhoiHanh = line;
 
     getline(inFile, line);
-    soLuongVe = stoi(line);
+    soLuongVe = std::stoi(line);
 
     getline(inFile, line);
-    giaVe = stoi(line);
+    giaVe = std::stoi(line);
 
     return  Ticket(updateLastTicketId(), ID_chuyenBay, diemDi, diemDen, loaiVe, ngayKhoiHanh, soLuongVe, giaVe);
 }
@@ -194,14 +194,14 @@ void printTicket(Ticket ticket)
 {
     TextTable table;
 
-    table.add("ID vé");
-    table.add("ID chuyến bay");
-    table.add("Điểm đi");
-    table.add("Điểm đến");
-    table.add("Loại vé");
-    table.add("Ngày khởi hành");
-    table.add("Số lượng vé");
-    table.add("Giá vé");
+    table.add("   ID vé   ");
+    table.add("   ID chuyến bay   ");
+    table.add("    Điểm đi    ");
+    table.add("    Điểm đến   ");
+    table.add("  Loại vé  ");
+    table.add("  Ngày khởi hành  ");
+    table.add("   Số lượng vé   ");
+    table.add("    Giá vé");
     table.endOfRow();
 
     table.add(std::to_string(ticket.getID_ve()));
@@ -217,9 +217,14 @@ void printTicket(Ticket ticket)
     std::cout << table << std::endl;
 }
 
-void printAllTickets(LinkedList<Ticket> tickets = getAllTicket())
+void printAllTickets(LinkedList<Ticket> tickets)
 {
-
+    if (tickets.length() == 0)
+    {
+        printError("No ticket found!");
+        system("pause");
+        return;
+    }
     TextTable table;
 
     table.add("ID vé");
@@ -235,7 +240,7 @@ void printAllTickets(LinkedList<Ticket> tickets = getAllTicket())
     for (int i = 0; i < tickets.length(); i++)
     {
         Ticket ticket = tickets.get(i);
-        table.add(std::to_string(ticket.getID_ve()));
+        table.add(std::to_string(ticket.getID_ve()-1));
         table.add(ticket.getID_chuyenBay());
         table.add(ticket.getdiemDi());
         table.add(ticket.getdiemDen());
@@ -297,5 +302,24 @@ void searchByTicketsPath()
 }
 void updateTicketQuantityInDatabase(int id, int quantity)
 {
-    updateLine("./Database/TicketDB/" + std::to_string(id) + ".txt", 3, quantity);
+    if (quantity == 0)
+    {
+        std::string filePath = "./Database/TicketDB/";
+        std::string fileName = std::to_string(id) + ".txt";
+
+        int status = remove((filePath + fileName).c_str());
+
+        if (status == 0)
+        {
+            printSuccess("Ticket SOLD OUT");
+            eraseFileLine(filePath + "ticket_ID.txt", std::to_string(id));
+            //eraseFileLine("./Database/saleSummary.txt", ticketID);
+        }
+        else
+        {
+            printError("Purchase failed!");
+        }
+        return;
+    }
+    updateLine("./Database/TicketDB/" + std::to_string(id) + ".txt", 6, quantity);
 }

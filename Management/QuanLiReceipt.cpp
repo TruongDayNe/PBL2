@@ -52,7 +52,7 @@ void printReceipt(int KhachHangID, std::string recID)
     getline(inFileRec, lineRec);
     std::cout << lineReceiptFormat("Issue Date", lineRec) << std::endl;
     getline(inFileRec, lineRec);
-    int total = stoi(lineRec);
+    int total = std::stoi(lineRec);
 
     for (int i = 0; i < 3; i++)
     {
@@ -64,8 +64,8 @@ void printReceipt(int KhachHangID, std::string recID)
     while (getline(inFileRec, lineRec))
     {
         firstIndex = lineRec.find_first_of(" ");
-        quantity = stoi(lineRec.substr(0, firstIndex));
-        ID_ve = stoi(lineRec.substr(firstIndex + 1));
+        quantity = std::stoi(lineRec.substr(0, firstIndex));
+        ID_ve = std::stoi(lineRec.substr(firstIndex + 1));
         Ticket ve = getTicketFromDatabase(ID_ve);
         amount = quantity * ve.getgiaVe();
         std::cout << lineReceiptFormat(std::to_string(quantity), ve.getID_chuyenBay(), formatCurrency(amount)) << std::endl;
@@ -134,8 +134,8 @@ void getReceiptFromDatabase(int KhachHangID, int recID)
     while (getline(inFileRec, lineRec))
     {
         firstIndex = lineRec.find_first_of(" ");
-        quantity = stoi(lineRec.substr(0, firstIndex));
-        ID_ve = stoi(lineRec.substr(firstIndex + 1));
+        quantity = std::stoi(lineRec.substr(0, firstIndex));
+        ID_ve = std::stoi(lineRec.substr(firstIndex + 1));
         Ticket ve = getTicketFromDatabase(ID_ve);
         amount = quantity * ve.getgiaVe();
         std::cout << lineReceiptFormat(std::to_string(quantity), ve.getID_chuyenBay(), formatCurrency(amount)) << std::endl;
