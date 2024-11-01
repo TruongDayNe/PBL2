@@ -7,6 +7,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include "./LinkedList.h"
 using namespace std;
 
 // Enum for representing airport codes as nodes in SEA (Southeast Asia)
@@ -34,6 +35,7 @@ private:
     int distances[NUM_AIRPORTS];                  // Shortest distances from source
     int prevNode[NUM_AIRPORTS];                   // Previous node in the shortest path
     int freeNode[NUM_AIRPORTS];                   // Unvisited nodes
+    LinkedList<Airport> path;
 
     // Utility function to trim whitespace from strings
     string trim(const string& str);

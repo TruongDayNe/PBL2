@@ -1,4 +1,5 @@
 #include "Graph.h"
+#include <LinkedList.h>
 
 // Constructor for the Graph class
 Graph::Graph() {
@@ -59,20 +60,17 @@ void Graph::readFromCSV(const string& filename) {
         stringstream ss(line);
         string srcCode, dstCode, distanceStr, feeStr;
 
-        // Read the values separated by commas
         getline(ss, srcCode, ',');
         getline(ss, dstCode, ',');
         getline(ss, distanceStr, ',');
         getline(ss, feeStr, ',');
 
-        // Trim any leading/trailing spaces from the extracted parts
         srcCode = trim(srcCode);
         dstCode = trim(dstCode);
         distanceStr = trim(distanceStr);
         feeStr = trim(feeStr);
 
         try {
-            // Convert the extracted strings to appropriate types
             Airport src = getAirportEnum(srcCode);
             Airport dst = getAirportEnum(dstCode);
             int distance = stoi(distanceStr);
@@ -88,7 +86,6 @@ void Graph::readFromCSV(const string& filename) {
     file.close();
 }
 
-// Find the unvisited node with the minimum distance
 int Graph::find_min_distance() {
     int min = INT_MAX, min_index = -1;
     for (int node = 0; node < NUM_AIRPORTS; node++) {
@@ -100,7 +97,6 @@ int Graph::find_min_distance() {
     return min_index;
 }
 
-// Dijkstra's algorithm to find the shortest path
 void Graph::dijkstra(Airport start, Airport end) {
     for (int i = 0; i < NUM_AIRPORTS; i++) {
         distances[i] = INT_MAX;
@@ -126,6 +122,18 @@ void Graph::dijkstra(Airport start, Airport end) {
             }
         }
     }
+
+    // Reset the LinkedList for a new path
+    LinkedList<Airport> path;  
+
+    for (int k = end; k != start; k = prevNode[k]) {
+        if (k == -1) {
+            cout << "No path found!" << endl;
+            return;
+        }
+        path.addLast(static_cast<Airport>(k));  // Add to the LinkedList
+    }
+    path.addLast(start);  // Add the starting point
 }
 
 // Dijkstra's algorithm excluding a specific node
@@ -157,7 +165,6 @@ void Graph::dijkstra_exclude_node(Airport start, Airport end, Airport exclude) {
     }
 }
 
-// Find and print the shortest path from start to end
 void Graph::find_path(Airport start, Airport end) {
     int path[NUM_AIRPORTS], idx = 0;
     for (int k = end; k != start; k = prevNode[k]) {
@@ -176,7 +183,6 @@ void Graph::find_path(Airport start, Airport end) {
     cout << endl;
 }
 
-// Get the distance to a specific airport
 int Graph::getDistance(Airport node) {
     return distances[node];
 }
