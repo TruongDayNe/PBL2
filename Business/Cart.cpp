@@ -1,8 +1,4 @@
-#pragma once
 #include "Cart.h"
-#include "../Management/QuanLiVe.cpp"
-#include "../Library/Table.cpp"
-#include "../Library/Console.cpp"
 
 Cart::Cart()
 {

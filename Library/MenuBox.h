@@ -1,12 +1,12 @@
-
-#pragma once // tránh đụng độ thư viện khi gọi chồng file lên nhau
-#include <bits/stdc++.h>
-#include <conio.h>
-#include <ctime>     /* thư viện hỗ trợ về thời gian thực */
-#include "windows.h" // thư viện này bá đạo lắm nhé - chứa nhiều đồ chơi nek - cứ tìm hiểu dần dần s
+#pragma once // Tránh đụng độ thư viện khi gọi chồng file
+#include <iostream>
+#include <conio.h>     // Thư viện hỗ trợ nhập xuất ký tự từ bàn phím
+#include <cstddef>
+#include <windows.h>   // Thư viện chứa các hàm liên quan đến Windows như SetConsoleTextAttribute, SetConsoleCursorPosition
+#include <ctime>       // Thư viện hỗ trợ về thời gian thực
 //======= lấy tọa độ x của con trỏ hiện tại =============
 #define KEY_NONE -1
-using namespace std;
+
 int whereX()
 {
     CONSOLE_SCREEN_BUFFER_INFO csbi;
@@ -26,7 +26,7 @@ int whereY()
 void gotoXY(int x, int y)
 {
     HANDLE hConsoleOutput;
-    COORD Cursor_an_Pos = {x, y}; // Lỗi
+    COORD Cursor_an_Pos = {(short)x, (short)y}; // Lỗi
     hConsoleOutput = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleCursorPosition(hConsoleOutput, Cursor_an_Pos);
 }
@@ -85,7 +85,7 @@ void ToMau(int x, int y, char *a, int color)
 {
     gotoXY(x, y);
     textcolor(color);
-    cout << a;
+    std::cout << a;
     textcolor(7);
 }
 void resizeConsole(int width, int heigth)

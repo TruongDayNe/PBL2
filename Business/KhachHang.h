@@ -1,16 +1,24 @@
 #pragma once
+
 #include "User.h"
 #include "Cart.h"
-#include "LinkedList.h"
+#include "../LinkedList.h"
+#include "Ticket.h"
+#include "../Management/QuanLiVe.h"
+#include "../Management/QuanLiReceipt.h"
+#include <iostream>
+
+#ifndef KHACHHANG_H
+#define KHACHHANG_H
 
 class KhachHang : public User {
     private:
         Cart _Cart;
-        LinkedList<string> _Rec;
+        LinkedList<std::string> _Rec;
     public:
         // Constructor
     KhachHang();
-    KhachHang(int, string, string, string, LinkedList<string> = LinkedList<string>());
+    KhachHang(int, std::string, std::string, std::string, LinkedList<std::string> = LinkedList<std::string>());
 
     // Destructor
     ~KhachHang();
@@ -23,19 +31,20 @@ class KhachHang : public User {
     Cart &getCart();
 
     // Get list of receipt ID
-    LinkedList<string> Rec();
+    LinkedList<std::string> Rec();
 
     // Set list of receipt ID
-    void setRec(LinkedList<string>);
+    void setRec(LinkedList<std::string>);
 
     void newKhachHang();
 
     void purchase();
     void searchByReceiptID(int);
-    // void searchByCompName(string);
+    // void searchByCompName(std::string);
     void printAllKhachHangReceipts();
     // void printReceipt(int);
     void addNewReceipt();
-    void deleteReceiptById(string);
+    void deleteReceiptById(std::string);
  
 };
+#endif

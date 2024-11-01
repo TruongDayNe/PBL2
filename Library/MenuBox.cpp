@@ -1,9 +1,7 @@
-#include <bits/stdc++.h>
 #include "MenuBox.h"
-#include <conio.h>
-#include <string.h>
-using namespace std;
 
+#ifndef MENUBOX_H
+#define MENUBOX_H
 class MenuBox
 {
 private:
@@ -22,6 +20,7 @@ public:
     int getChoose(int choose);
     int menu();
 };
+#endif
 
 MenuBox::MenuBox(int num, char data[200][200])
 {
@@ -44,7 +43,7 @@ MenuBox::MenuBox(int num, char data[200][200])
 
 void MenuBox::print(int idx, char **content)
 {
-    cout << content[idx];
+    std::cout << content[idx];
 }
 int MenuBox::getChoose(int choose)
 {
@@ -121,7 +120,7 @@ void MenuBox::lightBox(int xx, int yy, int w, int h, int b_color, char **content
         for (int j = xx + 1; j <= xx + w - 1; j++)
         {
             gotoXY(j, i);
-            cout << " ";
+            std::cout << " ";
         }
     }
     SetColor(7);
@@ -136,7 +135,7 @@ void MenuBox::box(int xx, int yy, int w, int h, int t_color, int b_color, char *
         for (int j = xx + 1; j <= xx + w - 1; j++)
         {
             gotoXY(j, i);
-            cout << " ";
+            std::cout << " ";
         }
     }
     SetColor(7);
@@ -150,27 +149,27 @@ void MenuBox::box(int xx, int yy, int w, int h, int t_color, int b_color, char *
     for (int i = xx; i <= xx + w; i++)
     {
         gotoXY(i, yy);
-        cout << "─";
+        std::cout << "─";
         gotoXY(i, yy + h);
-        cout << "─";
+        std::cout << "─";
     }
     for (int i = yy; i <= yy + h; i++)
     {
         gotoXY(xx, i);
-        cout << "│";
+        std::cout << "│";
         gotoXY(xx + w, i);
-        cout << "│";
+        std::cout << "│";
     }
     gotoXY(xx, yy);
-    cout << "┌";
+    std::cout << "┌";
     gotoXY(xx + w, yy);
-    cout << "┐";
+    std::cout << "┐";
     gotoXY(xx, yy + h);
-    cout << "└";
+    std::cout << "└";
     gotoXY(xx + w, yy + h);
-    cout << "┘";
+    std::cout << "┘";
     gotoXY(xx, yy + h);
-    cout << endl;
+    std::cout << std::endl;
 }
 void MenuBox::boxes(int xx, int yy, int w, int h, int t_color, int b_color, char **content, int count)
 {
@@ -180,9 +179,9 @@ void MenuBox::boxes(int xx, int yy, int w, int h, int t_color, int b_color, char
         if (i != 0)
         {
             gotoXY(xx, yy + i * 2);
-            cout << "├";
+            std::cout << "├";
             gotoXY(xx + w, yy + i * 2);
-            cout << "┤";
+            std::cout << "┤";
         }
     }
 }

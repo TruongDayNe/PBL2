@@ -1,17 +1,12 @@
 #include "KhachHang.h"
-#include "Ticket.cpp"
-#include "../Management/QuanLiVe.cpp"
-#include "../Management/QuanLiReceipt.cpp"
-#include <iostream>
-using namespace std;
 
 KhachHang::KhachHang() : User(0, "", "", "")
 {
-    this->_Rec = LinkedList<string>();
+    this->_Rec = LinkedList<std::string>();
     this->_Cart = Cart();
 }
 
-KhachHang::KhachHang(int id, string name, string email, string password, LinkedList<string> recs) : User(id, name, email, password)
+KhachHang::KhachHang(int id, std::string name, std::string email, std::string password, LinkedList<std::string> recs) : User(id, name, email, password)
 {
     this->_Rec = recs;
     this->_Cart = Cart();
@@ -26,37 +21,37 @@ Cart &KhachHang::getCart()
     return this->_Cart;
 }
 
-LinkedList<string> KhachHang::Rec()
+LinkedList<std::string> KhachHang::Rec()
 {
     return this->_Rec;
 }
 
-void KhachHang::setRec(LinkedList<string> recs)
+void KhachHang::setRec(LinkedList<std::string> recs)
 {
     this->_Rec = recs;
 }
 
 void KhachHang::purchase()
 {
-    string recID = "REC#" + to_string(this->_Rec.length() + 1);
+    std::string recID = "REC#" + std::to_string(this->_Rec.length() + 1);
     this->_Rec.addLast(recID);
 
-    string fileName = to_string(this->getID()) + "_" + recID + ".txt";
-    string filePath = "./Database/ReceiptDB/" + fileName;
-    ofstream outFileKhachHang("./Database/UserDB/KhachHangDB/CUSTOMER_" + to_string(this->getID()) + ".txt", ios::app);
-    outFileKhachHang << recID << endl;
+    std::string fileName = std::to_string(this->getID()) + "_" + recID + ".txt";
+    std::string filePath = "./Database/ReceiptDB/" + fileName;
+    std::ofstream outFileKhachHang("./Database/UserDB/KhachHangDB/KhachHang_" + std::to_string(this->getID()) + ".txt", std::ios::app);
+    outFileKhachHang << recID << std::endl;
     outFileKhachHang.close();
 
-    ofstream outFile(filePath);
+    std::ofstream outFile(filePath);
 
-    string date = currentDateTime();
-    outFile << date << endl;
-    outFile << _Cart.Total() << endl;
+    std::string date = currentDateTime();
+    outFile << date <<std::endl;
+    outFile << _Cart.Total() << std::endl;
 
     for (int i = 0; i < _Cart.ID_veMua().length(); i++)
     {
         outFile << _Cart.soVeMua().get(i) << " ";
-        outFile << _Cart.ID_veMua().get(i) << endl;
+        outFile << _Cart.ID_veMua().get(i) << std::endl;
     }
 
     outFile.close();
@@ -81,7 +76,7 @@ void KhachHang::addNewReceipt()
     addReceiptToDatabase(this->getID(), this->_Cart, this->_Rec);
 }
 
-void KhachHang::deleteReceiptById(string id)
+void KhachHang::deleteReceiptById(std::string id)
 {
     deleteReceiptFromDatabase(this->getID(), id);
 }

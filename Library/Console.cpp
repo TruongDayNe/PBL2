@@ -1,25 +1,11 @@
-#pragma once
+#include "Console.h"
 
-#include <iostream>
-#include <windows.h>
-#include <string>
-#include <sstream>
-#include <iomanip>
-#include <ctime>
-#include <set>
-#include <fstream>
-#include <algorithm>
-#include <conio.h>
-#include "../LinkedList.h"
-
-using namespace std;
-
-string spaceLine = "\t\t         ";
-string spaceLineChoice = "\t    ";
+std::string spaceLine = "\t\t         ";
+std::string spaceLineChoice = "\t    ";
 // Get current datetime
 // real time
 // Hàm lấy thời gian hiện tại dưới dạng chuỗi
-string currentDateTime() {
+std::string currentDateTime() {
     time_t now = time(0);
     struct tm tstruct;
     char buf[80];
@@ -29,102 +15,102 @@ string currentDateTime() {
 }
 
 // Hàm chuyển đổi chuỗi thời gian thành time_t
-time_t convertToTimeT(const string& dateTime) {
+time_t convertToTimeT(const std::string& dateTime) {
     struct tm t = {};
-    istringstream ss(dateTime);
-    ss >> get_time(&t, "%d-%m-%Y %H:%M:%S");
+    std::istringstream ss(dateTime);
+    ss >> std::get_time(&t, "%d-%m-%Y %H:%M:%S");
     return mktime(&t);
 }
 
 // Hàm so sánh thời gian hiện tại với thời gian đầu vào
-bool isExpired(const string& dateTime) {
+bool isExpired(const std::string& dateTime) {
     return (difftime(time(0), convertToTimeT(dateTime)) > 0.0);
 }
 
 // Change text color in terminal
-void printLineColor(string line, int color_code)
+void printLineColor(std::string line, int color_code)
 {
     HANDLE color;
     color = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleTextAttribute(color, color_code);
-    cout << line;
+    std::cout << line;
     SetConsoleTextAttribute(color, 7);
 }
 // Get input with string type
-string getStringInput(string title)
+std::string getStringInput(std::string title)
 {
-    string value;
+    std::string value;
 
     printLineColor(spaceLineChoice + title + ": ", 6);
-    getline(cin, value);
+    std::getline(std::cin, value);
 
     return value;
 }
 // Get input with int type
-int getIntInput(string title)
+int getIntInput(std::string title)
 {
-    string value;
+    std::string value;
     printLineColor(spaceLineChoice + title + ": ", 6);
-    getline(cin, value);
+    std::getline(std::cin, value);
 
     while (!isNumber(value))
     {
         printError("Invalid value!");
         printLineColor(spaceLineChoice + title + ": ", 6);
-        getline(cin, value);
+        std::getline(std::cin, value);
     }
 
     return stoi(value);
 }
 // Check if string s is a number
-bool isNumber(string s)
+bool isNumber(std::string s)
 {
     char *end = nullptr;
     double val = strtod(s.c_str(), &end);
     return end != s.c_str() && *end == '\0';
 }
-void printError(string status)
+void printError(std::string status)
 {
-    cout << spaceLineChoice;
+    std::cout << spaceLineChoice;
     printLineColor(" ERROR ", 67);
     printLineColor(" " + status, 4);
-    cout << endl;
+    std::cout << std::endl;
 }
 int updateLastTicketId()
 {
-    ifstream inFile("./Database/lastID.txt");
+    std::ifstream inFile("./Database/lastID.txt");
 
-    string x;
+    std::string x;
     getline(inFile, x);
 
     return stoi(x) + 1;
 }
 // Get input with yes/no
-string getYesNoInput(string title)
+std::string getYesNoInput(std::string title)
 {
-    string yn;
+    std::string yn;
 
     printLineColor(title + ": ", 3);
-    getline(cin, yn);
+    std::getline(std::cin, yn);
 
     while (yn != "y" && yn != "Y" && yn != "n" && yn != "N")
     {
         printError("You must enter a valid value (y/n)!");
         printLineColor(title + ": ", 3);
-        getline(cin, yn);
+        std::getline(std::cin, yn);
     }
 
     return yn;
 }
-string updateComponent(string key, string value)
+std::string updateComponent(std::string key, std::string value)
 {
-    string update;
+    std::string update;
 
     printLineColor(spaceLineChoice + key + ": ", 6);
     printLineColor(value + "\n", 7);
     update = getYesNoInput(spaceLineChoice + "Update " + key + " (y/n)");
 
-    string newValue = value;
+    std::string newValue = value;
     if (update == "y" || update == "Y")
     {
         newValue = getStringInput("New " + key);
@@ -134,12 +120,12 @@ string updateComponent(string key, string value)
 }
 
 // Update int component with y/n
-int updateIntComponent(string key, int value)
+int updateIntComponent(std::string key, int value)
 {
-    string update;
+    std::string update;
 
     printLineColor(spaceLineChoice + key + ": ", 6);
-    printLineColor(to_string(value) + "\n", 7);
+    printLineColor(std::to_string(value) + "\n", 7);
     update = getYesNoInput(spaceLineChoice + "Update " + key + " (y/n)");
 
     int newValue = value;
@@ -154,13 +140,13 @@ int updateIntComponent(string key, int value)
 // path: path to file in database, start from main.cpp file
 // numLine: index of line, start from 0
 // replaceValue: new line value
-void updateLine(string path, int numLine, int replaceValue)
+void updateLine(std::string path, int numLine, int replaceValue)
 {
-    string line;
-    ifstream fin;
+    std::string line;
+    std::ifstream fin;
 
     fin.open(path);
-    ofstream temp;
+    std::ofstream temp;
     temp.open("temp.txt");
     int count = 0;
 
@@ -168,11 +154,11 @@ void updateLine(string path, int numLine, int replaceValue)
     {
         if (count == numLine)
         {
-            temp << replaceValue << endl;
+            temp << replaceValue << std::endl;
             count++;
             continue;
         }
-        temp << line << endl;
+        temp << line << std::endl;
         count++;
     }
 
@@ -188,27 +174,27 @@ void updateLine(string path, int numLine, int replaceValue)
 // path: path to file in database, start from main.cpp file
 // inLine: line to update
 // replaceValue: new line value
-void updateLine(string path, string inLine, string replaceValue)
+void updateLine(std::string path, std::string inLine, std::string replaceValue)
 {
-    string line;
-    ifstream fin;
+    std::string line;
+    std::ifstream fin;
 
     fin.open(path);
     if (!fin.is_open())
     {
         printError("Eror open file" + path);
     }
-    ofstream temp;
+    std::ofstream temp;
     temp.open("temp.txt");
 
     while (getline(fin, line))
     {
         if (line == inLine)
         {
-            temp << replaceValue << endl;
+            temp << replaceValue << std::endl;
             continue;
         }
-        temp << line << endl;
+        temp << line << std::endl;
     }
 
     temp.close();
@@ -219,30 +205,30 @@ void updateLine(string path, string inLine, string replaceValue)
     rename("temp.txt", p);
 }
 // Print notification
-void printSuccess(string status)
+void printSuccess(std::string status)
 {
-    cout << spaceLineChoice;
+    std::cout << spaceLineChoice;
     printLineColor(" SUCCESS ", 37);
     printLineColor(" " + status, 2);
-    cout << endl;
+    std::cout << std::endl;
 }
 // Delete line input from file
 // path: path to file in database
 // start from main.cpp file
 // eraseLine: line to delete
-void eraseFileLine(string path, string eraseLine)
+void eraseFileLine(std::string path, std::string eraseLine)
 {
-    string line;
-    ifstream fin;
+    std::string line;
+    std::ifstream fin;
 
     fin.open(path);
-    ofstream temp;
+    std::ofstream temp;
     temp.open("temp.txt");
 
     while (getline(fin, line))
     {
         if (line != eraseLine)
-            temp << line << endl;
+            temp << line << std::endl;
     }
 
     temp.close();
@@ -257,21 +243,21 @@ void eraseFileLine(string path, string eraseLine)
 // path: path to file in database
 // start from main.cpp file
 // eraseLine: line contain int item to delete
-void eraseFileLine(string path, int eraseLine)
+void eraseFileLine(std::string path, int eraseLine)
 {
-    string line;
+    std::string line;
     int firstIndex;
-    ifstream fin;
+    std::ifstream fin;
 
     fin.open(path);
-    ofstream temp;
+    std::ofstream temp;
     temp.open("temp.txt");
 
-    while (getline(fin, line))
+    while (std::getline(fin, line))
     {
         firstIndex = line.find_first_of(" ");
-        if (line.substr(0, firstIndex) != to_string(eraseLine))
-            temp << line << endl;
+        if (line.substr(0, firstIndex) != std::to_string(eraseLine))
+            temp << line << std::endl;
     }
 
     temp.close();
@@ -282,28 +268,28 @@ void eraseFileLine(string path, int eraseLine)
     rename("temp.txt", p);
 }
 // Format int
-string formatInt(int num)
+std::string formatInt(int num)
 {
-    string s = to_string(num);
-    string ans = "";
+    std::string s = std::to_string(num);
+    std::string ans = "";
     for (int i = s.length() - 1; i >= 0; i -= 3)
     {
         if (i > 2)
         {
-            string sub = s.substr(i - 3 + 1, 3);
+            std::string sub = s.substr(i - 3 + 1, 3);
             ans = sub + ans;
             ans = "," + ans;
         }
         else
         {
-            string sub = s.substr(0, i + 1);
+            std::string sub = s.substr(0, i + 1);
             ans = sub + ans;
         }
     }
     return ans;
 }
 
-string formatCurrency(int price)
+std::string formatCurrency(int price)
 {
     return formatInt(price) + " VND";
 }
@@ -312,14 +298,14 @@ string formatCurrency(int price)
 // data: string
 // toSearch: string need to search
 // pos: start position to search in data
-size_t findCaseInsensitive(string data, string toSearch, size_t pos = 0)
+size_t findCaseInsensitive(std::string data, std::string toSearch, size_t pos = 0)
 {
     transform(data.begin(), data.end(), data.begin(), ::tolower);
     transform(toSearch.begin(), toSearch.end(), toSearch.begin(), ::tolower);
     return data.find(toSearch, pos);
 }
 // Check if string email is valid email form
-bool isEmail(string email)
+bool isEmail(std::string email)
 {
     int dot = -1, at = -1;
     for (int i = email.length() - 1; i >= 0; --i)
@@ -339,38 +325,38 @@ bool isEmail(string email)
     }
     return false;
 }
-string getEmailInput()
+std::string getEmailInput()
 {
-    string email;
+    std::string email;
     printLineColor(spaceLineChoice + "Email: ", 6);
-    getline(cin, email);
+    std::getline(std::cin, email);
 
     while (!isEmail(email))
     {
         printError("Invalid email!");
         printLineColor(spaceLineChoice + "Email: ", 6);
-        getline(cin, email);
+        std::getline(std::cin, email);
     }
 
     return email;
 }
 
-string getPasswordInput(string title)
+std::string getPasswordInput(std::string title)
 {
     printLineColor(spaceLineChoice + title + ": ", 6);
-    string pwd = "";
+    std::string pwd = "";
     char a = getch();
     while (a != 10 && a != 13)
     {
         if (a != 8)
         {
-            cout << '*';
+            std::cout << '*';
             pwd += a;
             a = getch();
         }
         else if (pwd.length() > 0)
         {
-            cout << "\b \b";
+            std::cout << "\b \b";
             pwd = pwd.erase(pwd.size() - 1);
             a = getch();
         }
@@ -380,32 +366,32 @@ string getPasswordInput(string title)
         }
     }
 
-    cout << endl;
+    std::cout << std::endl;
     return pwd;
 }
 
-LinkedList<string> getAllEmail()
+LinkedList<std::string> getAllEmail()
 {
-    LinkedList<string> list;
-    set<string> emails;
+    LinkedList<std::string> list;
+    std::set<std::string> emails;
 
-    ifstream inFile("./Database/UserDB/user_ID.txt");
-    string line;
+    std::ifstream inFile("./Database/UserDB/user_ID.txt");
+    std::string line;
     int first, last;
 
-    while (getline(inFile, line))
+    while (std::getline(inFile, line))
     {
         first = line.find_first_of(" ");
         last = line.find_last_of(" ");
 
-        string email = line.substr(first + 1, last - first - 1);
+        std::string email = line.substr(first + 1, last - first - 1);
         emails.insert(email);
     }
 
-    set<string>::iterator it;
+    std::set<std::string>::iterator it;
     for (it = emails.begin(); it != emails.end(); ++it)
     {
-        string mail = *it;
+        std::string mail = *it;
         list.addLast(mail);
     }
 
@@ -413,12 +399,12 @@ LinkedList<string> getAllEmail()
     return list;
 }
 
-bool isUniqueEmail(string emailToCheck)
+bool isUniqueEmail(std::string emailToCheck)
 {
-    LinkedList<string> emails = getAllEmail();
+    LinkedList<std::string> emails = getAllEmail();
     for (int i = 0; i < emails.length(); i++)
     {
-        string email = emails.get(i);
+        std::string email = emails.get(i);
         if (emailToCheck == email)
         {
             return false;
@@ -429,41 +415,41 @@ bool isUniqueEmail(string emailToCheck)
 
 int getLastKhachHangId()
 {
-    ifstream inFile("./Database/lastID.txt");
+    std::ifstream inFile("./Database/lastID.txt");
 
-    string x;
-    getline(inFile, x);
-    getline(inFile, x);
+    std::string x;
+    std::getline(inFile, x);
+    std::getline(inFile, x);
     return stoi(x) + 1;
 }
 
 int getLastTicketId()
-{
-    ifstream inFile("./Database/lastID.txt");
+    {
+    std::ifstream inFile("./Database/lastID.txt");
 
-    string x;
+    std::string x;
     getline(inFile, x);
 
     return stoi(x) + 1;
 }
 
-string getReceiptDateTime(int patientID, string recID)
+std::string getReceiptDateTime(int patientID, std::string recID)
 {
-    ifstream inFile("./Database/ReceiptDB/" + to_string(patientID) + "_" + recID + ".txt");
+    std::ifstream inFile("./Database/ReceiptDB/" + std::to_string(patientID) + "_" + recID + ".txt");
 
-    string x;
-    getline(inFile, x);
+    std::string x;
+    std::getline(inFile, x);
 
     return x;
 }
 
-int getReceiptTotal(int patientID, string recID)
+int getReceiptTotal(int patientID, std::string recID)
 {
-    ifstream inFile("./Database/ReceiptDB/" + to_string(patientID) + "_" + recID + ".txt");
+    std::ifstream inFile("./Database/ReceiptDB/" + std::to_string(patientID) + "_" + recID + ".txt");
 
-    string x;
-    getline(inFile, x);
-    getline(inFile, x);
+    std::string x;
+    std::getline(inFile, x);
+    std::getline(inFile, x);
 
     return stoi(x);
 }
@@ -473,10 +459,10 @@ int getReceiptTotal(int patientID, string recID)
 int updatePrice(int old_price)
 {
     printLineColor(spaceLineChoice + "Price: ", 6);
-    printLineColor(to_string(old_price) + "\n", 7);
+    printLineColor(std::to_string(old_price) + "\n", 7);
     int new_price = old_price;
 
-    string yn = getYesNoInput(spaceLineChoice + "Update Price (y/n)");
+    std::string yn = getYesNoInput(spaceLineChoice + "Update Price (y/n)");
 
     if (yn == "y" || yn == "Y")
     {
@@ -488,16 +474,16 @@ int updatePrice(int old_price)
 
 // Update password
 // old_pass: current password value
-string updatePassword(string old_pass)
+std::string updatePassword(std::string old_pass)
 {
-    string yn = getYesNoInput(spaceLineChoice + "Update Password (y/n)");
+    std::string yn = getYesNoInput(spaceLineChoice + "Update Password (y/n)");
 
     if (yn == "n" || yn == "N")
     {
         return old_pass;
     }
 
-    string old_pass_input = getPasswordInput("Enter old password");
+    std::string old_pass_input = getPasswordInput("Enter old password");
 
     while (old_pass != old_pass_input)
     {
@@ -505,7 +491,7 @@ string updatePassword(string old_pass)
         old_pass_input = getPasswordInput("Enter old password");
     }
 
-    string new_password = getPasswordInput("Enter new password");
+    std::string new_password = getPasswordInput("Enter new password");
 
     return new_password;
 }

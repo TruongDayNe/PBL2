@@ -1,22 +1,26 @@
 #pragma once
+
 #include <iostream>
 #include <string>
-using namespace std;
+#include "../Management/QuanLiVe.h"
+
+#ifndef USER_H
+#define USER_H
 
 class User
 {
 private:
     int _ID;
-    string _Name;
-    string _Email;
-    string _Password;
+    std::string _Name;
+    std::string _Email;
+    std::string _Password;
 
 public:
     // Constructor
     User();
-    User(int, string);
-    User(int, string, string);
-    User(int, string, string, string);
+    User(int, std::string);
+    User(int, std::string, std::string);
+    User(int, std::string, std::string, std::string);
 
     // Destructor
     ~User();
@@ -26,19 +30,19 @@ public:
     void setID(int);
 
     // Get, Set User _Name
-    string getName();
-    void setName(string);
+    std::string getName();
+    void setName(std::string);
 
     // Get, Set User _Email
-    string getEmail();
-    void setEmail(string);
+    std::string getEmail();
+    void setEmail(std::string);
 
     // Get, Set User _Password
-    string getPassword();
-    void setPassword(string);
+    std::string getPassword();
+    void setPassword(std::string);
 
-    void searchByDrugID();
     void searchByTicketID();
     // void searchByDrugName();
-    void printAllDrug();
+    void printAllTicket();
 };
+#endif

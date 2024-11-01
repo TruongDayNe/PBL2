@@ -1,14 +1,10 @@
-#include "../Business/User.h"
-#include "../Business/User.cpp"
-#include "../LinkedList.cpp"
-#include "../Library/Console.cpp"
-#include <fstream>
+#include "QuanLiNguoiDung.h"
 
-User getUserLoginInfo(string info)
+User getUserLoginInfo(std::string info)
 {
-    string id;
-    string email;
-    string password;
+    std::string id;
+    std::string email;
+    std::string password;
 
     int firstIndex = info.find_first_of(" ");
     int lastIndex = info.find_last_of(" ");
@@ -24,14 +20,14 @@ LinkedList<User> getAllUserLoginInfo()
 {
     LinkedList<User> usersInfo;
 
-    ifstream inFile("./Database/UserDB/user_ID.txt");
+    std::ifstream inFile("./Database/UserDB/user_ID.txt");
     if (!inFile.is_open())
     {
         printError("Error in open user info file database!");
         return usersInfo;
     }
 
-    string x;
+    std::string x;
     while (getline(inFile, x))
     {
         usersInfo.addLast(getUserLoginInfo(x));
@@ -41,7 +37,7 @@ LinkedList<User> getAllUserLoginInfo()
     return usersInfo;
 }
 
-int findUser(string email, string password)
+int findUser(std::string email, std::string password)
 {
     LinkedList<User> users = getAllUserLoginInfo();
 
