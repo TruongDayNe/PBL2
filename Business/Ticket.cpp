@@ -1,9 +1,4 @@
-
-#pragma once
 #include "Ticket.h"
-#include <fstream>
-#include <iostream>
-using namespace std;
 
 Ticket::Ticket()
 {
@@ -17,14 +12,14 @@ Ticket::Ticket()
     this->giaVe = 0;
 }
 
-Ticket::Ticket(int ID_ve, string ID_chuyenBay, string diemDi, string diemDen, string loaive,string ngayKhoiHanh, int soLuongVe, int giaVe)
+Ticket::Ticket(int ID_ve, std::string ID_chuyenBay, std::string diemDi, std::string diemDen, std::string loaiVe, std::string ngayKhoiHanh, int soLuongVe, int giaVe)
 {
     this->ID_ve = ID_ve;
     this->ID_chuyenBay = ID_chuyenBay;
-    this->diemDi = loaiVe;
+    this->diemDi = diemDi;
     this->diemDen = diemDen;
-    this->loaiVe = diemDi;
-    this->ngayKhoiHanh = "";
+    this->loaiVe = loaiVe;
+    this->ngayKhoiHanh = ngayKhoiHanh;
     this->soLuongVe = soLuongVe;
     this->giaVe = giaVe;
 }
@@ -33,9 +28,9 @@ Ticket::Ticket(const Ticket& Ve)
 {
     this->ID_ve = Ve.ID_ve;
     this->ID_chuyenBay = Ve.ID_chuyenBay;
-    this->diemDi = Ve.loaiVe;
+    this->diemDi = Ve.diemDi;
     this->diemDen = Ve.diemDen;
-    this->loaiVe = Ve.diemDi;
+    this->loaiVe = Ve.loaiVe;
     this->ngayKhoiHanh = Ve.ngayKhoiHanh;
     this->soLuongVe = Ve.soLuongVe;
     this->giaVe = Ve.giaVe;
@@ -45,9 +40,9 @@ Ticket& Ticket::operator = (const Ticket& Ve)
 {
     this->ID_ve = Ve.ID_ve;
     this->ID_chuyenBay = Ve.ID_chuyenBay;
-    this->diemDi = Ve.loaiVe;
+    this->diemDi = Ve.diemDi;
     this->diemDen = Ve.diemDen;
-    this->loaiVe = Ve.diemDi;
+    this->loaiVe = Ve.loaiVe;
     this->ngayKhoiHanh = Ve.ngayKhoiHanh;
     this->soLuongVe = Ve.soLuongVe;
     this->giaVe = Ve.giaVe;
@@ -56,7 +51,6 @@ Ticket& Ticket::operator = (const Ticket& Ve)
 
 Ticket::~Ticket()
 {
-
 }
 
 int Ticket::getID_ve()
@@ -69,62 +63,55 @@ void Ticket::setID_ve(int id)
     this->ID_ve = id;
 }
 
-string Ticket::getID_chuyenBay()
+std::string Ticket::getID_chuyenBay()
 {
     return this->ID_chuyenBay;
 }
 
-void Ticket::setID_chuyenBay(string ID_chuyenBay)
+void Ticket::setID_chuyenBay(std::string ID_chuyenBay)
 {
     this->ID_chuyenBay = ID_chuyenBay;
 }
 
-string Ticket::getdiemDi()
+std::string Ticket::getdiemDi()
 {
     return this->diemDi;
 }
 
-void Ticket::setdiemDi(string diemDi)
+void Ticket::setdiemDi(std::string diemDi)
 {
     this->diemDi = diemDi;
 }
 
-string Ticket::getdiemDen()
+std::string Ticket::getdiemDen()
 {
     return this->diemDen;
 }
 
-void Ticket::setdiemDen(string diemDen)
-{
-    this->diemDen= diemDen;
-}
-
-void Ticket::setloaiVe(string diemDen)
+void Ticket::setdiemDen(std::string diemDen)
 {
     this->diemDen = diemDen;
 }
 
-string Ticket::getloaiVe()
-{
-    return this->loaiVe;
-}
-
-
-void Ticket::setloaiVe(string loaiVe)
+void Ticket::setloaiVe(std::string loaiVe)
 {
     this->loaiVe = loaiVe;
 }
 
-string Ticket::getngayKhoiHanh()
+std::string Ticket::getloaiVe()
+{
+    return this->loaiVe;
+}
+
+std::string Ticket::getngayKhoiHanh()
 {
     return this->ngayKhoiHanh;
 }
 
-void Ticket::setngayKhoiHanh(string ngayKhoiHanh)
+void Ticket::setngayKhoiHanh(std::string ngayKhoiHanh)
 {
     this->ngayKhoiHanh = ngayKhoiHanh;
 }
-
 
 int Ticket::getsoLuongVe()
 {

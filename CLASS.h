@@ -4,8 +4,6 @@
 #include "Graph.h"
 #include "LinkedList.h"
 
-using namespace std;
-
 class ChuyenBay {
 private:
     string ID_chuyenBay;

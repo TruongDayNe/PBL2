@@ -7,7 +7,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
-#include "LinkedList.h"
+#include "./LinkedList.h"
 using namespace std;
 
 // Enum for representing airport codes as nodes in SEA (Southeast Asia)

@@ -1,23 +1,25 @@
 #pragma once
+#ifndef TICKET_H
+#define TICKET_H
 #include <iostream>
 #include <string>
-using namespace std;
+#include <fstream>
 
 class Ticket
 {
 private:
     int ID_ve;
-    string ID_chuyenBay;
-    string loaiVe;
-    string diemDi;
-    string diemDen;
-    string ngayKhoiHanh;
-    static int soLuongVe;
+    std::string ID_chuyenBay;
+    std::string loaiVe;
+    std::string diemDi;
+    std::string diemDen;
+    std::string ngayKhoiHanh;
+    int soLuongVe;
     int giaVe;
 public:
     // Constructor
     Ticket();
-    Ticket(int, string, string, string, string, string, int, int);
+    Ticket(int, std::string, std::string, std::string, std::string, std::string, int, int);
     Ticket(const Ticket&);
 
     // Overloading the assignment operator
@@ -31,24 +33,24 @@ public:
     void setID_ve(int);
 
     // Get, Set ID_chuyenBay
-    string getID_chuyenBay();
-    void setID_chuyenBay(string);
+    std::string getID_chuyenBay();
+    void setID_chuyenBay(std::string);
 
     // Get, Set loaiVe
-    string getloaiVe();
-    void setloaiVe(string);
+    std::string getloaiVe();
+    void setloaiVe(std::string);
 
     //Get, Set diemDi
-    string getdiemDi();
-    void setdiemDi(string);
+    std::string getdiemDi();
+    void setdiemDi(std::string);
 
     //Get, Set diemDen
-    string getdiemDen();
-    void setdiemDen(string);
+    std::string getdiemDen();
+    void setdiemDen(std::string);
 
     // Get, Set ngayKhoiHanh
-    string getngayKhoiHanh();
-    void setngayKhoiHanh(string);
+    std::string getngayKhoiHanh();
+    void setngayKhoiHanh(std::string);
 
     // Get, Set soLuongVe
     int getsoLuongVe();
@@ -58,3 +60,4 @@ public:
     int getgiaVe();
     void setgiaVe(int);
 };
+#endif
