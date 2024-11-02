@@ -1,16 +1,14 @@
-#pragma once
-#include <fstream>
-#include "Menu.h"
+#include "Home.h"
 
 
 void Home::welcome()
 {
 
-    ifstream inFile("./Page/Intro.txt");
-    string line;
+    std::ifstream inFile("./Page/Intro.txt");
+    std::string line;
     while (getline(inFile, line))
     {
-        cout << line << endl;
+        std::cout << line << std::endl;
     }
     inFile.close();
     system("pause");
@@ -18,13 +16,13 @@ void Home::welcome()
 }
 int Home::printTask()
 {
-    ifstream inFile("./Page/MainPage.txt");
-    string line;
-    while (getline(inFile, line))
-    {
-        cout << line << endl;
-    }
-    inFile.close();
+    // ifstream inFile("./Page/MainPage.txt");
+    // string line;
+    // while (getline(inFile, line))
+    // {
+    //     cout << line << endl;
+    // }
+    // inFile.close();
 
     char data[200][200] =
         {
@@ -44,12 +42,12 @@ void Home::menu()
     switch (key)
     {
     case 1:
-        KhachHangMenu::login();
+        KhachHangMenu::KH_main();
         system("pause");
         break;
 
     case 2:
-        AdminMenu::login();
+        AdminMenu::AD_main();
         system("pause");
         break;
 

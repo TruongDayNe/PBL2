@@ -5,7 +5,6 @@
 #include <string>
 #include <vector>
 #include <windows.h>
-using namespace std;
 
 #ifdef TEXTTABLE_ENCODE_MULTIBYTE_STRINGS
 #include <clocale>
@@ -22,7 +21,7 @@ public:
 		LEFT,
 		RIGHT
 	};
-	typedef vector<string> Row;
+	typedef std::vector<std::string> Row;
 	TextTable()
 		: _horizontal('-'), _vertical('|'), _corner('+'), _has_ruler(true) {}
 
@@ -45,7 +44,7 @@ public:
 
 	char horizontal() const { return _horizontal; }
 
-	void add(const string &content) { _current.push_back(content); }
+	void add(const std::string &content) { _current.push_back(content); }
 
 	void endOfRow()
 	{
@@ -69,7 +68,7 @@ public:
 		addRow(container.begin(), container.end());
 	}
 
-	const vector<Row> &rows() const { return _rows; }
+	const std::vector<Row> &rows() const { return _rows; }
 
 	void setup() const
 	{
@@ -77,9 +76,9 @@ public:
 		setupAlignment();
 	}
 
-	string ruler() const
+	std::string ruler() const
 	{
-		string result;
+		std::string result;
 		result += _corner;
 		for (auto width = _width.begin(); width != _width.end(); ++width)
 		{
@@ -94,7 +93,7 @@ public:
 
 	bool has_ruler() const { return _has_ruler; }
 
-	int correctDistance(const string &string_to_correct) const
+	int correctDistance(const std::string &string_to_correct) const
 	{
 		return static_cast<int>(string_to_correct.size()) -
 			   static_cast<int>(glyphLength(string_to_correct));
@@ -106,14 +105,14 @@ private:
 	const char _corner;
 	const bool _has_ruler;
 	Row _current;
-	vector<Row> _rows;
-	vector<unsigned> mutable _width;
-	vector<unsigned> mutable _utf8width;
-	map<unsigned, Alignment> mutable _alignment;
+	std::vector<Row> _rows;
+	std::vector<unsigned> mutable _width;
+	std::vector<unsigned> mutable _utf8width;
+	std::map<unsigned, Alignment> mutable _alignment;
 
-	static string repeat(unsigned times, char c)
+	static std::string repeat(unsigned times, char c)
 	{
-		string result;
+		std::string result;
 		for (; times > 0; --times)
 			result += c;
 
@@ -122,7 +121,7 @@ private:
 
 	unsigned columns() const { return _rows[0].size(); }
 
-	unsigned glyphLength(const string &s) const
+	unsigned glyphLength(const std::string &s) const
 	{
 		unsigned int _byteLength = s.length();
 		#ifdef TEXTTABLE_ENCODE_MULTIBYTE_STRINGS
@@ -181,9 +180,9 @@ private:
 	}
 };
 
-inline ostream &operator<<(ostream &stream, TextTable const &table)
+inline std::ostream &operator<<(std::ostream &stream, TextTable const &table)
 {
-	string tab = "                    ";
+	std::string tab = "                    ";
 	HANDLE color;
 	color = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(color, 11);
@@ -202,12 +201,12 @@ inline ostream &operator<<(ostream &stream, TextTable const &table)
 		stream << tab << table.vertical();
 		for (unsigned i = 0; i < row.size(); ++i)
 		{
-			auto alignment = table.alignment(i) == TextTable::Alignment::LEFT ? left : right;
+			auto alignment = table.alignment(i) == TextTable::Alignment::LEFT ? std::left : std::right;
 			// setw( width ) works as follows: a string which goes in the stream with byte length (!) l is filled with n spaces so that l+n=width.
 			// For a utf8 encoded string the glyph length g might be smaller than l. We need n spaces so that g+n=width which is equivalent to g+n+l-l=width ==> l+n = width+l-g
 			// l-g (that means glyph length minus byte length) has to be added to the width argument.
 			// l-g is computed by correctDistance.
-			stream << setw(table.width(i) + table.correctDistance(row[i])) << alignment << row[i];
+			stream << std::setw(table.width(i) + table.correctDistance(row[i])) << alignment << row[i];
 			if (i == 0 && rowIterator != table.rows().begin())
 			{
 				SetConsoleTextAttribute(color, 7);

@@ -1,7 +1,9 @@
-#pragma once
+#ifndef LINKEDLIST_H
+#define LINKEDLIST_H
 #include <iostream>
-using namespace std;
 
+template <class T>
+class LinkedList;
 template <class T>
 class Node
 {
@@ -167,11 +169,11 @@ public:
     {
         if (head == NULL)
         {
-            cout << "Empty list!";
+            std::cout << "Empty list!";
         }
         else if (index >= length() || index < 0)
         {
-            cout << "Index out of bound!";
+            std::cout << "Index out of bound!";
         }
 
         if (index == 0)
@@ -202,3 +204,4 @@ public:
         return false;
     }
 };
+#endif

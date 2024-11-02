@@ -1,17 +1,8 @@
-#pragma once
-#include "../Library/Console.cpp"
-#include "../Business/Ticket.cpp"
-#include "../Management/QuanLiKhachHang.cpp"
-#include <iostream>
-#include <fstream>
-#include <iomanip>
-#include <string>
-#include <cstring>
-using namespace std;
+#include "QuanLiReceipt.h"
 
-string lineReceiptFormat(string key, string info)
+std::string lineReceiptFormat(std::string key, std::string info)
 {
-    string s = key;
+    std::string s = key;
     int n = 57 - key.length() - info.length();
     for (int i = 0; i < n; i++)
     {
@@ -22,9 +13,9 @@ string lineReceiptFormat(string key, string info)
     return s;
 }
 
-string lineReceiptFormat(string qty, string item, string amount)
+std::string lineReceiptFormat(std::string qty, std::string item, std::string amount)
 {
-    string s = qty;
+    std::string s = qty;
     int n = 6 - qty.length();
     for (int i = 0; i < n; i++)
     {
@@ -41,65 +32,65 @@ string lineReceiptFormat(string qty, string item, string amount)
     return s;
 }
 
-void printReceipt(int KhachHangID, string recID)
+void printReceipt(int KhachHangID, std::string recID)
 {
-    ifstream inFile("./Page/Receipt.txt");
-    ifstream inFileRec("./Database/ReceiptDB/" + to_string(KhachHangID) + "_" + recID + ".txt");
+    std::ifstream inFile("./Page/Receipt.txt");
+    std::ifstream inFileRec("./Database/ReceiptDB/" + std::to_string(KhachHangID) + "_" + recID + ".txt");
 
-    string line;
-    string lineRec;
+    std::string line;
+    std::string lineRec;
     int firstIndex;
 
     for (int i = 0; i < 9; i++)
     {
         getline(inFile, line);
-        cout << line << endl;
+        std::cout << line << std::endl;
     }
 
-    cout << lineReceiptFormat("No.", recID) << endl;
+    std::cout << lineReceiptFormat("No.", recID) << std::endl;
 
     getline(inFileRec, lineRec);
-    cout << lineReceiptFormat("Issue Date", lineRec) << endl;
+    std::cout << lineReceiptFormat("Issue Date", lineRec) << std::endl;
     getline(inFileRec, lineRec);
-    int total = stoi(lineRec);
+    int total = std::stoi(lineRec);
 
     for (int i = 0; i < 3; i++)
     {
         getline(inFile, line);
-        cout << line << endl;
+        std::cout << line << std::endl;
     }
 
     int quantity, ID_ve, amount;
     while (getline(inFileRec, lineRec))
     {
         firstIndex = lineRec.find_first_of(" ");
-        quantity = stoi(lineRec.substr(0, firstIndex));
-        ID_ve = stoi(lineRec.substr(firstIndex + 1));
+        quantity = std::stoi(lineRec.substr(0, firstIndex));
+        ID_ve = std::stoi(lineRec.substr(firstIndex + 1));
         Ticket ve = getTicketFromDatabase(ID_ve);
         amount = quantity * ve.getgiaVe();
-        cout << lineReceiptFormat(to_string(quantity), ve.getID_chuyenBay(), formatCurrency(amount)) << endl;
+        std::cout << lineReceiptFormat(std::to_string(quantity), ve.getID_chuyenBay(), formatCurrency(amount)) << std::endl;
     }
 
     for (int i = 0; i < 1; i++)
     {
         getline(inFile, line);
-        cout << line << endl;
+        std::cout << line << std::endl;
     }
 
-    cout << lineReceiptFormat("TOTAL AMOUNT", formatCurrency(total)) << endl;
+    std::cout << lineReceiptFormat("TOTAL AMOUNT", formatCurrency(total)) << std::endl;
 
     while (getline(inFile, line))
     {
-        cout << line << endl;
+        std::cout << line << std::endl;
     }
 
     inFileRec.close();
     inFile.close();
 }
 
-bool isValidReceiptID(string recID, KhachHang &KhachHang)
+bool isValidReceiptID(std::string recID, KhachHang &KhachHang)
 {
-    LinkedList<string> recs = KhachHang.Rec();
+    LinkedList<std::string> recs = KhachHang.Rec();
 
     for (int i = 0; i < recs.length(); i++)
     {
@@ -113,54 +104,54 @@ bool isValidReceiptID(string recID, KhachHang &KhachHang)
 
 void getReceiptFromDatabase(int KhachHangID, int recID)
 {
-    ifstream inFile("./Page/Receipt.txt");
-    ifstream inFileRec("./Database/ReceiptDB/" + to_string(KhachHangID) + "_" + to_string(recID) + ".txt");
+    std::ifstream inFile("./Page/Receipt.txt");
+    std::ifstream inFileRec("./Database/ReceiptDB/" + std::to_string(KhachHangID) + "_" + std::to_string(recID) + ".txt");
 
-    string line;
-    string lineRec;
+    std::string line;
+    std::string lineRec;
     int firstIndex;
 
     for (int i = 0; i < 9; i++)
     {
         getline(inFile, line);
-        cout << line << endl;
+        std::cout << line << std::endl;
     }
 
-    cout << lineReceiptFormat("No.", to_string(recID)) << endl;
+    std::cout << lineReceiptFormat("No.", std::to_string(recID)) << std::endl;
 
     getline(inFileRec, lineRec);
-    cout << lineReceiptFormat("Terminal.", lineRec) << endl;
+    std::cout << lineReceiptFormat("Terminal.", lineRec) << std::endl;
     getline(inFileRec, lineRec);
     int total = stoi(lineRec);
 
     for (int i = 0; i < 3; i++)
     {
         getline(inFile, line);
-        cout << line << endl;
+        std::cout << line << std::endl;
     }
 
     int quantity, ID_ve, amount;
     while (getline(inFileRec, lineRec))
     {
         firstIndex = lineRec.find_first_of(" ");
-        quantity = stoi(lineRec.substr(0, firstIndex));
-        ID_ve = stoi(lineRec.substr(firstIndex + 1));
+        quantity = std::stoi(lineRec.substr(0, firstIndex));
+        ID_ve = std::stoi(lineRec.substr(firstIndex + 1));
         Ticket ve = getTicketFromDatabase(ID_ve);
         amount = quantity * ve.getgiaVe();
-        cout << lineReceiptFormat(to_string(quantity), ve.getID_chuyenBay(), formatCurrency(amount)) << endl;
+        std::cout << lineReceiptFormat(std::to_string(quantity), ve.getID_chuyenBay(), formatCurrency(amount)) << std::endl;
     }
 
     for (int i = 0; i < 1; i++)
     {
         getline(inFile, line);
-        cout << line << endl;
+        std::cout << line << std::endl;
     }
 
-    cout << lineReceiptFormat("TOTAL AMOUNT", formatCurrency(total)) << endl;
+    std::cout << lineReceiptFormat("TOTAL AMOUNT", formatCurrency(total)) << std::endl;
 
     while (getline(inFile, line))
     {
-        cout << line << endl;
+        std::cout << line << std::endl;
     }
 
     inFileRec.close();
@@ -181,7 +172,7 @@ void getAllKhachHangReceipts(KhachHang &KhachHang)
     int total = 0;
     for (int i = 0; i < n; i++)
     {
-        table.add(to_string(KhachHang.getID()));
+        table.add(std::to_string(KhachHang.getID()));
         table.add(KhachHang.getName());
         table.add(KhachHang.Rec().get(i));
         table.add(formatCurrency(getReceiptTotal(KhachHang.getID(), KhachHang.Rec().get(i))));
@@ -196,30 +187,30 @@ void getAllKhachHangReceipts(KhachHang &KhachHang)
     table.add("");
     table.endOfRow();
 
-    cout << table << endl;
+    std::cout << table << std::endl;
 }
 
-void addReceiptToDatabase(int KhachHangID, Cart _Cart, LinkedList<string> Rec)
+void addReceiptToDatabase(int KhachHangID, Cart _Cart, LinkedList<std::string> Rec)
 {
-    string recID = "REC#" + to_string(Rec.length() + 1);
+    std::string recID = "REC#" + std::to_string(Rec.length() + 1);
     Rec.addLast(recID);
 
-    string fileName = to_string(KhachHangID) + "_" + recID + ".txt";
-    string filePath = "./Database/ReceiptDB/" + fileName;
-    ofstream outFileKhachHang("./Database/UserDB/KhachHangDB/KhachHang_" + to_string(KhachHangID) + ".txt", ios::app);
-    outFileKhachHang << recID << endl;
+    std::string fileName = std::to_string(KhachHangID) + "_" + recID + ".txt";
+    std::string filePath = "./Database/ReceiptDB/" + fileName;
+    std::ofstream outFileKhachHang("./Database/UserDB/KhachHangDB/KhachHang_" + std::to_string(KhachHangID) + ".txt", std::ios::app);
+    outFileKhachHang << recID << std::endl;
     outFileKhachHang.close();
 
-    ofstream outFile(filePath);
+    std::ofstream outFile(filePath);
 
-    string date = currentDateTime();
-    outFile << date << endl;
-    outFile << _Cart.Total() << endl;
+    std::string date = currentDateTime();
+    outFile << date << std::endl;
+    outFile << _Cart.Total() <<std:: endl;
 
     for (int i = 0; i < _Cart.ID_veMua().length(); i++)
     {
         outFile << _Cart.soVeMua().get(i) << " ";
-        outFile << _Cart.ID_veMua().get(i) << endl;
+        outFile << _Cart.ID_veMua().get(i) << std::endl;
     }
 
     outFile.close();
@@ -229,10 +220,10 @@ void addReceiptToDatabase(int KhachHangID, Cart _Cart, LinkedList<string> Rec)
     // _Cart.emptyCart();
 }
 
-void deleteReceiptFromDatabase(int KhachHangID, string recID)
+void deleteReceiptFromDatabase(int KhachHangID, std::string recID)
 {
-    string fileName = to_string(KhachHangID) + "_" + recID + ".txt";
-    string filePath = "./Database/ReceiptDB/" + fileName;
+    std::string fileName = std::to_string(KhachHangID) + "_" + recID + ".txt";
+    std::string filePath = "./Database/ReceiptDB/" + fileName;
 
     char char_filePath[(filePath + fileName).length() + 1];
     strcpy(char_filePath, (filePath + fileName).c_str());

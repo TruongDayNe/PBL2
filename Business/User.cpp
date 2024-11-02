@@ -1,9 +1,4 @@
-#pragma once
 #include "User.h"
-#include <iostream>
-#include <string>
-#include "../Management/QuanLiVe.cpp"
-using namespace std;
 
 User::User()
 {
@@ -13,20 +8,20 @@ User::User()
     this->_Password = "";
 }
 
-User::User(int id, string name)
+User::User(int id, std::string name)
 {
     this->_ID = id;
     this->_Name = name;
 }
 
-User::User(int id, string email, string password)
+User::User(int id, std::string email, std::string password)
 {
     this->_ID = id;
     this->_Email = email;
     this->_Password = password;
 }
 
-User::User(int id, string name, string email, string password)
+User::User(int id, std::string name, std::string email, std::string password)
 {
     this->_ID = id;
     this->_Name = name;
@@ -48,32 +43,32 @@ void User::setID(int id)
     this->_ID = id;
 }
 
-string User::getName()
+std::string User::getName()
 {
     return this->_Name;
 }
 
-void User::setName(string name)
+void User::setName(std::string name)
 {
     this->_Name = name;
 }
 
-string User::getEmail()
+std::string User::getEmail()
 {
     return this->_Email;
 }
 
-void User::setEmail(string email)
+void User::setEmail(std::string email)
 {
     this->_Email = email;
 }
 
-string User::getPassword()
+std::string User::getPassword()
 {
     return this->_Password;
 }
 
-void User::setPassword(string password)
+void User::setPassword(std::string password)
 {
     this->_Password = password;
 }
@@ -83,7 +78,7 @@ void User::searchByTicketID()
     searchByTicketsID();
 }
 
-void User::printAllDrug()
+void User::printAllTicket()
 {
     printAllTickets();
 }

@@ -1,19 +1,10 @@
-#pragma once
-#include "../Business/KhachHang.cpp"
-#include "../LinkedList.cpp"
-#include "../Library/Console.cpp"
-#include "../Library/Table.cpp"
-#include "../Menu/KhachHangMenu.cpp"
-#include <fstream>
-#include <string>
-#include <cstring>
-#include <iostream>
+#include "QuanLiKhachHang.h"
 
 bool isValidKhachHangID(int KhachHangID)
 {
-    ifstream inFile("./Database/UserDB/KhachHangDB/KhachHang_ID.txt");
-    string x;
-    string line;
+    std::ifstream inFile("./Database/UserDB/KhachHangDB/KhachHang_ID.txt");
+    std::string x;
+    std::string line;
     while (getline(inFile, x))
     {
         line = x;
@@ -30,24 +21,24 @@ void addKhachHangToDatabase(KhachHang &KhachHang)
 {
     // generate file path
     // start from main.cpp
-    string fileName = "KhachHang_" + to_string(KhachHang.getID()) + ".txt";
-    string filePath = "./Database/UserDB/KhachHangDB/" + fileName;
+    std::string fileName = "KhachHang_" + std::to_string(KhachHang.getID()) + ".txt";
+    std::string filePath = "./Database/UserDB/KhachHangDB/" + fileName;
 
     // write KhachHang to database
-    ofstream outFile(filePath);
-    outFile << KhachHang.getName() << endl;
-    outFile << KhachHang.getEmail() << endl;
-    outFile << KhachHang.getPassword() << endl;
+    std::ofstream outFile(filePath);
+    outFile << KhachHang.getName() << std::endl;
+    outFile << KhachHang.getEmail() << std::endl;
+    outFile << KhachHang.getPassword() << std::endl;
     for (int i = 0; i < KhachHang.Rec().length(); i++)
     {
-        outFile << KhachHang.Rec().get(i) << endl;
+        outFile << KhachHang.Rec().get(i) << std::endl;
     }
 
     // write KhachHangid to KhachHang_id.txt
     if (!isValidKhachHangID(KhachHang.getID()))
     {
-        ofstream outFileKhachHangId("./Database/UserDB/KhachHangDB/KhachHang_ID.txt", ios::app);
-        outFileKhachHangId << KhachHang.getID() << endl;
+        std::ofstream outFileKhachHangId("./Database/UserDB/KhachHangDB/KhachHang_ID.txt", std::ios::app);
+        outFileKhachHangId << KhachHang.getID() << std::endl;
         outFileKhachHangId.close();
     }
 
@@ -57,17 +48,17 @@ void addKhachHangToDatabase(KhachHang &KhachHang)
 
 KhachHang addNewKhachHang()
 {
-    cout << spaceLineChoice << "New KhachHang:\n";
+    std::cout << spaceLineChoice << "New KhachHang:\n";
 
-    string name = getStringInput("Name");
-    string email = getEmailInput();
+    std::string name = getStringInput("Name");
+    std::string email = getEmailInput();
     while (!isUniqueEmail(email))
     {
         printError("Email already exists, please login instead!");
         system("pause");
-        KhachHangMenu::main();
+        KhachHangMenu::KH_main();
     }
-    string pwd = getPasswordInput("Password");
+    std::string pwd = getPasswordInput("Password");
 
     // create new KhachHang object
     KhachHang khachhang = KhachHang(getLastKhachHangId(), name, email, pwd);
@@ -75,10 +66,10 @@ KhachHang addNewKhachHang()
     // save to database
     addKhachHangToDatabase(khachhang);
 
-    ofstream outFile("./Database/UserDB/user_ID.txt", ios::app);
+    std::ofstream outFile("./Database/UserDB/user_ID.txt", std::ios::app);
     outFile << khachhang.getID() << " ";
     outFile << khachhang.getEmail() << " ";
-    outFile << khachhang.getPassword() << endl;
+    outFile << khachhang.getPassword() << std::endl;
     outFile.close();
 
     // update new KhachHang id range
@@ -91,15 +82,15 @@ KhachHang getKhachHangFromDatabase(int KhachHangID)
 {
     // take file path
     // start from main.cpp
-    string filePath = "./Database/UserDB/KhachHangDB/";
-    string fileName = "KhachHang_" + to_string(KhachHangID) + ".txt";
+    std::string filePath = "./Database/UserDB/KhachHangDB/";
+    std::string fileName = "KhachHang_" + std::to_string(KhachHangID) + ".txt";
 
-    ifstream inFile(filePath + fileName);
-    string line;
+    std::ifstream inFile(filePath + fileName);
+    std::string line;
 
-    string name;
-    string email;
-    string password;
+    std::string name;
+    std::string email;
+    std::string password;
 
     getline(inFile, line);
     name = line;
@@ -110,7 +101,7 @@ KhachHang getKhachHangFromDatabase(int KhachHangID)
     getline(inFile, line);
     password = line;
 
-    LinkedList<string> recs;
+    LinkedList<std::string> recs;
     while (getline(inFile, line))
     {
         recs.addLast(line);
@@ -123,8 +114,8 @@ void deleteKhachHangFromDatabase(int KhachHangID)
 {
     KhachHang KhachHang = getKhachHangFromDatabase(KhachHangID);
 
-    string filePath = "./Database/UserDB/KhachHangDB/";
-    string fileName = "KhachHang_" + to_string(KhachHangID) + ".txt";
+    std::string filePath = "./Database/UserDB/KhachHangDB/";
+    std::string fileName = "KhachHang_" + std::to_string(KhachHangID) + ".txt";
 
     char char_filePath[(filePath + fileName).length() + 1];
     strcpy(char_filePath, (filePath + fileName).c_str());
@@ -134,8 +125,8 @@ void deleteKhachHangFromDatabase(int KhachHangID)
     if (status == 0)
     {
         printSuccess("Successfully delete this KhachHang!");
-        eraseFileLine(filePath + "KhachHang_ID.txt", to_string(KhachHangID));
-        eraseFileLine("./Database/UserDB/user_ID.txt", to_string(KhachHangID) + " " + KhachHang.getEmail() + " " + KhachHang.getPassword());
+        eraseFileLine(filePath + "KhachHang_ID.txt", std::to_string(KhachHangID));
+        eraseFileLine("./Database/UserDB/user_ID.txt", std::to_string(KhachHangID) + " " + KhachHang.getEmail() + " " + KhachHang.getPassword());
     }
     else
     {
@@ -145,27 +136,44 @@ void deleteKhachHangFromDatabase(int KhachHangID)
 
 void updateKhachHangInDatabase(int KhachHangID)
 {
-    KhachHang oldKhachHang = getKhachHangFromDatabase(KhachHangID);
-    KhachHang KhachHang = getKhachHangFromDatabase(KhachHangID);
+    KhachHang oldkhachHang = getKhachHangFromDatabase(KhachHangID);
+    KhachHang khachHang = getKhachHangFromDatabase(KhachHangID);
 
-    string filePath = "./Database/UserDB/KhachHangDB/";
-    string fileName = "KhachHang_" + to_string(KhachHangID) + ".txt";
+    std::string filePath = "./Database/UserDB/KhachHangDB/";
+    std::string fileName = "KhachHang_" +std:: to_string(KhachHangID) + ".txt";
 
     char char_filePath[(filePath + fileName).length() + 1];
     strcpy(char_filePath, (filePath + fileName).c_str());
 
     int status = remove(char_filePath);
 
-    string name = updateComponent("Name", KhachHang.getName());
-    string email = updateComponent("Email", KhachHang.getEmail());
-    string password = updatePassword(KhachHang.getPassword());
+    std::string name = updateComponent("Name", khachHang.getName());
+    std::string email = updateComponent("Email", khachHang.getEmail());
+    std::string password = updatePassword(khachHang.getPassword());
 
-    KhachHang.setID(KhachHangID);
-    KhachHang.setName(name);
-    KhachHang.setEmail(email);
-    KhachHang.setPassword(password);
-    KhachHang.setRec(oldKhachHang.Rec());
+    khachHang.setID(KhachHangID);
+    khachHang.setName(name);
+    khachHang.setEmail(email);
+    khachHang.setPassword(password);
+    khachHang.setRec(oldkhachHang.Rec());
 
-    addKhachHangToDatabase(KhachHang);
-    updateLine("./Database/UserDB/user_ID.txt", to_string(oldKhachHang.getID()) + " " + oldKhachHang.getEmail() + " " + oldKhachHang.getPassword(), to_string(KhachHang.getID()) + " " + KhachHang.getEmail() + " " + KhachHang.getPassword());
+    addKhachHangToDatabase(khachHang);
+    updateLine("./Database/UserDB/user_ID.txt", std::to_string(oldkhachHang.getID()) + " " + oldkhachHang.getEmail() + " " + oldkhachHang.getPassword(), std::to_string(khachHang.getID()) + " " + khachHang.getEmail() + " " + khachHang.getPassword());
+}
+
+void printKhachHang(KhachHang &khachHang)
+{
+    TextTable table;
+
+    table.add("ID");
+    table.add("Name");
+    table.add("Email");
+    table.endOfRow();
+
+    table.add(std::to_string(khachHang.getID()));
+    table.add(khachHang.getName());
+    table.add(khachHang.getEmail());
+    table.endOfRow();
+
+    std::cout << table << std::endl;
 }

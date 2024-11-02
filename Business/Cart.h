@@ -1,7 +1,13 @@
 #pragma once
-#include "./LinkedList.cpp"
-#include "./Ticket.h"
-#include "./Ticket.cpp"
+
+#include "../LinkedList.h"
+#include "Ticket.h"
+#include "../Management/QuanLiVe.h"
+#include "../Library/Table.cpp"
+#include "../Library/Console.h"
+
+#ifndef CART_H
+#define CART_H
 
 class Cart
 {
@@ -32,3 +38,4 @@ public:
     // Set Total //Calculate total amount (money) in cart
     int Total();
 };
+#endif

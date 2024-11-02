@@ -1,74 +1,59 @@
-#pragma once
-#include "Menu.h"
-#include "QuanLiVe.h"
-#include "Amin"
-#include "QuanLiChuyenBay.h"
-#include "Console.cpp"
-#include <iostream>
-using namespace std;
+#include "AdminMenu.h"
 
-void AdminMenu::main()
+void AdminMenu::AD_main()
 {
     system("cls");
-    ifstream inFile("PBL2\Menu\AdminMenu.cpp")
-        string line;
-    while (getline(inFile, line))
-    {
-        cout << line << endl;
-    }
-    inFile.close();
+    // std::ifstream inFile("./PBL2/Menu/AdminMenu.txt");
+    // std::string line;
+    // while (getline(inFile, line))
+    // {
+    //     std::cout << line << std::endl;
+    // }
+    // inFile.close();
     char data[200][200] = {
-        "\t Login",
-        "\t   Sign Up",
+        "\t   Login",
         "\t   Back",
     };
-    MenuBox MENU(3, data);
+    MenuBox MENU(2, data);
     int key = MENU.menu();
     switch (key)
     {
     case 1:
     {
-        KhachHangMenu::login();
+        AdminMenu::login();
         system("pause");
         break;
     }
 
     case 2:
-    {
-        KhachHangMenu::signUp();
-        system("pause");
-        break;
-    }
-
-    case 3:
         Home::menu();
         break;
     }
 }
-void Admin::login()
+void AdminMenu::login()
 {
     system("cls");
 
-    const string ADMIN_USERNAME = "admin";
-    const string ADMIN_PASSWORD = "admin123";
+    const std::string ADMIN_USERNAME = "admin";
+    const std::string ADMIN_PASSWORD = "admin123";
     int attempts = 3;
 
     do
     {
-        cout << "\n\t\t=== ADMIN LOGIN ===" << endl;
-        cout << "\t\t-------------------" << endl;
+        std::cout << "\n\t\t=== ADMIN LOGIN ===" << std::endl;
+        std::cout << "\t\t-------------------" << std::endl;
 
-        string username;
-        cout << "\t\tUsername: ";
-        cin >> username;
+        std::string username;
+        std::cout << "\t\tUsername: ";
+        std::cin >> username;
 
-        string password = getPasswordInput("Password");
+        std::string password = getPasswordInput("Password");
 
         if (username == ADMIN_USERNAME && password == ADMIN_PASSWORD)
         {
-            cout << "\n\t\tLogin successful!" << endl;
+            printSuccess("Login successful!");
             system("pause");
-            AdminMenu::main(); // Chuyển đến menu admin
+            AdminMenu::AD_main(); // Chuyển đến menu admin
             return;
         }
         else
@@ -76,7 +61,7 @@ void Admin::login()
             attempts--;
             if (attempts > 0)
             {
-                printError("Invalid username/password. " + to_string(attempts) + " attempts remaining.");
+                printError("Invalid username/password. " + std::to_string(attempts) + " attempts remaining.");
                 system("pause");
                 system("cls");
             }
@@ -89,53 +74,39 @@ void Admin::login()
         }
     } while (attempts > 0);
 }
-void Admin::signUp()
-{
-    system("cls");
-    ifstream inFile("./Page/AdminSignUp.txt");
-    string line;
-    while (getline(inFile, line))
-    {
-        cout << line << endl;
-    }
-    inFile.close();
-     KhachHang = addNewKhachHang();
-    KhachHangMenu::menu(KhachHang);
-}
 
 void AdminMenu::menu(Admin &Admin)
 {
     system("cls");
-
+    int ticketID;    
     while (true)
     {
         int key = AdminMenu::printTask();
         switch (key)
         {
         case 1:
-            cout << "Nhập ID vé cần tra cứu";
-            int ticketID;
-            cin >> ticketID;
-            searchByTicketsID(ticketID);
+            std::cout << "Nhập ID vé cần tra cứu";
+            
+            std::cin >> ticketID;
+            // searchByTicketsID(ticketID);
             break;
         case 2:
-            cout << "Nhập ID vé cần chỉnh sửa";
-            int ticketID;
-            cin >> ticketID;
+            std::cout << "Nhập ID vé cần chỉnh sửa";
+            std::cin >> ticketID;
             updateTicketInDatabase(ticketID);
             break;
         case 3:
             addNewTicketToDataBase();
-            cout<< "Thêm vé thành công";
-            printReceipt();
+            printSuccess("Thêm vé thành công");
+            // printReceipt();
 
             break;
         case 4: 
-            cout << "Nhập ID vé cần hủy";
+            std::cout << "Nhập ID vé cần hủy";
             int ticketID;
-            cin >> ticketID;
+            std::cin >> ticketID;
             deleteTicketFromDatabase(ticketID);
-            cout<<"Hủy vé thành công";
+            std::cout<<"Hủy vé thành công";
         case 5:
 
         default:
@@ -147,11 +118,11 @@ void AdminMenu::menu(Admin &Admin)
 int AdminMenu::printTask()
 {
     system("cls");
-    ifstream inFile("./Page/AdminMenu.txt");
-    string line;
+    std::ifstream inFile("./Page/AdminMenu.txt");
+    std::string line;
     while (getline(inFile, line))
     {
-        cout << line << endl;
+        std::cout << line << std::endl;
     }
     inFile.close();
 

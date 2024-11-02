@@ -1,50 +1,56 @@
+// utils.h
 #pragma once
 
+#ifndef CONSOLE_H
+#define CONSOLE_H
+
+#include <iostream>
+#include <windows.h>
 #include <string>
+#include <sstream>
+#include <iomanip>
 #include <ctime>
+#include <set>
+#include <fstream>
+#include <algorithm>
+#include <conio.h>
+#include "../LinkedList.h"
 
-using namespace std;
+// Constants
+extern std::string spaceLine;
+extern std::string spaceLineChoice;
 
-// Các hàm xử lý thời gian
-string currentDateTime();
-time_t convertToTimeT(const string& dateTime);
-bool isExpired(const string& dateTime);
-
-// Các hàm xử lý đầu vào/đầu ra
-void printLineColor(string line, int color_code);
-string getStringInput(string title);
-int getIntInput(string title);
-bool isNumber(string s);
-void printError(string status);
-void printSuccess(string status);
-string getYesNoInput(string title);
-
-// Các hàm xử lý file
-void updateLine(string path, int numLine, int replaceValue);
-void updateLine(string path, string inLine, string replaceValue);
-void eraseFileLine(string path, string eraseLine);
-void eraseFileLine(string path, int eraseLine);
-
-// Các hàm xử lý dữ liệu
-string formatInt(int num);
-string formatCurrency(int price);
-size_t findCaseInsensitive(string data, string toSearch, size_t pos = 0);
-
-// Các hàm xử lý email và mật khẩu
-bool isEmail(string email);
-string getEmailInput();
-string getPasswordInput(string title);
-LinkedList<string> getAllEmail();
-bool isUniqueEmail(string emailToCheck);
-
-// Các hàm lấy ID và thông tin
+// Function Prototypes
+std::string currentDateTime();
+time_t convertToTimeT(const std::string& dateTime);
+bool isExpired(const std::string& dateTime);
+void printLineColor(std::string line, int color_code);
+std::string getStringInput(std::string title);
+int getIntInput(std::string title);
+bool isNumber(std::string s);
+void printError(std::string status);
+int updateLastTicketId();
+std::string getYesNoInput(std::string title);
+std::string updateComponent(std::string key, std::string value);
+int updateIntComponent(std::string key, int value);
+void updateLine(std::string path, int numLine, int replaceValue);
+void updateLine(std::string path, std::string inLine, std::string replaceValue);
+void printSuccess(std::string status);
+void eraseFileLine(std::string path, std::string eraseLine);
+void eraseFileLine(std::string path, int eraseLine);
+std::string formatInt(int num);
+std::string formatCurrency(int price);
+size_t findCaseInsensitive(std::string data, std::string toSearch, size_t pos = 0);
+bool isEmail(std::string email);
+std::string getEmailInput();
+std::string getPasswordInput(std::string title);
+LinkedList<std::string> getAllEmail();
+bool isUniqueEmail(std::string emailToCheck);
 int getLastKhachHangId();
 int getLastTicketId();
-string getReceiptDateTime(int patientID, string recID);
-int getReceiptTotal(int patientID, string recID);
-
-// Các hàm cập nhật
+std::string getReceiptDateTime(int patientID, std::string recID);
+int getReceiptTotal(int patientID, std::string recID);
 int updatePrice(int old_price);
-string updatePassword(string old_pass);
-string updateComponent(string key, string value);
-int updateIntComponent(string key, int value);
+std::string updatePassword(std::string old_pass);
+
+#endif
