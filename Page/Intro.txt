@@ -12,11 +12,11 @@
 ║                              ║ Mô tả chương trình ║                               ║
 ║                              ╚════════════════════╝                               ║
 ║                                                                                   ║
-║     - Đọc dữ liệu ma trận từ bàn phím hoặc file                                   ║
-║     - Biến đổi thành ma trận tam giác trên và thể hiện các bước biến đổi          ║
-║     - Giải ma trận tam giác trên bằng quá trình ngược, in ra vecto nghiệm, in ra  ║
-║       đa thức p(x) có các hệ số bằng tổng các cột                                 ║
-║     - Tính Q(x) = Sum (p(xi)) với xi là nghiệm                                    ║
-║     - Lưu các dữ liệu vào file                                                    ║
+║                                                                                   ║
+║                                                                                   ║
+║                                                                                   ║
+║                                                                                   ║
+║                                                                                   ║
+║                                                                                   ║
 ║                                                                                   ║
 ╚═══════════════════════════════════════════════════════════════════════════════════╝

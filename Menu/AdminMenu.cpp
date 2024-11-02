@@ -26,7 +26,7 @@ void AdminMenu::AD_main()
     }
 
     case 2:
-        Home::menu();
+        exit(0);
         break;
     }
 }
