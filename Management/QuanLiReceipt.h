@@ -6,9 +6,9 @@
 #include <string>
 #include <cstring>
 
-#include "D:/Code/PBL2/Library/Console.h"
-#include "D:/Code/PBL2/Business/Ticket.h"
-#include "D:/Code/PBL2/Management/QuanLiKhachHang.h"
+#include "../Library/Console.h"
+#include "../Business/Ticket.h"
+#include "../Management/QuanLiKhachHang.h"
 class KhachHang;
 
 // Function prototypes

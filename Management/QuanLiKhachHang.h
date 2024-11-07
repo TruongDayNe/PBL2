@@ -1,7 +1,7 @@
 #pragma once
 
-#include "D:/Code/PBL2/Business/KhachHang.h"  // Only include the header file, not the implementation file
-#include "D:/Code/PBL2/Menu/KhachHangMenu.h"
+#include "../Business/KhachHang.h"  // Only include the header file, not the implementation file
+#include "../Menu/KhachHangMenu.h"
 #include <fstream>
 #include <string>
 #include <cstring>
