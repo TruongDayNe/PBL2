@@ -1,7 +1,7 @@
 #pragma once
 
 #include "User.h"
-#include "Cart.h"
+//#include "Cart.h"
 #include "../Management/QuanLiVe.h"
 #include "../Management/QuanLiReceipt.h"
 #include <iostream>
@@ -11,7 +11,7 @@
 
 class KhachHang : public User {
     private:
-        Cart _Cart;
+        //Cart _Cart;
         LinkedList<std::string> _Rec;
     public:
         // Constructor
@@ -26,7 +26,7 @@ class KhachHang : public User {
     void updateInfo();
 
     // Get KhachHang item in Cart
-    Cart &getCart();
+    //Cart &getCart();
 
     // Get list of receipt ID
     LinkedList<std::string> Rec();

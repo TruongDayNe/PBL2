@@ -2,7 +2,7 @@
 
 Ticket::Ticket()
 {
-    this->ID_ve = 0;
+    
     this->ID_chuyenBay = " ";
     this->diemDi = " ";
     this->diemDen = " ";
@@ -12,9 +12,9 @@ Ticket::Ticket()
     this->giaVe = 0;
 }
 
-Ticket::Ticket(int ID_ve, std::string ID_chuyenBay, std::string diemDi, std::string diemDen, std::string loaiVe, std::string ngayKhoiHanh, int soLuongVe, int giaVe)
+Ticket::Ticket( std::string ID_chuyenBay, std::string diemDi, std::string diemDen, std::string loaiVe, std::string ngayKhoiHanh, int soLuongVe, int giaVe)
 {
-    this->ID_ve = ID_ve;
+   
     this->ID_chuyenBay = ID_chuyenBay;
     this->diemDi = diemDi;
     this->diemDen = diemDen;
@@ -26,7 +26,7 @@ Ticket::Ticket(int ID_ve, std::string ID_chuyenBay, std::string diemDi, std::str
 
 Ticket::Ticket(const Ticket& Ve)
 {
-    this->ID_ve = Ve.ID_ve;
+    // this->ID_ve = Ve.ID_ve;
     this->ID_chuyenBay = Ve.ID_chuyenBay;
     this->diemDi = Ve.diemDi;
     this->diemDen = Ve.diemDen;
@@ -38,7 +38,7 @@ Ticket::Ticket(const Ticket& Ve)
 
 Ticket& Ticket::operator = (const Ticket& Ve)
 {
-    this->ID_ve = Ve.ID_ve;
+    // this->ID_ve = Ve.ID_ve;
     this->ID_chuyenBay = Ve.ID_chuyenBay;
     this->diemDi = Ve.diemDi;
     this->diemDen = Ve.diemDen;
@@ -53,15 +53,15 @@ Ticket::~Ticket()
 {
 }
 
-int Ticket::getID_ve()
-{
-    return this->ID_ve;
-}
+// int Ticket::getID_ve()
+// {
+//     return this->ID_ve;
+// }
 
-void Ticket::setID_ve(int id)
-{
-    this->ID_ve = id;
-}
+// void Ticket::setID_ve(int id)
+// {
+//     this->ID_ve = id;
+// }
 
 std::string Ticket::getID_chuyenBay()
 {

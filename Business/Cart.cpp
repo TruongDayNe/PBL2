@@ -9,7 +9,7 @@ Cart::~Cart()
 {
 }
 
-LinkedList<int> Cart::ID_veMua()
+LinkedList<std::string> Cart::ID_veMua()
 {
     return this->ID_ve;
 }
@@ -30,9 +30,9 @@ int Cart::Total()
     return total;
 }
 
-void Cart::addTickettoCart(int id, int quantity)
+void Cart::addTickettoCart(std::string id, int quantity)
 {
-    this->ID_ve.addLast(id);
+    // this->ID_ve.addLast(id);
     this->soLuongMua.addLast(quantity);
 }
 

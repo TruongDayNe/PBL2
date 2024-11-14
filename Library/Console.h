@@ -29,7 +29,7 @@ std::string getStringInput(std::string title);
 int getIntInput(std::string title);
 bool isNumber(std::string s);
 void printError(std::string status);
-int updateLastTicketId();
+// int updateLastTicketId();
 std::string getYesNoInput(std::string title);
 std::string updateComponent(std::string key, std::string value);
 int updateIntComponent(std::string key, int value);

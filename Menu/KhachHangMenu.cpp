@@ -181,7 +181,8 @@ int KhachHangMenu::printTask()
 
 void KhachHangMenu::purchaseTicket(KhachHang &khachHang)
 {
-    int ID_ve, soLuongMua, new_soLuongVe;
+    std::string ID_ve;
+    int soLuongMua, new_soLuongVe;
     std::string request;
 
     do
@@ -189,11 +190,11 @@ void KhachHangMenu::purchaseTicket(KhachHang &khachHang)
         system("cls");
         printAllTickets();
         
-        ID_ve = getIntInput("Please enter the Ticket ID that you want to purchase");
+        ID_ve = getStringInput("Please enter the Ticket ID that you want to purchase");
         while (!isValidTicketId(ID_ve))
         {
             printError("Invalid Ticket ID, please enter again!");
-            ID_ve = getIntInput("Please enter the Ticket ID that you want to purchase");
+            ID_ve = getStringInput("Please enter the Ticket ID that you want to purchase");
         }
         Ticket Ticket = getTicketFromDatabase(ID_ve);
         soLuongMua = getIntInput("Please enter the quantity you want to purchase");
@@ -203,7 +204,7 @@ void KhachHangMenu::purchaseTicket(KhachHang &khachHang)
             soLuongMua = getIntInput("Please enter the quantity you want to purchase");
         }
         new_soLuongVe = Ticket.getsoLuongVe() - soLuongMua;
-        updateTicketQuantityInDatabase(ID_ve, new_soLuongVe);
+        updateTicketQuantityInDatabase(new_soLuongVe);
         khachHang.getCart().addTickettoCart(ID_ve, soLuongMua);
         request = getYesNoInput(spaceLineChoice + "Do you want to purchase another Ticket (y/n)");
     } while (request == "y" || request == "Y");

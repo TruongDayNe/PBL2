@@ -8,10 +8,11 @@
 #include <iostream>
 #include <string>
 
-bool isValidTicketId(int ticketID);
+bool isValidTicketId(const std::string& filghtID);
 void addTicketToDatabase(Ticket &ticket);
 void addNewTicketToDataBase();
-Ticket getTicketFromDatabase(int ticketID);
+Ticket getTicketFromDatabase(std::string ticketID);
+// Ticket getTicketFromDatabase(int ticketID);
 void deleteTicketFromDatabase(int ticketID);
 void updateTicketInDatabase(int ticketID);
 LinkedList<Ticket> getAllTicket();
@@ -20,4 +21,4 @@ void printAllTickets(LinkedList<Ticket> tickets = getAllTicket());
 void searchByTicketsID();
 LinkedList<Ticket> searchByTicketCase(std::string StarttoSearch, std::string EndtoSearch);
 void searchByTicketsPath();
-void updateTicketQuantityInDatabase(int id, int quantity); 
+void updateTicketQuantityInDatabase( int quantity); 

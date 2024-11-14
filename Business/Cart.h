@@ -12,7 +12,7 @@
 class Cart
 {
 private:
-    LinkedList<int> ID_ve;
+    LinkedList<std::string> ID_ve;
     LinkedList<int> soLuongMua;
     int _Total;
 
@@ -30,7 +30,7 @@ public:
     LinkedList<int> soVeMua();
 
     // Add drug to cart
-    void addTickettoCart(int, int = 1);
+    void addTickettoCart(std::string, int = 1);
 
     // Set cart to Null for next purchase
     void emptyCart();

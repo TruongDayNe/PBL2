@@ -60,7 +60,8 @@ void printReceipt(int KhachHangID, std::string recID)
         std::cout << line << std::endl;
     }
 
-    int quantity, ID_ve, amount;
+    std::string ID_ve;
+    int quantity, amount;
     while (getline(inFileRec, lineRec))
     {
         firstIndex = lineRec.find_first_of(" ");
@@ -129,8 +130,8 @@ void getReceiptFromDatabase(int KhachHangID, int recID)
         getline(inFile, line);
         std::cout << line << std::endl;
     }
-
-    int quantity, ID_ve, amount;
+    std::string ID_ve;
+    int quantity, amount;
     while (getline(inFileRec, lineRec))
     {
         firstIndex = lineRec.find_first_of(" ");

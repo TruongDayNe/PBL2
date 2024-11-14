@@ -8,7 +8,6 @@
 class Ticket
 {
 private:
-    int ID_ve;
     std::string ID_chuyenBay;
     std::string loaiVe;
     std::string diemDi;
@@ -19,7 +18,7 @@ private:
 public:
     // Constructor
     Ticket();
-    Ticket(int, std::string, std::string, std::string, std::string, std::string, int, int);
+    Ticket(std::string, std::string, std::string, std::string, std::string, int, int);
     Ticket(const Ticket&);
 
     // Overloading the assignment operator
@@ -29,8 +28,8 @@ public:
     ~Ticket();
 
     // Get, Set ID_ve
-    int getID_ve();
-    void setID_ve(int);
+    // int getID_ve();
+    // void setID_ve(int);
 
     // Get, Set ID_chuyenBay
     std::string getID_chuyenBay();

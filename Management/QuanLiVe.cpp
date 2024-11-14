@@ -1,43 +1,69 @@
 #include "QuanLiVe.h"
 
-bool isValidTicketId(int ticketID)
-{
-    std::ifstream inFile("./Database/TicketDB/ticket_ID.txt");
-    std::string x;
-    while (getline(inFile, x))
-    {
-        if (stoi(x) == ticketID)
-        {
+// bool isValidTicketId(int ticketID)
+// {
+//     std::ifstream inFile("./Database/TicketDB/ticket_ID.txt");
+//     std::string x;
+//     while (getline(inFile, x))
+//     {
+//         if (std::stoi(x) == ticketID)
+//         {
+//             return true;
+//         }
+//     }
+//     inFile.close();
+//     return false;
+// }
+
+bool isValidTicketId( const std::string& flightId){
+    std:: ifstream inFile("PBL2/Database/lastID.txt");
+    if(!inFile.is_open()){
+        std::cout<<"Can not open the file!"<<std::endl;
+        return false;
+    }
+    std::string line;
+
+    while(getline(inFile, line)){
+        // Loại bỏ khoảng trắng thừa ở đầu và cuối nếu có
+        line.erase(0, line.find_first_not_of(" "));
+        line.erase(line.find_last_not_of(" ") + 1);
+
+        if(line== flightId){
+            inFile.close();
             return true;
+
         }
     }
-    inFile.close();
-    return false;
 }
 
 void addTicketToDatabase(Ticket &ticket)
 {
     // generate file path
     // start from main.cpp
-    std::string fileName = std::to_string(ticket.getID_ve()) + ".txt";
-    std::string filePath = "./Database/TicketDB/" + fileName;
+    // std::string fileName = std::to_string(ticket.getID_ve()) + ".txt";
+    // std::string filePath = "./Database/TicketDB/" + fileName;
+
+    
 
     // create file in database
-    std::ofstream outFile(filePath);
-    // outFile << computer.ID() << endl;
-    outFile << ticket.getID_ve() << std::endl;
-    outFile << ticket.getID_chuyenBay() << std::endl;
-    outFile << ticket.getdiemDi() << std::endl;
-    outFile << ticket.getdiemDen() << std::endl;
-    outFile << ticket.getloaiVe() << std::endl;
-    outFile << ticket.getngayKhoiHanh() << std::endl;
-    outFile << ticket.getsoLuongVe() << std::endl;
-    outFile << ticket.getgiaVe() << std::endl;
+    std::fstream outFile("../TicketDB/ticket_ID.txt");
+    int lastIndex = 0;
+    if(outFile.is_open()){
+        std::string line;
+        while (std::getline(outFile, line)){
+            lastIndex= std::stoi (line) ;
+        }
+    } else {
+        std::cerr<< "Không thể mở tệp ticket_ID.txt" << std::endl;
+        return;
+    }
 
-    if (!isValidTicketId(ticket.getID_ve()))
+    outFile<<lastIndex<<" | "<<ticket.getID_chuyenBay() <<" | "<<ticket.getdiemDi()<<" | " << ticket.getdiemDen() <<" | "<<ticket.getloaiVe()<< " | "<<ticket.getngayKhoiHanh() <<" | "<<ticket.getsoLuongVe()<< " | "<< ticket.getgiaVe() << std::endl;
+
+    if (!isValidTicketId(ticket.getID_chuyenBay()))
     {
         std::ofstream outFileTicketId("./Database/TicketDB/ticket_ID.txt", std::ios::app);
-        outFileTicketId << ticket.getID_ve() << std::endl;
+        outFileTicketId << ticket.getID_chuyenBay() << std::endl;
         outFileTicketId.close();
     }
 
@@ -47,7 +73,7 @@ void addTicketToDatabase(Ticket &ticket)
 
 void addNewTicketToDataBase()
 {
-    std::cout << spaceLineChoice + "New ticket:\n";
+    std::cout << spaceLineChoice + "New filght:\n";
     std::string ID_chuyenBay = getStringInput("ID chuyến bay");
     std::string loaiVe = getStringInput("Loại vé");
     std::string diemDi = getStringInput("Điểm đi");
@@ -56,13 +82,13 @@ void addNewTicketToDataBase()
     unsigned int soLuongVe = getIntInput("Số lượng vé");
     int giaVe = getIntInput("Giá vé");
     // Create new Ticket object
-    Ticket ticket = Ticket(updateLastTicketId(), ID_chuyenBay, diemDi, diemDen, loaiVe, ngayKhoiHanh, soLuongVe, giaVe );
+    Ticket ticket = Ticket( ID_chuyenBay, diemDi, diemDen, loaiVe, ngayKhoiHanh, soLuongVe, giaVe );
 
     // Save to database
     addTicketToDatabase(ticket);
 
     // Update new Ticket id range
-    updateLine("./Database/lastID.txt", 0, updateLastTicketId());
+    updateLine("./Database/lastID.txt", 0, ID_chuyenBay);
 
     // // Generate sale and write to sale file
     // ofstream outFilesale("./Database/saleSummary.txt", ios::app);
@@ -70,49 +96,110 @@ void addNewTicketToDataBase()
     // outFilesale.close();
 }
 
-Ticket getTicketFromDatabase(int ticketID)
+Ticket getTicketFromDatabase(std::string ticketID)
 {
-    std::string fileName = std::to_string(ticketID) + ".txt";
-    std::string filePath = "./Database/TicketDB/" + fileName;
+    std::ifstream inFile("../TicketDB/ticket_ID.txt");
+    if (!inFile.is_open()) {
+        throw std::runtime_error("Không thể mở file");
+    }
 
-    std::ifstream inFile(filePath);
     std::string line;
-
+    std::string soThuTu;
     std::string ID_chuyenBay;
     std::string diemDi;
     std::string diemDen;
     std::string loaiVe;
     std::string ngayKhoiHanh;
-    int soLuongVe;
-    int giaVe;
+    std::string soLuongVe_str;
+    std::string giaVe_str;
+    
+    bool found = false;
+    while(getline(inFile, line)) {
+        std::stringstream ss(line);
+        getline(ss, soThuTu, '|');
+        getline(ss, ID_chuyenBay, '|');
+        getline(ss, diemDi, '|');
+        getline(ss, diemDen, '|');
+        getline(ss, loaiVe, '|');
+        getline(ss, ngayKhoiHanh, '|');
+        getline(ss, soLuongVe_str, '|');
+        getline(ss, giaVe_str, '|');
+        
+        if (ID_chuyenBay == ticketID) {
+            found = true;
+            break;
+        }
+    }
 
+    if (!found) {
+        throw std::runtime_error("Không tìm thấy vé với ID này");
+    }
 
-    getline(inFile, line);
-    ticketID = std::stoi(line);
+    int soLuongVe = 0;
+    int giaVe = 0;
 
-    getline(inFile, line);
-    ID_chuyenBay = line;
+    try {
+        // Loại bỏ khoảng trắng và ký tự không mong muốn
+        soLuongVe_str.erase(remove_if(soLuongVe_str.begin(), soLuongVe_str.end(), isspace), soLuongVe_str.end());
+        giaVe_str.erase(remove_if(giaVe_str.begin(), giaVe_str.end(), isspace), giaVe_str.end());
 
-    getline(inFile, line);
-    diemDi = line;
+        if (!soLuongVe_str.empty()) {
+            soLuongVe = std::stoi(soLuongVe_str);
+        }
+        if (!giaVe_str.empty()) {
+            giaVe = std::stoi(giaVe_str);
+        }
+    }
+    catch (const std::exception& e) {
+        throw std::runtime_error("Lỗi chuyển đổi số: " + std::string(e.what()));
+    }
 
-    getline(inFile, line);
-    diemDen = line;
-
-    getline(inFile, line);
-    loaiVe = line;
-
-    getline(inFile, line);
-    ngayKhoiHanh = line;
-
-    getline(inFile, line);
-    soLuongVe = std::stoi(line);
-
-    getline(inFile, line);
-    giaVe = std::stoi(line);
-
-    return  Ticket(updateLastTicketId(), ID_chuyenBay, diemDi, diemDen, loaiVe, ngayKhoiHanh, soLuongVe, giaVe);
+    inFile.close();
+    return Ticket(ID_chuyenBay, diemDi, diemDen, loaiVe, ngayKhoiHanh, soLuongVe, giaVe);
 }
+// Ticket getTicketFromDatabase(int ticketID)
+// {
+//     std::string fileName = std::to_string(ticketID) + ".txt";
+//     std::string filePath = "./Database/TicketDB/" + fileName;
+
+//     std::ifstream inFile(filePath);
+//     std::string line;
+
+//     std::string ID_chuyenBay;
+//     std::string diemDi;
+//     std::string diemDen;
+//     std::string loaiVe;
+//     std::string ngayKhoiHanh;
+//     int soLuongVe=0;
+//     int giaVe=0;
+
+
+//     getline(inFile, line);
+//     ticketID = std::stoi(line);
+
+//     getline(inFile, line);
+//     ID_chuyenBay = line;
+
+//     getline(inFile, line);
+//     diemDi = line;
+
+//     getline(inFile, line);
+//     diemDen = line;
+
+//     getline(inFile, line);
+//     loaiVe = line;
+
+//     getline(inFile, line);
+//     ngayKhoiHanh = line;
+
+//     getline(inFile, line);
+//     soLuongVe = std::stoi(line);
+
+//     getline(inFile, line);
+//     giaVe = std::stoi(line);
+
+//     return  Ticket( ID_chuyenBay, diemDi, diemDen, loaiVe, ngayKhoiHanh, soLuongVe, giaVe);
+// }
 void deleteTicketFromDatabase(int ticketID)
 {
     std::string filePath = "./Database/TicketDB/";
@@ -135,16 +222,12 @@ void deleteTicketFromDatabase(int ticketID)
     }
 }
 
-void updateTicketInDatabase(int ticketID)
+void updateTicketInDatabase(std::string ticketID)
 {
     Ticket ticket = getTicketFromDatabase(ticketID);
-    std::string filePath = "./Database/TicketDB/";
-    std::string fileName = std::to_string(ticketID) + ".txt";
+    std::string fileName = "../Database/TicketDB/ticket_ID.txt";
 
-    char char_filePath[(filePath + fileName).length() + 1];
-    strcpy(char_filePath, (filePath + fileName).c_str());
-
-    int status = remove(char_filePath);
+    int status = remove(fileName.c_str());
 
     std::string ID_chuyenBay = updateComponent("ID chuyến bay", ticket.getID_chuyenBay());
     std::string diemDi = updateComponent("Điểm đi", ticket.getdiemDi());
@@ -154,7 +237,7 @@ void updateTicketInDatabase(int ticketID)
     int soLuongVe = updateIntComponent("Số lượng vé", ticket.getsoLuongVe());
     int giaVe = updateIntComponent("Giá vé", ticket.getgiaVe());
 
-    ticket.setID_ve(ticketID);
+    // ticket.setID_ve(ticketID);
     ticket.setID_chuyenBay(ID_chuyenBay);
     ticket.setdiemDi(diemDi);
     ticket.setdiemDen(diemDen);
@@ -182,7 +265,7 @@ LinkedList<Ticket> getAllTicket()
     // Get each Ticket from database then add it to the list of Tickets
     while (getline(inFile, x))
     {
-        Ticket ticket = getTicketFromDatabase(stoi(x));
+        Ticket ticket = getTicketFromDatabase(x);
         tickets.addLast(ticket);
     }
 
@@ -204,7 +287,7 @@ void printTicket(Ticket ticket)
     table.add("    Giá vé");
     table.endOfRow();
 
-    table.add(std::to_string(ticket.getID_ve()));
+    // table.add(std::to_string(ticket.getID_ve()));
     table.add(ticket.getID_chuyenBay());
     table.add(ticket.getdiemDi());
     table.add(ticket.getdiemDen());
@@ -227,7 +310,7 @@ void printAllTickets(LinkedList<Ticket> tickets)
     }
     TextTable table;
 
-    table.add("ID vé");
+    table.add("Số thứ tự");
     table.add("ID chuyến bay");
     table.add("Điểm đi");
     table.add("Điểm đến");
@@ -240,7 +323,7 @@ void printAllTickets(LinkedList<Ticket> tickets)
     for (int i = 0; i < tickets.length(); i++)
     {
         Ticket ticket = tickets.get(i);
-        table.add(std::to_string(ticket.getID_ve()-1));
+        table.add(std::to_string(i+1));
         table.add(ticket.getID_chuyenBay());
         table.add(ticket.getdiemDi());
         table.add(ticket.getdiemDen());
@@ -254,9 +337,11 @@ void printAllTickets(LinkedList<Ticket> tickets)
     std::cout << table << std::endl;
 }
 
+
+
 void searchByTicketsID()
 {
-    int id = getIntInput("Enter ID");
+    std::string id = getStringInput("Enter ID");
     if (!isValidTicketId(id))
     {
         printError("Invalid ID, please enter again!");
@@ -300,26 +385,10 @@ void searchByTicketsPath()
         printError("Không có chuyến bay nào!");
     }
 }
-void updateTicketQuantityInDatabase(int id, int quantity)
+void updateTicketQuantityInDatabase( int quantity)
 {
     if (quantity == 0)
     {
-        std::string filePath = "./Database/TicketDB/";
-        std::string fileName = std::to_string(id) + ".txt";
-
-        int status = remove((filePath + fileName).c_str());
-
-        if (status == 0)
-        {
             printSuccess("Ticket SOLD OUT");
-            eraseFileLine(filePath + "ticket_ID.txt", std::to_string(id));
-            //eraseFileLine("./Database/saleSummary.txt", ticketID);
-        }
-        else
-        {
-            printError("Purchase failed!");
-        }
-        return;
     }
-    updateLine("./Database/TicketDB/" + std::to_string(id) + ".txt", 6, quantity);
 }

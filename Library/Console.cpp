@@ -76,15 +76,34 @@ void printError(std::string status)
     printLineColor(" " + status, 4);
     std::cout << std::endl;
 }
-int updateLastTicketId()
-{
-    std::ifstream inFile("./Database/lastID.txt");
+// int updateLastTicketId()
+// {
+//     std::ifstream inFile("./Database/lastID.txt");
+//     std::string x;
 
-    std::string x;
-    getline(inFile, x);
+//     // Kiểm tra xem tệp có mở thành công không
+//     if (inFile.is_open()) {
+//         getline(inFile, x);
+//         inFile.close();
+//     }
 
-    return stoi(x) + 1;
-}
+//     int lastTicketId = 0;
+//     // Nếu không có giá trị trong tệp, ID sẽ bắt đầu từ 1
+//     if (!x.empty()) {
+//         lastTicketId = std::stoi(x); // Chuyển đổi giá trị từ chuỗi sang số nguyên
+//     }
+
+//     lastTicketId++; // Tăng ID lên 1 cho vé mới
+
+//     // Cập nhật lại ID vào tệp
+//     std::ofstream outFile("./Database/lastID.txt");
+//     if (outFile.is_open()) {
+//         outFile << lastTicketId; // Ghi ID mới vào tệp
+//         outFile.close();
+//     }
+
+//     return lastTicketId;
+// }
 // Get input with yes/no
 std::string getYesNoInput(std::string title)
 {
