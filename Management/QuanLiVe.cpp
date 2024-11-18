@@ -270,8 +270,8 @@ LinkedList<Ticket> searchByTicketCase(std::string StarttoSearch, std::string End
 
     for (int i = 0; i < tickets.length(); i++)
     {
-        if (findCaseInsensitive(tickets.get(i).getdiemDen(), StarttoSearch) != std::string::npos &&
-            findCaseInsensitive(tickets.get(i).getdiemDi(), EndtoSearch) != std::string::npos)
+        if (findCaseInsensitive(tickets.get(i).getdiemDi(), StarttoSearch) != std::string::npos &&
+            findCaseInsensitive(tickets.get(i).getdiemDen(), EndtoSearch) != std::string::npos)
         {
             res.addLast(tickets.get(i));
         }
@@ -279,7 +279,7 @@ LinkedList<Ticket> searchByTicketCase(std::string StarttoSearch, std::string End
     return res;
 }
 
-void searchByTicketsPath()
+LinkedList<Ticket> searchByTicketsPath()
 {
     std::string diemDi = getStringInput("Điểm đi: ");
     std::string diemDen = getStringInput("Điểm đến: ");
@@ -288,7 +288,7 @@ void searchByTicketsPath()
     if (tickets.length())
     {
         printSuccess("Tìm thấy vé!");
-        printAllTickets(tickets);
+        return tickets;
     }
     else
     {

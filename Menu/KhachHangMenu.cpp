@@ -132,7 +132,8 @@ void KhachHangMenu::menu(KhachHang &khachHang)
 
         case 4:
         {
-            printAllTickets();
+            LinkedList<Ticket> tickets_foundByPath  = searchByTicketsPath();
+            purchaseTicket(khachHang, tickets_foundByPath);
             system("pause");
             KhachHangMenu::menu(khachHang);
         }
@@ -169,7 +170,7 @@ int KhachHangMenu::printTask()
             "\t  Account information",
             "\t  Update account information",
             "\t  View your ticket order history",
-            "\t  View all tickets",
+            "\t  Search tickets",
             "\t  Purchase ticket",
             "\t  Log out",
         };
@@ -179,7 +180,7 @@ int KhachHangMenu::printTask()
     return key;
 }
 
-void KhachHangMenu::purchaseTicket(KhachHang &khachHang)
+void KhachHangMenu::purchaseTicket(KhachHang &khachHang, LinkedList<Ticket> tickets)
 {
     int ID_ve, soLuongMua, new_soLuongVe;
     std::string request;
@@ -187,8 +188,14 @@ void KhachHangMenu::purchaseTicket(KhachHang &khachHang)
     do
     {
         system("cls");
-        printAllTickets();
-        
+        printAllTickets(tickets);
+
+        if (tickets.length() == 0)
+        {
+            printError("No Tickets found!");
+            return;
+        }
+    
         ID_ve = getIntInput("Please enter the Ticket ID that you want to purchase");
         while (!isValidTicketId(ID_ve))
         {
