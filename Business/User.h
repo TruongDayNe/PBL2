@@ -25,6 +25,8 @@ public:
     // Destructor
     ~User();
 
+    User& operator=(const User& other);
+
     // Get, Set User _Id
     int getID();
     void setID(int);

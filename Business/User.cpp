@@ -33,6 +33,17 @@ User::~User()
 {
 }
 
+// Toán tử gán
+User& User::operator=(const User& other) {
+    if (this != &other) { // Kiểm tra tự gán
+        this->_ID = other._ID;               // Sao chép ID
+        this->_Name = other._Name;           // Sao chép Name
+        this->_Email = other._Email;         // Sao chép Email
+        this->_Password = other._Password;   // Sao chép Password
+    }
+    return *this; // Trả về đối tượng hiện tại
+}
+
 int User::getID()
 {
     return this->_ID;

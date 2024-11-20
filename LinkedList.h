@@ -31,6 +31,8 @@ public:
     {
         this->head = NULL;
     }
+    
+    LinkedList<T>& operator=(const LinkedList<T>& other);
 
     void addLast(T item)
     {
@@ -204,4 +206,22 @@ public:
         return false;
     }
 };
+
+template <class T>
+LinkedList<T>& LinkedList<T>::operator=(const LinkedList<T>& other) {
+    if (this != &other) { // Kiểm tra tự gán
+        // Xóa dữ liệu hiện tại
+        while (head != nullptr) {
+            removeFirst();
+        }
+
+        // Sao chép từ danh sách khác
+        Node<T>* current = other.head;
+        while (current != nullptr) {
+            addLast(current->data); 
+            current = current->next;
+        }
+    }
+    return *this; 
+}
 #endif

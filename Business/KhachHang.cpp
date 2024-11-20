@@ -16,6 +16,18 @@ KhachHang::~KhachHang()
 {
 }
 
+KhachHang& KhachHang::operator=(const KhachHang& other) {
+    if (this != &other) {
+        // Gán các thành viên từ lớp cơ sở (User)
+        User::operator=(other);
+
+        // Gán các thành viên của KhachHang
+        this->_Cart = other._Cart;
+        this->_Rec = other._Rec;  // Giả sử LinkedList có toán tử gán
+    }
+    return *this;
+}
+
 Cart &KhachHang::getCart()
 {
     return this->_Cart;

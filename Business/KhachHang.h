@@ -21,6 +21,8 @@ class KhachHang : public User {
     // Destructor
     ~KhachHang();
 
+    KhachHang& operator=(const KhachHang& other);
+
     // Info
     void displayInfo();
     void updateInfo();

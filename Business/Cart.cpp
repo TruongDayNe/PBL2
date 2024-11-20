@@ -9,7 +9,7 @@ Cart::~Cart()
 {
 }
 
-LinkedList<int> Cart::ID_veMua()
+LinkedList<std::string> Cart::ID_veMua()
 {
     return this->ID_ve;
 }
