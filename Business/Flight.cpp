@@ -1,4 +1,5 @@
 #include "Flight.h"
+#include "Ticket.h"
 
 Flight::Flight()
 {
@@ -19,10 +20,11 @@ Flight::Flight(std::string ID_chuyenBay, std::string diemDi, std::string diemDen
     this->soLuongVe = soLuongVe;
     this->giaVe = giaVe;
     // Khởi tạo danh sách vé
-    for (int i = 0; i < soLuongVe; i++) 
+    for (int i = 0; i < soLuongVe; i) 
     {
-        std::string ticketID = ID_chuyenBay + "_" + to_string(i + 1);
-        std::string ghe = "Ghe_" + to_string(i + 1);
+        i++;
+        std::string ticketID = ID_chuyenBay + "_" + std::to_string(i);
+        std::string ghe = "Ghe_" + std::to_string(i);
         KhachHang khachHang;
         tickets.addLast(Ticket(ticketID, *this, khachHang, ghe, giaVe));
     }
@@ -36,6 +38,10 @@ Flight::Flight(const Flight& chuyenBay)
     this->ngayKhoiHanh = chuyenBay.ngayKhoiHanh;
     this->soLuongVe = chuyenBay.soLuongVe;
     this->giaVe = chuyenBay.giaVe;
+
+    // for (int i = 0; i < (chuyenBay.tickets).length() ; i++) {
+    //     this->tickets.addLast(chuyenBay.tickets.get(i));
+    // }
 }
 
 Flight& Flight::operator = (const Flight& chuyenBay)

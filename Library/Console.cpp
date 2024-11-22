@@ -60,7 +60,7 @@ int getIntInput(std::string title)
         std::getline(std::cin, value);
     }
 
-    return stoi(value);
+    return std::stoi(value);
 }
 // Check if string s is a number
 bool isNumber(std::string s)
@@ -83,7 +83,7 @@ int updateLastTicketId()
     std::string x;
     getline(inFile, x);
 
-    return stoi(x) + 1;
+    return std::stoi(x) + 1;
 }
 // Get input with yes/no
 std::string getYesNoInput(std::string title)
@@ -420,7 +420,7 @@ int getLastKhachHangId()
     std::string x;
     std::getline(inFile, x);
     std::getline(inFile, x);
-    return stoi(x) + 1;
+    return std::stoi(x) + 1;
 }
 
 int getLastTicketId()
@@ -430,7 +430,7 @@ int getLastTicketId()
     std::string x;
     getline(inFile, x);
 
-    return stoi(x) + 1;
+    return std::stoi(x) + 1;
 }
 
 std::string getReceiptDateTime(int patientID, std::string recID)
@@ -451,7 +451,7 @@ int getReceiptTotal(int patientID, std::string recID)
     std::getline(inFile, x);
     std::getline(inFile, x);
 
-    return stoi(x);
+    return std::stoi(x);
 }
 
 // Update price
@@ -494,4 +494,34 @@ std::string updatePassword(std::string old_pass)
     std::string new_password = getPasswordInput("Enter new password");
 
     return new_password;
+}
+
+std::string trim(const std::string& str) {
+    // Find the first non-space character
+    auto start = std::find_if_not(str.begin(), str.end(), [](unsigned char c) { return std::isspace(c); });
+    // Find the last non-space character
+    auto end = std::find_if_not(str.rbegin(), str.rend(), [](unsigned char c) { return std::isspace(c); }).base();
+    
+    // Return the trimmed string
+    return (start < end) ? std::string(start, end) : std::string();
+}
+
+int findLine(const std::string& filename, const std::string& targetLine) {
+    std::ifstream file(filename); // Open the file
+    if (!file.is_open()) {
+        throw std::runtime_error("Could not open file: " + filename);
+    }
+
+    std::string line;
+    int index = 0;
+
+    // Read the file line by line
+    while (std::getline(file, line)) {
+        if (line == targetLine) {
+            return index; // Return the index if the line matches
+        }
+        index++;
+    }
+
+    return -1; // Return -1 if the line is not found
 }

@@ -8,7 +8,7 @@ bool isValidKhachHangID(int KhachHangID)
     while (getline(inFile, x))
     {
         line = x;
-        if (stoi(line) == KhachHangID)
+        if (std::stoi(line) == KhachHangID)
         {
             return true;
         }
@@ -29,9 +29,11 @@ void addKhachHangToDatabase(KhachHang &KhachHang)
     outFile << KhachHang.getName() << std::endl;
     outFile << KhachHang.getEmail() << std::endl;
     outFile << KhachHang.getPassword() << std::endl;
+    outFile << KhachHang.getCCCD() << std::endl;
+    outFile << KhachHang.getMobile() << std::endl;
     for (int i = 0; i < KhachHang.Rec().length(); i++)
     {
-        outFile << KhachHang.Rec().get(i) << std::endl;
+        outFile << KhachHang.Rec().get(i).getID_ve() << std::endl;
     }
 
     // write KhachHangid to KhachHang_id.txt
@@ -46,22 +48,28 @@ void addKhachHangToDatabase(KhachHang &KhachHang)
     outFile.close();
 }
 
-KhachHang addNewKhachHang()
+KhachHang addNewKhachHang(bool isLogin)
 {
     std::cout << spaceLineChoice << "New KhachHang:\n";
 
     std::string name = getStringInput("Name");
     std::string email = getEmailInput();
-    while (!isUniqueEmail(email))
+    // Nếu không phải đang đăng ký tài khoản thì dùng chung email cũng cũng
+    if (isLogin)
     {
-        printError("Email already exists, please login instead!");
-        system("pause");
-        KhachHangMenu::KH_main();
+        while (!isUniqueEmail(email))
+        {
+            printError("Email already exists, please login instead!");
+            system("pause");
+            KhachHangMenu::KH_main();
+        }
     }
     std::string pwd = getPasswordInput("Password");
+    std::string cccd = getStringInput("CCCD");
+    std::string phone = getStringInput("Phone");
 
     // create new KhachHang object
-    KhachHang khachhang = KhachHang(getLastKhachHangId(), name, email, pwd);
+    KhachHang khachhang = KhachHang(getLastKhachHangId(), name, email, pwd, cccd, phone);
 
     // save to database
     addKhachHangToDatabase(khachhang);
@@ -69,7 +77,9 @@ KhachHang addNewKhachHang()
     std::ofstream outFile("./Database/UserDB/user_ID.txt", std::ios::app);
     outFile << khachhang.getID() << " ";
     outFile << khachhang.getEmail() << " ";
-    outFile << khachhang.getPassword() << std::endl;
+    outFile << khachhang.getPassword() << " ";
+    outFile << khachhang.getCCCD() << " ";
+    outFile << khachhang.getMobile() << std::endl;
     outFile.close();
 
     // update new KhachHang id range
@@ -91,6 +101,8 @@ KhachHang getKhachHangFromDatabase(int KhachHangID)
     std::string name;
     std::string email;
     std::string password;
+    std::string cccd;
+    std::string phone;
 
     getline(inFile, line);
     name = line;
@@ -101,13 +113,19 @@ KhachHang getKhachHangFromDatabase(int KhachHangID)
     getline(inFile, line);
     password = line;
 
-    LinkedList<std::string> recs;
+    getline(inFile, line);
+    cccd = line;
+
+    getline(inFile, line);
+    phone = line;
+
+    LinkedList<Ticket> recs;
     while (getline(inFile, line))
     {
-        recs.addLast(line);
+        recs.addLast(findTicketById(line));
     }
 
-    return KhachHang(KhachHangID, name, email, password, recs);
+    return KhachHang(KhachHangID, name, email, password, cccd, phone, recs);
 }
 
 void deleteKhachHangFromDatabase(int KhachHangID)
@@ -126,7 +144,7 @@ void deleteKhachHangFromDatabase(int KhachHangID)
     {
         printSuccess("Successfully delete this KhachHang!");
         eraseFileLine(filePath + "KhachHang_ID.txt", std::to_string(KhachHangID));
-        eraseFileLine("./Database/UserDB/user_ID.txt", std::to_string(KhachHangID) + " " + KhachHang.getEmail() + " " + KhachHang.getPassword());
+        eraseFileLine("./Database/UserDB/user_ID.txt", std::to_string(KhachHangID) + " " + KhachHang.getEmail() + " " + KhachHang.getPassword() + " " + KhachHang.getCCCD() + " " + KhachHang.getMobile());
     }
     else
     {

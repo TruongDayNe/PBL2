@@ -1,22 +1,20 @@
 #pragma once
 
-#include "User.h"
-#include "Cart.h"
-#include "../Management/QuanLiVe.h"
-#include "../Management/QuanLiReceipt.h"
-#include <iostream>
-
 #ifndef KHACHHANG_H
 #define KHACHHANG_H
+#include "User.h"
+#include <iostream>
+#include "Cart.h"
+#include "../Management/QuanLiVe.h"
 
-class KhachHang : public User {
+class KhachHang : public User{
     private:
         Cart _Cart;
-        LinkedList<std::string> _Rec;
+        LinkedList<Ticket> _Rec;
     public:
         // Constructor
     KhachHang();
-    KhachHang(int, std::string, std::string, std::string, LinkedList<std::string> = LinkedList<std::string>());
+    KhachHang(int, std::string, std::string, std::string,std::string, std::string, LinkedList<Ticket> = LinkedList<Ticket>());
 
     // Destructor
     ~KhachHang();
@@ -30,21 +28,21 @@ class KhachHang : public User {
     // Get KhachHang item in Cart
     Cart &getCart();
 
-    // Get list of receipt ID
-    LinkedList<std::string> Rec();
+    // Get list of ticket
+    LinkedList<Ticket> Rec();
 
     // Set list of receipt ID
-    void setRec(LinkedList<std::string>);
+    void setRec(LinkedList<Ticket>);
 
     void newKhachHang();
 
     void purchase();
-    void searchByReceiptID(int);
+    void searchByTicketID(std::string);
     // void searchByCompName(std::string);
-    void printAllKhachHangReceipts();
+    void printAllKhachHangPurchases();
     // void printReceipt(int);
     void addNewReceipt();
-    void deleteReceiptById(std::string);
+    void deleteTicketById(std::string);
  
 };
 #endif

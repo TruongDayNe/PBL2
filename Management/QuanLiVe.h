@@ -1,23 +1,32 @@
 #pragma once
-#include "../Business/Ticket.h"
-#include "../LinkedList.h"
-#include "../Library/Console.h"
-#include "../Library/Table.cpp"
-#include <fstream>
-#include <string>
-#include <iostream>
-#include <string>
 
-bool isValidTicketId(std::string ticketID);
-void addTicketToDatabase(Ticket &ticket);
-void addNewTicketToDataBase();
-Ticket getTicketFromDatabase(std::string ticketID);
-void deleteTicketFromDatabase(std::string ticketID);
-void updateTicketInDatabase(std::string ticketID);
-LinkedList<Ticket> getAllTicket();
-void printTicket(Ticket ticket);
-void printAllTickets(LinkedList<Ticket> tickets = getAllTicket());
-void searchByTicketsID();
-LinkedList<Ticket> searchByTicketCase(std::string StarttoSearch, std::string EndtoSearch);
-LinkedList<Ticket> searchByTicketsPath();
-void updateTicketQuantityInDatabase(std::string id, int quantity); 
+#include <iostream>
+#include <fstream>
+#include <iomanip>
+#include <string>
+#include <cstring>
+
+#include "../Library/Console.h"
+#include "../Business/Ticket.h"
+#include "QuanLiChuyenBay.h"
+
+class KhachHang;
+
+// Function prototypes
+std::string lineTicketFormat(std::string key, std::string info);
+std::string lineTicketFormat(std::string qty, std::string item, std::string amount);
+
+void printTicket(int KhachHangID, Ticket ticket);
+
+bool isValidTicketID(std::string ticketID, KhachHang &KhachHang);
+
+void getTicketFromDatabase(int KhachHangID, Ticket ticket);
+
+void getAllKhachHangTickets(KhachHang &KhachHang); 
+
+void addTicketToDatabase(int KhachHangID, Cart _Cart, LinkedList<std::string> ticketID);
+
+void deleteTicketFromDatabase(int KhachHangID, std::string ticketID);
+
+Ticket findTicketById(const std::string& ticketID);
+// Add any additional utility function prototypes here if needed

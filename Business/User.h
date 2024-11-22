@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <string>
-#include "../Management/QuanLiVe.h"
 
 #ifndef USER_H
 #define USER_H
@@ -14,6 +13,8 @@ private:
     std::string _Name;
     std::string _Email;
     std::string _Password;
+    std::string _CCCD;
+    std::string _Mobile;
 
 public:
     // Constructor
@@ -21,6 +22,8 @@ public:
     User(int, std::string);
     User(int, std::string, std::string);
     User(int, std::string, std::string, std::string);
+    User(int, std::string, std::string, std::string, std::string);
+    User(int, std::string, std::string, std::string, std::string, std::string);
 
     // Destructor
     ~User();
@@ -42,6 +45,12 @@ public:
     // Get, Set User _Password
     std::string getPassword();
     void setPassword(std::string);
+
+    std::string getCCCD();
+    void setCCCD(std::string);
+
+    std::string getMobile();
+    void setMobile(std::string);
 
     void searchByTicketID();
     // void searchByDrugName();

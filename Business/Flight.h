@@ -5,8 +5,9 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-#include "./LinkedList.h"
-#include "./Ticket.h"
+#include "../LinkedList.h"
+
+class Ticket;
 
 class Flight
 {
@@ -17,8 +18,8 @@ private:
     std::string ngayKhoiHanh;
     int soLuongVe;
     int giaVe;
-    LinkedList<Ticket> tickets;
 public:
+    LinkedList<Ticket> tickets;
     // Constructor
     Flight();
     Flight(std::string, std::string, std::string, std::string, int, int);

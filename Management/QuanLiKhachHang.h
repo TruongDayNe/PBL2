@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Business/KhachHang.h"  // Only include the header file, not the implementation file
+#include "../Business/KhachHang.h"
 #include "../Menu/KhachHangMenu.h"
 #include <fstream>
 #include <string>
@@ -12,7 +12,7 @@ class KhachHang;
 // Function prototypes
 bool isValidKhachHangID(int KhachHangID);
 void addKhachHangToDatabase(KhachHang &KhachHang);
-KhachHang addNewKhachHang();
+KhachHang addNewKhachHang(bool = true);
 KhachHang getKhachHangFromDatabase(int KhachHangID);
 void deleteKhachHangFromDatabase(int KhachHangID);
 void updateKhachHangInDatabase(int KhachHangID);

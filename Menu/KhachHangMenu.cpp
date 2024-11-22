@@ -132,8 +132,8 @@ void KhachHangMenu::menu(KhachHang &khachHang)
 
         case 4:
         {
-            LinkedList<Ticket> tickets_foundByPath  = searchByTicketsPath();
-            purchaseTicket(khachHang, tickets_foundByPath);
+            LinkedList<Flight> flights_foundByPath  = searchByFlightsPath();
+            purchaseTicket(khachHang, flights_foundByPath);
             system("pause");
             KhachHangMenu::menu(khachHang);
         }
@@ -180,41 +180,74 @@ int KhachHangMenu::printTask()
     return key;
 }
 
-void KhachHangMenu::purchaseTicket(KhachHang &khachHang, LinkedList<Ticket> tickets)
+//Thêm ticket vào cart để mua
+void KhachHangMenu::purchaseTicket(KhachHang &khachHang, LinkedList<Flight> flights)
 {
-    int ID_ve, soLuongMua, new_soLuongVe;
+    int soLuongMua, new_soLuongVe;
+    std::string ID_chuyenBay;
     std::string request;
 
     do
     {
         system("cls");
-        printAllTickets(tickets);
+        printAllFlights(flights);
 
-        if (tickets.length() == 0)
+        if (flights.length() == 0)
         {
             printError("No Tickets found!");
+            system("pause");
+            menu(khachHang);
             return;
         }
     
-        ID_ve = getIntInput("Please enter the Ticket ID that you want to purchase");
-        while (!isValidTicketId(ID_ve))
+        ID_chuyenBay = getStringInput("Please enter the Flight ID that you want to purchase");
+        while (!isValidFlightID(ID_chuyenBay))
         {
             printError("Invalid Ticket ID, please enter again!");
-            ID_ve = getIntInput("Please enter the Ticket ID that you want to purchase");
+            ID_chuyenBay = getStringInput("Please enter the Ticket ID that you want to purchase");
         }
-        Ticket Ticket = getTicketFromDatabase(ID_ve);
+        Flight flight = getFlightFromDatabase(ID_chuyenBay);
+
         soLuongMua = getIntInput("Please enter the quantity you want to purchase");
-        while (soLuongMua > Ticket.getsoLuongVe() || soLuongMua < 1)
+        while (soLuongMua > flight.getsoLuongVe() || soLuongMua < 1)
         {
             printError("Invalid Ticket quantity, please enter again!");
             soLuongMua = getIntInput("Please enter the quantity you want to purchase");
         }
-        new_soLuongVe = Ticket.getsoLuongVe() - soLuongMua;
-        updateTicketQuantityInDatabase(ID_ve, new_soLuongVe);
-        khachHang.getCart().addTickettoCart(ID_ve, soLuongMua);
-        request = getYesNoInput(spaceLineChoice + "Do you want to purchase another Ticket (y/n)");
-    } while (request == "y" || request == "Y");
+        // Get flight once before loop to avoid multiple database calls
+        Flight currentFlight = getFlightFromDatabase(ID_chuyenBay);
+        
+        // Store tickets to add before updating quantity
+        LinkedList<Ticket> ticketsToAdd;
+        for (int i = 0; i < soLuongMua; ++i)
+        {
+            KhachHang ticket_owner = addNewKhachHang(false);
+            
+            // Get ticket from flight's ticket list
+            if (currentFlight.tickets.length() > 0) {
+                Ticket ticket = currentFlight.tickets.get(i);
+                
+                // Create new ticket with unique ID and owner
+                Ticket newTicket(ticket.getID_ve(), currentFlight, ticket_owner, ticket.getGhe(), ticket.getgiaVe());
+                
+                ticketsToAdd.addLast(newTicket);
+            }
+        }
 
+        // Update available tickets
+        new_soLuongVe = flight.getsoLuongVe() - soLuongMua;
+        updateTicketQuantityInDatabase(ID_chuyenBay, new_soLuongVe);
+        
+        // Remove used tickets from flight
+        for (int i = 0; i < soLuongMua; i++) {
+            currentFlight.tickets.removeAtIndex(0);
+        }
+        
+        // Add all tickets to cart
+        for (int i = 0; i < ticketsToAdd.length(); i++) {
+            khachHang.getCart().addTickettoCart(ticketsToAdd.get(i));
+        } 
+    } while (request == "y" || request == "Y");
     khachHang.purchase();
 }
 
@@ -229,12 +262,12 @@ void KhachHangMenu::orderTicketHistory(KhachHang &khachHang)
     else
     {
         system("cls");
-        khachHang.printAllKhachHangReceipts();
+        khachHang.printAllKhachHangPurchases();
         // cout << spaceLine << "1. View receipt details by ID\n";
         // cout << spaceLine << "2. Back\n";
         char data[200][200] =
             {
-                "\t   View receipt details by ID",
+                "\t   View ticket details by ID",
                 "\t   Back",
             };
 
@@ -244,15 +277,15 @@ void KhachHangMenu::orderTicketHistory(KhachHang &khachHang)
         {
         case 1:
         {
-            std::string recID = getStringInput("Enter the receipt ID you want to view details");
-            while (!isValidReceiptID(recID, khachHang))
+            std::string ticketID = getStringInput("Enter the ticket ID you want to view details");
+            while (!isValidTicketID(ticketID, khachHang))
             {
-                printError("Invalid receipt ID, please enter again!");
-                recID = getStringInput("Enter the receipt ID you want to view details");
+                printError("Invalid ticket ID, please enter again!");
+                ticketID = getStringInput("Enter the ticket ID you want to view details");
             }
             std::cout << std::endl;
             // Handle Exception
-            printReceipt(khachHang.getID(), recID);
+            printTicket(khachHang.getID(), findTicketById(ticketID));
             system("pause");
             orderTicketHistory(khachHang);
         }

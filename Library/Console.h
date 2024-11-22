@@ -13,6 +13,7 @@
 #include <set>
 #include <fstream>
 #include <algorithm>
+#include <cctype>
 #include <conio.h>
 #include "../LinkedList.h"
 
@@ -52,5 +53,7 @@ std::string getReceiptDateTime(int patientID, std::string recID);
 int getReceiptTotal(int patientID, std::string recID);
 int updatePrice(int old_price);
 std::string updatePassword(std::string old_pass);
+std::string trim(const std::string& str);
+int findLine(const std::string& filename, const std::string& targetLine);
 
 #endif

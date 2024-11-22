@@ -78,25 +78,25 @@ void AdminMenu::login()
 void AdminMenu::menu(Admin &Admin)
 {
     system("cls");
-    int ticketID;    
+    std::string flightID;    
     while (true)
     {
         int key = AdminMenu::printTask();
         switch (key)
         {
         case 1:
-            std::cout << "Nhập ID vé cần tra cứu";
+            std::cout << "Nhập ID chuyến bay cần tra cứu";
             
-            std::cin >> ticketID;
+            std::cin >> flightID;
             // searchByTicketsID(ticketID);
             break;
         case 2:
             std::cout << "Nhập ID vé cần chỉnh sửa";
-            std::cin >> ticketID;
-            updateTicketInDatabase(ticketID);
+            std::cin >> flightID;
+            updateFlightInDatabase(flightID);
             break;
         case 3:
-            addNewTicketToDataBase();
+            addNewFlightToDataBase();
             printSuccess("Thêm vé thành công");
             // printReceipt();
 
@@ -105,7 +105,7 @@ void AdminMenu::menu(Admin &Admin)
             std::cout << "Nhập ID vé cần hủy";
             int ticketID;
             std::cin >> ticketID;
-            deleteTicketFromDatabase(ticketID);
+            deleteFlightFromDatabase(flightID);
             std::cout<<"Hủy vé thành công";
         case 5:
 

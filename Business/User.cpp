@@ -29,6 +29,25 @@ User::User(int id, std::string name, std::string email, std::string password)
     this->_Password = password;
 }
 
+User::User(int id, std::string email, std::string password, std::string cccd, std::string phone)
+{
+    this->_ID = id;
+    this->_Email = email;
+    this->_Password = password;
+    this->_CCCD = cccd;
+    this->_Mobile = phone;
+}
+
+User::User(int id, std::string name, std::string email, std::string password, std::string cccd, std::string phone)
+{
+    this->_ID = id;
+    this->_Name = name;
+    this->_Email = email;
+    this->_Password = password;
+    this->_CCCD = cccd;
+    this->_Mobile = phone;
+}
+
 User::~User()
 {
 }
@@ -84,12 +103,32 @@ void User::setPassword(std::string password)
     this->_Password = password;
 }
 
-void User::searchByTicketID()
+std::string User::getCCCD()
 {
-    searchByTicketsID();
+    return this->_CCCD;
 }
 
-void User::printAllTicket()
+void User::setCCCD(std::string cccd)
 {
-    printAllTickets();
+    this->_CCCD = cccd;
 }
+
+std::string User::getMobile()
+{
+    return this->_Mobile;
+}
+
+void User::setMobile(std::string mobile)
+{
+    this->_Mobile = mobile;
+}
+
+// void User::searchByTicketID()
+// {
+//     searchByTicketsID();
+// }
+
+// void User::printAllTicket()
+// {
+//     printAllTickets();
+// }

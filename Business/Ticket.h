@@ -4,8 +4,12 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-#include <Flight.h>
-#include <KhachHang.h>
+#include "Flight.h"
+#include "KhachHang.h"
+#include "../Library/Console.h"
+
+class Flight;
+class KhachHang;
 
 class Ticket
 {
@@ -14,12 +18,12 @@ private:
     Flight* chuyenBay;
     KhachHang* khachHang;
     std::string ghe;
-    double giaVe;
-
+    int giaVe;
+    std::string ngayMua;
 public:
     // Constructor
     Ticket();
-    Ticket(std::string, Flight, KhachHang, std::string, int);
+    Ticket(std::string, Flight, KhachHang, std::string, int, std::string = currentDateTime());
     Ticket(const Ticket&);
 
     // Overloading the assignment operator
@@ -28,9 +32,22 @@ public:
     // Destructor
     ~Ticket();
 
+    // Get, Set ngayMua
+    std::string getngayMua();
+    void setngayMua(std::string);
+
     // Get, Set ID_ve
     std::string getID_ve();
     void setID_ve(std::string);
+
+    Flight getChuyenBay();
+    void setChuyenBay(Flight);
+
+    KhachHang getKhachHang();
+    void setKhachHang(KhachHang);
+
+    std::string getGhe();
+    void setGhe(std::string);
 
     // // Get, Set loaiVe
     // std::string getloaiVe();

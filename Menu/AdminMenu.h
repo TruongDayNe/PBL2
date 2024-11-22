@@ -5,9 +5,9 @@
 #include "../Business/KhachHang.h"
 #include "../Library/MenuBox.h"
 #include "../Management/QuanLiKhachHang.h"
-#include "../Management/QuanLiVe.h"
+#include "../Management/QuanLiChuyenBay.h"
 #include "../Management/QuanLiNguoiDung.h"
-#include "../Management/QuanLiReceipt.h"
+#include "../Management/QuanLiVe.h"
 #include "../Library/Table.cpp"
 #include <string>
 #include "Home.h"

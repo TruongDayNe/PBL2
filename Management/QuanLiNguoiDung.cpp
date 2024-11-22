@@ -1,19 +1,31 @@
 #include "QuanLiNguoiDung.h"
+#include "../Menu/KhachHangMenu.h"
 
 User getUserLoginInfo(std::string info)
 {
-    std::string id;
-    std::string email;
-    std::string password;
+    std::string id, email, password, cccd, phone;
 
-    int firstIndex = info.find_first_of(" ");
-    int lastIndex = info.find_last_of(" ");
+    // Tìm vị trí của từng dấu cách
+    int firstIndex = info.find(" ");
+    int secondIndex = info.find(" ", firstIndex + 1);
+    int thirdIndex = info.find(" ", secondIndex + 1);
+    int fourthIndex = info.find(" ", thirdIndex + 1);
 
+    // // Kiểm tra chuỗi có đủ 5 phần tử hay không
+    // if (firstIndex == std::string::npos || secondIndex == std::string::npos || 
+    //     thirdIndex == std::string::npos || fourthIndex == std::string::npos) {
+    //     throw std::invalid_argument("Invalid input format");
+    // }
+
+    // Tách các phần tử
     id = info.substr(0, firstIndex);
-    email = info.substr(firstIndex + 1, lastIndex - firstIndex - 1);
-    password = info.substr(lastIndex + 1, info.length() - lastIndex);
+    email = info.substr(firstIndex + 1, secondIndex - firstIndex - 1);
+    password = info.substr(secondIndex + 1, thirdIndex - secondIndex - 1);
+    cccd = info.substr(thirdIndex + 1, fourthIndex - thirdIndex - 1);
+    phone = info.substr(fourthIndex + 1);
 
-    return User(stoi(id), email, password);
+    // Trả về đối tượng User với 5 tham số
+    return User(std::stoi(id), email, password, cccd, phone);
 }
 
 LinkedList<User> getAllUserLoginInfo()

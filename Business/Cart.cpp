@@ -1,4 +1,5 @@
 #include "Cart.h"
+#include "Ticket.h"
 
 Cart::Cart()
 {
@@ -9,9 +10,9 @@ Cart::~Cart()
 {
 }
 
-LinkedList<std::string> Cart::ID_veMua()
+LinkedList<Ticket> Cart::veMua()
 {
-    return this->ID_ve;
+    return this->ve;
 }
 
 LinkedList<int> Cart::soVeMua()
@@ -19,26 +20,36 @@ LinkedList<int> Cart::soVeMua()
     return this->soLuongMua;
 }
 
+int Cart::tongsoVeMua()
+{
+    int sovemua;
+    for (int i = 0; i < this->ve.length(); i++)
+    {
+        sovemua += (this->soLuongMua.get(i));
+    }
+    return sovemua;
+}
+
 int Cart::Total()
 {
     int total = 0;
-    for (int i = 0; i < this->ID_ve.length(); i++)
+    for (int i = 0; i < this->ve.length(); i++)
     {
-        Ticket Ve = getTicketFromDatabase(this->ID_ve.get(i));
-        total += Ve.getgiaVe() * this->soLuongMua.get(i);
+        int giaVe = ve.get(i).getgiaVe();
+        total += giaVe * this->soLuongMua.get(i);
     }
     return total;
 }
 
-void Cart::addTickettoCart(int id, int quantity)
+void Cart::addTickettoCart(Ticket ticket, int quantity)
 {
-    this->ID_ve.addLast(id);
+    this->ve.addLast(ticket);
     this->soLuongMua.addLast(quantity);
 }
 
 void Cart::emptyCart()
 {
-    this->ID_ve = LinkedList<int>();
+    this->ve = LinkedList<Ticket>();
     this->soLuongMua = LinkedList<int>();
     this->_Total = 0;
 }

@@ -1,18 +1,15 @@
 #pragma once
 
-#include "../LinkedList.h"
-#include "Ticket.h"
-#include "../Management/QuanLiVe.h"
+#ifndef CART_H
+#define CART_H
 #include "../Library/Table.cpp"
 #include "../Library/Console.h"
 
-#ifndef CART_H
-#define CART_H
-
+class Ticket;
 class Cart
 {
 private:
-    LinkedList<std::string> ID_ve;
+    LinkedList<Ticket> ve;
     LinkedList<int> soLuongMua;
     int _Total;
 
@@ -24,13 +21,14 @@ public:
     ~Cart();
 
     // Get list of ticket ID
-    LinkedList<std::string> ID_veMua();
+    LinkedList<Ticket> veMua();
 
     // Get list of Ticket Quantity
     LinkedList<int> soVeMua();
+    int tongsoVeMua();
 
     // Add ticket to cart
-    void addTickettoCart(int, int = 1);
+    void addTickettoCart(Ticket, int = 1);
 
     // Set cart to Null for next purchase
     void emptyCart();

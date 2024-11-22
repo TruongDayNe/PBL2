@@ -1,12 +1,13 @@
 #include "KhachHang.h"
+#include "Cart.h"
 
 KhachHang::KhachHang() : User(0, "", "", "")
 {
-    this->_Rec = LinkedList<std::string>();
+    this->_Rec = LinkedList<Ticket>();
     this->_Cart = Cart();
 }
 
-KhachHang::KhachHang(int id, std::string name, std::string email, std::string password, LinkedList<std::string> recs) : User(id, name, email, password)
+KhachHang::KhachHang(int id, std::string name, std::string email, std::string password,std::string cccd , std::string phone, LinkedList<Ticket> recs) : User(id, name, email, password, cccd, phone)
 {
     this->_Rec = recs;
     this->_Cart = Cart();
@@ -33,26 +34,29 @@ Cart &KhachHang::getCart()
     return this->_Cart;
 }
 
-LinkedList<std::string> KhachHang::Rec()
+LinkedList<Ticket> KhachHang::Rec()
 {
     return this->_Rec;
 }
 
-void KhachHang::setRec(LinkedList<std::string> recs)
+void KhachHang::setRec(LinkedList<Ticket> recs)
 {
     this->_Rec = recs;
 }
 
+// Khi lựa xong vé sẽ mua, điền thông tin từng người sở hữu vé
 void KhachHang::purchase()
 {
-    std::string recID = "REC#" + std::to_string(this->_Rec.length() + 1);
-    this->_Rec.addLast(recID);
+    std::string recID = "Purchased_" + std::to_string(this->getCart().tongsoVeMua());
+    //Hóa đơn được lưu ở ReceiptDB
 
     std::string fileName = std::to_string(this->getID()) + "_" + recID + ".txt";
     std::string filePath = "./Database/ReceiptDB/" + fileName;
-    std::ofstream outFileKhachHang("./Database/UserDB/KhachHangDB/KhachHang_" + std::to_string(this->getID()) + ".txt", std::ios::app);
-    outFileKhachHang << recID << std::endl;
-    outFileKhachHang.close();
+
+    // ghi vào file thông tin khách hàng 
+    // std::ofstream outFileKhachHang("./Database/UserDB/KhachHangDB/KhachHang_" + std::to_string(this->getID()) + ".txt", std::ios::app);
+    // outFileKhachHang << recID << std::endl;
+    // outFileKhachHang.close();
 
     std::ofstream outFile(filePath);
 
@@ -60,35 +64,40 @@ void KhachHang::purchase()
     outFile << date <<std::endl;
     outFile << _Cart.Total() << std::endl;
 
-    for (int i = 0; i < _Cart.ID_veMua().length(); i++)
+    for (int i = 0; i < _Cart.veMua().length(); i++)
     {
         outFile << _Cart.soVeMua().get(i) << " ";
-        outFile << _Cart.ID_veMua().get(i) << std::endl;
+        outFile << _Cart.veMua().get(i).getID_ve() << std::endl;
     }
 
     outFile.close();
     system("cls");
-    printReceipt(this->getID(), recID);
+    for (int i = 0; i < _Cart.veMua().length(); i++)
+    {
+        printTicket(this->getID(), _Cart.veMua().get(i));
+    }
+
+    system("pause");
 
     _Cart.emptyCart();
 }
 
-void KhachHang::searchByReceiptID(int id)
+void KhachHang::searchByTicketID(std::string id)
 {
-    getReceiptFromDatabase(this->getID(), id);
+    getTicketFromDatabase(this->getID(), findTicketById(id));
 }
 
-void KhachHang::printAllKhachHangReceipts()
+void KhachHang::printAllKhachHangPurchases()
 {
-    getAllKhachHangReceipts(*this);
+    getAllKhachHangTickets(*this);
 }
 
-void KhachHang::addNewReceipt()
-{
-    addReceiptToDatabase(this->getID(), this->_Cart, this->_Rec);
-}
+// void KhachHang::addNewReceipt()
+// {
+//     addTicketToDatabase(this->getID(), this->_Cart, this->_Rec);
+// }
 
-void KhachHang::deleteReceiptById(std::string id)
+void KhachHang::deleteTicketById(std::string id)
 {
-    deleteReceiptFromDatabase(this->getID(), id);
+    deleteTicketFromDatabase(this->getID(), id);
 }

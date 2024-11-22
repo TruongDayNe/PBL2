@@ -5,9 +5,9 @@
 #include "../Business/KhachHang.h"
 #include "../Library/MenuBox.h"
 #include "../Management/QuanLiKhachHang.h"
-#include "../Management/QuanLiVe.h"
+#include "../Management/QuanLiChuyenBay.h"
 #include "../Management/QuanLiNguoiDung.h"
-#include "../Management/QuanLiReceipt.h"
+#include "../Management/QuanLiVe.h"
 #include "../Library/Table.cpp"
 #include <string>
 #include "Home.h"
@@ -17,7 +17,7 @@ class KhachHangMenu
 {
 public:
     static int printTask();                    // In ra console các chức năng
-    static void purchaseTicket(KhachHang &khachHang, LinkedList<Ticket> tickets = getAllTicket());       // Mua bán thuốc
+    static void purchaseTicket(KhachHang &khachHang, LinkedList<Flight> flights = getAllFlight());       // Mua bán thuốc
     static void searchTicket(KhachHang &);         // Tìm kiếm thông tin thuốc
     static void orderTicketHistory(KhachHang &);   // Lịch sử mua bán thuốc
     // static void bookAppointment(Patient &);    // Đặt lịch hẹn
