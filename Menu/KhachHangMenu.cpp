@@ -248,6 +248,7 @@ void KhachHangMenu::purchaseTicket(KhachHang &khachHang, LinkedList<Flight> flig
             khachHang.getCart().addTickettoCart(ticketsToAdd.get(i));
         } 
     } while (request == "y" || request == "Y");
+    request = getYesNoInput(spaceLineChoice + "Do you want to purchase more tickets? (y/n)");
     khachHang.purchase();
 }
 
