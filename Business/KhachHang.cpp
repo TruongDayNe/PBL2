@@ -3,11 +3,11 @@
 
 KhachHang::KhachHang() : User(0, "", "", "")
 {
-    this->_Rec = LinkedList<Ticket>();
+    this->_Rec = LinkedList<std::string>();
     this->_Cart = Cart();
 }
 
-KhachHang::KhachHang(int id, std::string name, std::string email, std::string password,std::string cccd , std::string phone, LinkedList<Ticket> recs) : User(id, name, email, password, cccd, phone)
+KhachHang::KhachHang(int id, std::string name, std::string email, std::string password,std::string cccd , std::string phone, LinkedList<std::string> recs) : User(id, name, email, password, cccd, phone)
 {
     this->_Rec = recs;
     this->_Cart = Cart();
@@ -34,12 +34,12 @@ Cart &KhachHang::getCart()
     return this->_Cart;
 }
 
-LinkedList<Ticket> KhachHang::Rec()
+LinkedList<std::string> KhachHang::Rec()
 {
     return this->_Rec;
 }
 
-void KhachHang::setRec(LinkedList<Ticket> recs)
+void KhachHang::setRec(LinkedList<std::string> recs)
 {
     this->_Rec = recs;
 }
@@ -47,26 +47,26 @@ void KhachHang::setRec(LinkedList<Ticket> recs)
 // Khi lựa xong vé sẽ mua, điền thông tin từng người sở hữu vé
 void KhachHang::purchase()
 {
-    std::string recID = "Purchased_" + std::to_string(this->getCart().tongsoVeMua());
+    std::string recID = "Purchased_" + std::to_string(this->getCart().veMua().length());
     //Hóa đơn được lưu ở ReceiptDB
 
     std::string fileName = std::to_string(this->getID()) + "_" + recID + ".txt";
     std::string filePath = "./Database/ReceiptDB/" + fileName;
 
-    // ghi vào file thông tin khách hàng 
-    // std::ofstream outFileKhachHang("./Database/UserDB/KhachHangDB/KhachHang_" + std::to_string(this->getID()) + ".txt", std::ios::app);
-    // outFileKhachHang << recID << std::endl;
-    // outFileKhachHang.close();
+    //ghi vào file thông tin khách hàng 
+    std::ofstream outFileKhachHang("./Database/UserDB/KhachHangDB/KhachHang_" + std::to_string(this->getID()) + ".txt", std::ios::app);
+    outFileKhachHang << fileName << std::endl;
+    outFileKhachHang.close();
 
     std::ofstream outFile(filePath);
 
+    //thông tin giao dịch lưu trong ReiceitDB
     std::string date = currentDateTime();
     outFile << date <<std::endl;
     outFile << _Cart.Total() << std::endl;
-
+    //in ra tất cả các vé
     for (int i = 0; i < _Cart.veMua().length(); i++)
     {
-        outFile << _Cart.soVeMua().get(i) << " ";
         outFile << _Cart.veMua().get(i).getID_ve() << std::endl;
     }
 

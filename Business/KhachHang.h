@@ -10,11 +10,11 @@
 class KhachHang : public User{
     private:
         Cart _Cart;
-        LinkedList<Ticket> _Rec;
+        LinkedList<std::string> _Rec;
     public:
         // Constructor
     KhachHang();
-    KhachHang(int, std::string, std::string, std::string,std::string, std::string, LinkedList<Ticket> = LinkedList<Ticket>());
+    KhachHang(int, std::string, std::string, std::string,std::string, std::string, LinkedList<std::string> = LinkedList<std::string>());
 
     // Destructor
     ~KhachHang();
@@ -29,10 +29,10 @@ class KhachHang : public User{
     Cart &getCart();
 
     // Get list of ticket
-    LinkedList<Ticket> Rec();
+    LinkedList<std::string> Rec();
 
     // Set list of receipt ID
-    void setRec(LinkedList<Ticket>);
+    void setRec(LinkedList<std::string>);
 
     void newKhachHang();
 

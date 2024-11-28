@@ -31,9 +31,11 @@ void addKhachHangToDatabase(KhachHang &KhachHang)
     outFile << KhachHang.getPassword() << std::endl;
     outFile << KhachHang.getCCCD() << std::endl;
     outFile << KhachHang.getMobile() << std::endl;
+
+    //Lưu tên các hóa đơn
     for (int i = 0; i < KhachHang.Rec().length(); i++)
     {
-        outFile << KhachHang.Rec().get(i).getID_ve() << std::endl;
+        outFile << KhachHang.Rec().get(i) << std::endl;
     }
 
     // write KhachHangid to KhachHang_id.txt
@@ -53,18 +55,26 @@ KhachHang addNewKhachHang(bool isLogin)
     std::cout << spaceLineChoice << "New KhachHang:\n";
 
     std::string name = getStringInput("Name");
-    std::string email = getEmailInput();
-    // Nếu không phải đang đăng ký tài khoản thì dùng chung email cũng cũng
+    std::string email;
+    std::string pwd;
+
     if (isLogin)
     {
+        email = getEmailInput();
         while (!isUniqueEmail(email))
         {
             printError("Email already exists, please login instead!");
             system("pause");
             KhachHangMenu::KH_main();
         }
+        pwd = getPasswordInput("Password");
     }
-    std::string pwd = getPasswordInput("Password");
+    else
+    {
+        email = "none";
+        pwd = "1";
+    }
+
     std::string cccd = getStringInput("CCCD");
     std::string phone = getStringInput("Phone");
 
@@ -119,10 +129,10 @@ KhachHang getKhachHangFromDatabase(int KhachHangID)
     getline(inFile, line);
     phone = line;
 
-    LinkedList<Ticket> recs;
+    LinkedList<std::string> recs;
     while (getline(inFile, line))
     {
-        recs.addLast(findTicketById(line));
+        recs.addLast(line);
     }
 
     return KhachHang(KhachHangID, name, email, password, cccd, phone, recs);
@@ -186,11 +196,15 @@ void printKhachHang(KhachHang &khachHang)
     table.add("ID");
     table.add("Name");
     table.add("Email");
+    table.add("CCCD");
+    table.add("Mobile");  
     table.endOfRow();
 
     table.add(std::to_string(khachHang.getID()));
     table.add(khachHang.getName());
     table.add(khachHang.getEmail());
+    table.add(khachHang.getCCCD());
+    table.add(khachHang.getMobile());
     table.endOfRow();
 
     std::cout << table << std::endl;

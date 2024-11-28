@@ -20,6 +20,7 @@ public:
     static void purchaseTicket(KhachHang &khachHang, LinkedList<Flight> flights = getAllFlight());       // Mua bán thuốc
     static void searchTicket(KhachHang &);         // Tìm kiếm thông tin thuốc
     static void orderTicketHistory(KhachHang &);   // Lịch sử mua bán thuốc
+    static void cancelTicket(KhachHang &khachHang);
     // static void bookAppointment(Patient &);    // Đặt lịch hẹn
     // static void viewMedicalHistory(Patient &); // Xem lịch sử khám
     static void menu(KhachHang &);               // Thực hiện các chức năng menu, switchcase

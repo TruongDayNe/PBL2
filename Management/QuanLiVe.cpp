@@ -36,7 +36,7 @@ std::string lineTicketFormat(std::string qty, std::string item, std::string amou
 void printTicket(int KhachHangID, Ticket ticket)
 {
     std::ifstream inFile("./Page/Ticket.txt");
-    std::ifstream inFileRec("./Database/TicketDB/" + std::to_string(KhachHangID) + "_" + ticket.getID_ve() + ".txt");
+    //std::ifstream inFileRec("./Database/TicketDB/" + std::to_string(KhachHangID) + "_" + ticket.getID_ve() + ".txt");
 
     std::string line;
     std::string lineRec;
@@ -59,9 +59,9 @@ void printTicket(int KhachHangID, Ticket ticket)
         std::cout << line << std::endl;
     }
 
-    getline(inFileRec, lineRec);
+    //getline(inFileRec, lineRec);
     std::cout << lineTicketFormat("Issue Date", currentDateTime()) << std::endl;
-    getline(inFileRec, lineRec);
+    //getline(inFileRec, lineRec);
 
     //in tới dòng 10
     for (int i = 8; i < 10; i++)
@@ -98,21 +98,21 @@ void printTicket(int KhachHangID, Ticket ticket)
         std::cout << line << std::endl;
     }
 
-    inFileRec.close();
+    //inFileRec.close();
     inFile.close();
 }
 
-bool isValidTicketID(std::string ticketID, KhachHang &KhachHang)
-{
-    LinkedList<Ticket> tickets = KhachHang.Rec();
+// bool isValidTicketID(std::string ticketID, KhachHang &KhachHang)
+// {
+//     LinkedList<Ticket> tickets = KhachHang.Rec();
 
-    for (int i = 0; i < tickets.length(); i++) {
-        if (tickets.get(i).getID_ve() == ticketID) {
-            return true;
-        }
-    }
-    return false;
-}
+//     for (int i = 0; i < tickets.length(); i++) {
+//         if (tickets.get(i).getID_ve() == ticketID) {
+//             return true;
+//         }
+//     }
+//     return false;
+// }
 
 bool isValidTicketID(std::string ticketID) 
 {
@@ -203,30 +203,31 @@ void getAllKhachHangTickets(KhachHang &KhachHang)
 {
     TextTable table;
     int n = KhachHang.Rec().length();
-    table.add("ID");
-    table.add("Name");
     table.add("Ticket ID");
-    // table.add("Total");
-    table.add("Datetime");
+    table.add("Passenger");
+    table.add("Date of departure");
+    table.add("Price");
     table.endOfRow();
 
     int total = 0;
     for (int i = 0; i < n; i++)
     {
-        table.add(std::to_string(KhachHang.getID()));
-        table.add(KhachHang.getName());
-        table.add(KhachHang.Rec().get(i).getID_ve());
-        // table.add(formatCurrency(getReceiptTotal(KhachHang.getID(), KhachHang.Rec().get(i))));
-        // table.add(getReceiptDateTime(KhachHang.getID(), KhachHang.Rec().get(i)));
-        table.add(KhachHang.Rec().get(i).getngayMua());
-        table.endOfRow();
-        // total += getReceiptTotal(KhachHang.getID(), KhachHang.Rec().get(i));
+        LinkedList<Ticket> KhachHangReceipts = getTicketFromReceipt(KhachHang.Rec().get(i));
+        for (int j = 0; j < KhachHangReceipts.length(); j++)
+        {
+            Ticket KhachHangTicket = KhachHangReceipts.get(j);
+            table.add(KhachHangTicket.getID_ve());
+            table.add(KhachHangTicket.getKhachHang().getName());
+            table.add(KhachHangTicket.getChuyenBay().getngayKhoiHanh());
+            table.add(formatCurrency(KhachHangTicket.getgiaVe()));
+            table.endOfRow();
+            total += KhachHangTicket.getgiaVe();
+        }
     }
-    // table.add("");
-    // table.add("");
-    // table.add("Total amount");
-    // table.add(formatCurrency(total));
-    // table.add("");
+    table.add("");
+    table.add("");
+    table.add("Total amount");
+    table.add(formatCurrency(total));
     table.endOfRow();
 
     std::cout << table << std::endl;
@@ -300,4 +301,25 @@ Ticket findTicketById(const std::string& ticketID)
         }
     }
     throw std::runtime_error("Không tìm thấy vé với ID: " + ticketID);
+}
+
+LinkedList<Ticket> getTicketFromReceipt(std::string recID)
+{
+    std::ifstream inFile("./Database/ReceiptDB/" + recID + ".txt");
+    std::string line;
+    int firstIndex;
+    LinkedList<Ticket> tickets;
+
+    getline(inFile, line);
+    getline(inFile, line);
+    while (getline(inFile, line))
+    {
+        // firstIndex = line.find_first_of(" ");
+        // std::string ID_ve = line.substr(firstIndex);
+        Ticket ve = findTicketById(line);
+        tickets.addLast(ve);
+    }
+
+    inFile.close();
+    return tickets;
 }

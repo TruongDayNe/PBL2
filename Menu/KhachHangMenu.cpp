@@ -148,6 +148,14 @@ void KhachHangMenu::menu(KhachHang &khachHang)
         break;
 
         case 6:
+        {
+            cancelTicket(khachHang);
+            system("pause");
+            KhachHangMenu::menu(khachHang);
+        }
+        break;
+
+        case 7:
             Home::menu();
             break;
         }
@@ -172,10 +180,11 @@ int KhachHangMenu::printTask()
             "\t  View your ticket order history",
             "\t  Search tickets",
             "\t  Purchase ticket",
+            "\t  Cancel ticket",
             "\t  Log out",
         };
 
-    MenuBox MENU(6, data);
+    MenuBox MENU(7, data);
     int key = MENU.menu();
     return key;
 }
@@ -247,8 +256,9 @@ void KhachHangMenu::purchaseTicket(KhachHang &khachHang, LinkedList<Flight> flig
         for (int i = 0; i < ticketsToAdd.length(); i++) {
             khachHang.getCart().addTickettoCart(ticketsToAdd.get(i));
         } 
+        request = getYesNoInput(spaceLineChoice + "Do you want to purchase more tickets? (y/n)");
     } while (request == "y" || request == "Y");
-    request = getYesNoInput(spaceLineChoice + "Do you want to purchase more tickets? (y/n)");
+    
     khachHang.purchase();
 }
 
@@ -279,7 +289,7 @@ void KhachHangMenu::orderTicketHistory(KhachHang &khachHang)
         case 1:
         {
             std::string ticketID = getStringInput("Enter the ticket ID you want to view details");
-            while (!isValidTicketID(ticketID, khachHang))
+            while (!isValidTicketID(ticketID))
             {
                 printError("Invalid ticket ID, please enter again!");
                 ticketID = getStringInput("Enter the ticket ID you want to view details");
@@ -293,11 +303,94 @@ void KhachHangMenu::orderTicketHistory(KhachHang &khachHang)
         break;
 
         case 2:
-            KhachHangMenu::menu(khachHang);
+            // KhachHangMenu::menu(khachHang);
             break;
         }
     }
 }
+
+void cancelTicket(KhachHang &khachHang)
+{
+    if (khachHang.Rec().length() == 0)
+    {
+        printError("You haven't purchased any tickets to cancel!");
+        system("pause");
+        KhachHangMenu::menu(khachHang);
+        return;
+    }
+
+    system("cls");
+    khachHang.printAllKhachHangPurchases();
+
+    std::string ticketID = getStringInput("Enter the Ticket ID you want to cancel");
+    while (!isValidTicketID(ticketID))
+    {
+        printError("Invalid Ticket ID, please enter again!");
+        ticketID = getStringInput("Enter the Ticket ID you want to cancel");
+    }
+
+    // Find the ticket in the customer's records
+    Ticket ticketToCancel;
+    bool found = false;
+    for (int i = 0; i < khachHang.Rec().length(); ++i)
+    {
+        LinkedList<Ticket> tickets = getTicketFromReceipt(khachHang.Rec().get(i));
+        for (int j = 0; j < tickets.length(); ++j)
+        {
+            if (tickets.get(j).getID_ve() == ticketID)
+            {
+                ticketToCancel = tickets.get(j);
+                found = true;
+                break;
+            }
+        }
+        if (found)
+            break;
+    }
+
+    if (!found)
+    {
+        printError("Ticket not found in your purchases!");
+        system("pause");
+        cancelTicket(khachHang);
+        return;
+    }
+
+    // Confirm cancellation
+    std::string confirm = getYesNoInput("Are you sure you want to cancel this ticket? (y/n)");
+    if (confirm != "y" && confirm != "Y")
+    {
+        printSuccess("Ticket canceled.");
+        system("pause");
+        return;
+    }
+
+    // Remove the ticket from the customer's cart
+    // khachHang.getCart().removeTicketFromCart(ticketID);
+
+    // Update ticket availability in the flight's record
+    Flight flight = ticketToCancel.getChuyenBay();
+    int updatedQuantity = flight.getsoLuongVe() + 1;
+    updateTicketQuantityInDatabase(flight.getID_chuyenBay(), updatedQuantity);
+
+    // Remove ticket from the customer's receipts
+    for (int i = 0; i < khachHang.Rec().length(); ++i)
+    {
+        LinkedList<Ticket> tickets = getTicketFromReceipt(khachHang.Rec().get(i));
+        for (int j = 0; j < tickets.length(); ++j)
+        {
+            if (tickets.get(j).getID_ve() == ticketID)
+            {
+                tickets.removeAtIndex(j);
+                break;
+            }
+        }
+    }
+
+    printSuccess("Ticket canceled successfully!");
+    system("pause");
+}
+
 
 // static void KhachHangMenu::searchTicket(KhachHang &khachHang)
 // {

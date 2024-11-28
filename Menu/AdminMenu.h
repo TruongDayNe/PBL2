@@ -18,7 +18,7 @@ class AdminMenu
 {
 public:
     static int printTask();
-    static void menu(Admin &);                      // In ra console các chức năng
+    static void menu();                      // In ra console các chức năng
     // static void searchDrug(Doctor &);            // Tìm kiếm thông tin thuốc
     // static void drugManagement(Doctor &);        // Xem, thêm, cập nhật, xóa,...
     // static void searchPatient(Doctor &);         // Tìm theo tên, ID

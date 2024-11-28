@@ -53,7 +53,7 @@ void AdminMenu::login()
         {
             printSuccess("Login successful!");
             system("pause");
-            AdminMenu::AD_main(); // Chuyển đến menu admin
+            AdminMenu::menu(); // Chuyển đến menu admin
             return;
         }
         else
@@ -75,7 +75,7 @@ void AdminMenu::login()
     } while (attempts > 0);
 }
 
-void AdminMenu::menu(Admin &Admin)
+void AdminMenu::menu()
 {
     system("cls");
     std::string flightID;    
@@ -85,30 +85,31 @@ void AdminMenu::menu(Admin &Admin)
         switch (key)
         {
         case 1:
-            std::cout << "Nhập ID chuyến bay cần tra cứu";
+        {    std::cout << "Nhập ID chuyến bay cần tra cứu";
             
             std::cin >> flightID;
             // searchByTicketsID(ticketID);
-            break;
+            break;}
         case 2:
-            std::cout << "Nhập ID vé cần chỉnh sửa";
+        {    std::cout << "Nhập ID vé cần chỉnh sửa";
             std::cin >> flightID;
             updateFlightInDatabase(flightID);
-            break;
+            break;}
         case 3:
-            addNewFlightToDataBase();
+        {    addNewFlightToDataBase();
             printSuccess("Thêm vé thành công");
             // printReceipt();
 
-            break;
+            break;}
         case 4: 
-            std::cout << "Nhập ID vé cần hủy";
+        {   std::cout << "Nhập ID vé cần hủy";
             int ticketID;
             std::cin >> ticketID;
             deleteFlightFromDatabase(flightID);
-            std::cout<<"Hủy vé thành công";
+            std::cout<<"Hủy vé thành công";}
         case 5:
-
+        {    Home::menu();
+            break;}
         default:
             break;
         }
@@ -130,9 +131,10 @@ int AdminMenu::printTask()
         {
             "\t  Tra cứu vé theo ID",
             "\t  Chỉnh sửa thông tin vé",
-            "\t  Thêm vé",
-            "\t  Hủy vé",
+            "\t  Thêm chuyến bay",
+            "\t  Hủy vé của người dùng",
             "\t  Tra cứu thông tin chuyến bay",
+            "\t  Đăng xuất",
         };
 
     MenuBox MENU(5, data);

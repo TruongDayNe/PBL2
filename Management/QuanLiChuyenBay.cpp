@@ -282,13 +282,16 @@ void printAllFlights(LinkedList<Flight> flights)
     for (int i = 0; i < flights.length(); i++)
     {
         Flight flight = flights.get(i);
-        table.add(flight.getID_chuyenBay());
-        table.add(flight.getdiemDi());
-        table.add(flight.getdiemDen());
-        table.add(flight.getngayKhoiHanh());
-        table.add(std::to_string(flight.getsoLuongVe()));
-        table.add(formatCurrency(flight.getgiaVe()));
-        table.endOfRow();
+        if (flight.getsoLuongVe() != 0)
+        {
+            table.add(flight.getID_chuyenBay());
+            table.add(flight.getdiemDi());
+            table.add(flight.getdiemDen());
+            table.add(flight.getngayKhoiHanh());
+            table.add(std::to_string(flight.getsoLuongVe()));
+            table.add(formatCurrency(flight.getgiaVe()));
+            table.endOfRow();
+        } 
     }
 
     std::cout << table << std::endl;

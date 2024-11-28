@@ -423,15 +423,24 @@ int getLastKhachHangId()
     return std::stoi(x) + 1;
 }
 
-int getLastTicketId()
-    {
-    std::ifstream inFile("./Database/lastID.txt");
+// FIXED so it won't use lastID.txt
+// int getLastKhachHangId()    
+// {
+//     std::ifstream inFile("./Database/KhachHang_ID.txt");
+//     if (!inFile) {
+//         std::cerr << "Error opening file.\n";
+//         return -1; // Return error code if file cannot be opened
+//     }
 
-    std::string x;
-    getline(inFile, x);
+//     std::string line, id;
+//     while (getline(inFile, line)) {
+//         std::stringstream ss(line);
+//         getline(ss, id, ' '); // Extract the first column (ID)
+//     }
 
-    return std::stoi(x) + 1;
-}
+//     // Convert the last extracted ID to an integer
+//     return id.empty() ? 0 : std::stoi(id); // Return 0 if the file is empty
+// }
 
 std::string getReceiptDateTime(int patientID, std::string recID)
 {

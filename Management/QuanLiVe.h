@@ -20,6 +20,8 @@ void printTicket(int KhachHangID, Ticket ticket);
 
 bool isValidTicketID(std::string ticketID, KhachHang &KhachHang);
 
+bool isValidTicketID(std::string ticketID) ;
+
 void getTicketFromDatabase(int KhachHangID, Ticket ticket);
 
 void getAllKhachHangTickets(KhachHang &KhachHang); 
@@ -29,4 +31,5 @@ void addTicketToDatabase(int KhachHangID, Cart _Cart, LinkedList<std::string> ti
 void deleteTicketFromDatabase(int KhachHangID, std::string ticketID);
 
 Ticket findTicketById(const std::string& ticketID);
-// Add any additional utility function prototypes here if needed
+
+LinkedList<Ticket> getTicketFromReceipt(std::string recID);
