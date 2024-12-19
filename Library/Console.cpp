@@ -218,26 +218,28 @@ void printSuccess(std::string status)
 // eraseLine: line to delete
 void eraseFileLine(std::string path, std::string eraseLine)
 {
+    std::ifstream fin(path);
+    std::ofstream temp("temp.txt");
+
     std::string line;
-    std::ifstream fin;
-
-    fin.open(path);
-    std::ofstream temp;
-    temp.open("temp.txt");
-
     while (getline(fin, line))
     {
+        // Kiểm tra nếu dòng không phải là dòng cần xóa
         if (line != eraseLine)
-            temp << line << std::endl;
+        {
+            temp << line << "\n";
+        }
     }
 
     temp.close();
     fin.close();
 
+    // Ghi lại nội dung file tạm vào file gốc
     const char *p = path.c_str();
     remove(p);
     rename("temp.txt", p);
 }
+
 
 // Delete line input from file
 // path: path to file in database
@@ -433,13 +435,19 @@ int getLastKhachHangId()
 //     }
 
 //     std::string line, id;
+//     int maxId = 0; // Initialize maxId to 0
+
 //     while (getline(inFile, line)) {
 //         std::stringstream ss(line);
 //         getline(ss, id, ' '); // Extract the first column (ID)
+
+//         if (!id.empty()) {
+//             int currentId = std::stoi(id);
+//             maxId = std::max(maxId, currentId); // Update maxId if currentId is larger
+//         }
 //     }
 
-//     // Convert the last extracted ID to an integer
-//     return id.empty() ? 0 : std::stoi(id); // Return 0 if the file is empty
+//     return maxId;
 // }
 
 std::string getReceiptDateTime(int patientID, std::string recID)
@@ -533,4 +541,147 @@ int findLine(const std::string& filename, const std::string& targetLine) {
     }
 
     return -1; // Return -1 if the line is not found
+}
+
+std::string getDateFromString(const std::string &dateTime)
+{
+    // Chuỗi định dạng: "DD-MM-YYYY HH:MM:SS"
+    size_t spacePos = dateTime.find(' ');
+    if (spacePos == std::string::npos)
+    {
+        throw std::invalid_argument("Invalid date-time format: " + dateTime);
+    }
+    return dateTime.substr(0, spacePos); // Trả về phần ngày: "DD-MM-YYYY"
+}
+
+std::string getTimeFromString(const std::string &dateTime)
+{
+    // Chuỗi định dạng: "DD-MM-YYYY HH:MM:SS"
+    size_t spacePos = dateTime.find(' ');
+    if (spacePos == std::string::npos)
+    {
+        throw std::invalid_argument("Invalid date-time format: " + dateTime);
+    }
+    return dateTime.substr(spacePos + 1); // Trả về phần giờ: "HH:MM:SS"
+}
+
+// Hàm chuyển đổi ID vé thành ID chuyến bay
+std::string extractFlightID(const std::string& ticketID) {
+    size_t pos = ticketID.find('_'); // Tìm vị trí của ký tự '_'
+    if (pos != std::string::npos) {
+        return ticketID.substr(0, pos); // Lấy phần từ đầu đến trước '_'
+    }
+    return ""; // Trả về chuỗi rỗng nếu không tìm thấy '_'
+}
+
+std::string extractNumbers(const std::string& input) {
+    std::string result;
+    for (char ch : input) {
+        if (std::isdigit(ch)) { // Kiểm tra nếu ký tự là số
+            result += ch;       // Thêm ký tự số vào kết quả
+        }
+    }
+    return result;
+}
+
+
+bool taoSoDoGhe(int soGhe, const std::string& ID_chuyenBay) {
+    // Kiểm tra số ghế hợp lệ
+    if (soGhe <= 0) {
+        std::cerr << "Error: Số ghế phải lớn hơn 0.\n";
+        return false;
+    }
+
+    const int soCot = 8; // Cố định 8 cột (ABCDEFGH)
+    int soDong = (soGhe + soCot - 1) / soCot; // Tính số dòng, làm tròn lên
+
+    // Cấp phát bộ nhớ động cho ma trận ghế
+    int** maTranGhe = new int*[soDong];
+    for (int i = 0; i < soDong; ++i) {
+        maTranGhe[i] = new int[soCot];
+    }
+
+    // Khởi tạo ma trận ghế
+    for (int i = 0; i < soDong; ++i) {
+        for (int j = 0; j < soCot; ++j) {
+            maTranGhe[i][j] = 0; // Mặc định tất cả ghế là trống
+        }
+    }
+
+    // Đánh dấu các ghế không tồn tại (ở dòng cuối, nếu có)
+    int soGheThua = soDong * soCot - soGhe; // Số ghế dư trong ma trận
+    for (int i = 0; i < soGheThua; ++i) {
+        maTranGhe[soDong - 1][soCot - 1 - i] = -1; // Ghế không tồn tại
+    }
+
+    // Tạo tên file
+    std::string fileName = "./Database/SeatDB/" + ID_chuyenBay + ".txt";
+
+    // Mở file để ghi
+    std::ofstream file(fileName);
+    if (!file.is_open()) {
+        std::cerr << "Error: Không thể mở file " << fileName << " để ghi.\n";
+
+        // Giải phóng bộ nhớ
+        for (int i = 0; i < soDong; ++i) {
+            delete[] maTranGhe[i];
+        }
+        delete[] maTranGhe;
+
+        return false;
+    }
+
+    // Ghi ma trận ghế vào file
+    for (int i = 0; i < soDong; ++i) {
+        for (int j = 0; j < soCot; ++j) {
+            if (maTranGhe[i][j] == -1) {
+                file << "x "; // Ghế không tồn tại
+            } else {
+                file << maTranGhe[i][j] << " "; // Ghế bình thường
+            }
+        }
+        file << "\n"; // Xuống dòng sau mỗi hàng
+    }
+
+    file.close();
+
+    // Giải phóng bộ nhớ
+    for (int i = 0; i < soDong; ++i) {
+        delete[] maTranGhe[i];
+    }
+    delete[] maTranGhe;
+
+    std::cout << "Đã tạo thành công sơ đồ ghế cho chuyến bay: " << ID_chuyenBay << std::endl;
+    return true;
+}
+
+
+int getSeatIndex(const std::string& seatCode) {
+    // Kiểm tra tính hợp lệ của mã ghế
+    if (seatCode.length() < 2 || 
+        !isdigit(seatCode[0]) || 
+        !isupper(seatCode[1]) || 
+        seatCode[1] < 'A' || seatCode[1] > 'H') {
+        return -1; // Mã ghế không hợp lệ
+    }
+
+    int row = std::stoi(seatCode.substr(0, 1)) - 1; // Chuyển hàng về chỉ số 0
+    int col = seatCode[1] - 'A'; // Chuyển cột về chỉ số 0
+
+    return row * 8 + col + 1; // Tính toán chỉ số thứ tự
+}
+
+std::string extractSeatFromTicketID(const std::string& ticketID) {
+    size_t pos = ticketID.find('_'); // Tìm vị trí của ký tự '_'
+    if (pos != std::string::npos) {
+        return ticketID.substr(pos + 1); // Lấy phần từ sau '_'
+    }
+    return ""; // Trả về chuỗi rỗng nếu không tìm thấy '_'
+}
+
+std::string getIssueDate(const std::string& recID){
+    std::ifstream inFile("./Database/ReceiptDB/" + recID);
+    std::string line;
+    std::getline(inFile, line);
+    return line;
 }

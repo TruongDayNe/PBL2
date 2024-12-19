@@ -85,31 +85,43 @@ void AdminMenu::menu()
         switch (key)
         {
         case 1:
-        {    std::cout << "Nhập ID chuyến bay cần tra cứu";
-            
-            std::cin >> flightID;
-            // searchByTicketsID(ticketID);
-            break;}
+        {    
+            system("cls");
+            LinkedList<Flight> allFlights = getAllFlight();
+            printAllFlights(allFlights);
+            if (allFlights.length() == 0)
+            {
+                printError("Không tìm thấy chuyến bay nào");
+                AdminMenu::menu();
+                break;
+            }
+        }
         case 2:
-        {    std::cout << "Nhập ID vé cần chỉnh sửa";
+        {    
+            LinkedList<Flight> flights = searchByFlightsPath();
+            if (flights.length() == 0)
+            {
+                printError("Không tìm thấy chuyến bay");
+                AdminMenu::menu();
+                break;
+            }
+            std::cout << "Nhập ID chuyến bay cần chỉnh sửa";
             std::cin >> flightID;
             updateFlightInDatabase(flightID);
+            AdminMenu::menu();
             break;}
         case 3:
-        {    addNewFlightToDataBase();
-            printSuccess("Thêm vé thành công");
-            // printReceipt();
-
-            break;}
-        case 4: 
-        {   std::cout << "Nhập ID vé cần hủy";
-            int ticketID;
-            std::cin >> ticketID;
-            deleteFlightFromDatabase(flightID);
-            std::cout<<"Hủy vé thành công";}
-        case 5:
-        {    Home::menu();
-            break;}
+        {    
+            addNewFlightToDataBase();
+            printSuccess("Thêm chuyến bay thành công");
+            AdminMenu::menu();
+            break;
+        }
+        case 4:
+        {    
+            Home::menu();
+            break;
+        }
         default:
             break;
         }
@@ -129,15 +141,13 @@ int AdminMenu::printTask()
 
     char data[200][200] =
         {
-            "\t  Tra cứu vé theo ID",
-            "\t  Chỉnh sửa thông tin vé",
+            "\t  Xem thông tin tất cả chuyến bay",
+            "\t  Tìm chuyến bay để chỉnh sửa",
             "\t  Thêm chuyến bay",
-            "\t  Hủy vé của người dùng",
-            "\t  Tra cứu thông tin chuyến bay",
             "\t  Đăng xuất",
         };
 
-    MenuBox MENU(5, data);
+    MenuBox MENU(4, data);
     int key = MENU.menu();
     return key;
 }

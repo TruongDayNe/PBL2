@@ -65,15 +65,19 @@ void addFlightToDatabase(Flight &flight)
 
 void addNewFlightToDataBase()
 {
-    std::cout << spaceLineChoice + "New flight:\n";
-    std::string ID_chuyenBay = getStringInput("ID chuyến bay");
+    std::cout << spaceLineChoice + "New flight:" << std::endl;
+    std::string ID_chuyenBay;
+    do {
+        ID_chuyenBay = getStringInput("ID chuyến bay");
+    } while (ID_chuyenBay == "");
     std::string diemDi = getStringInput("Điểm đi");
     std::string diemDen = getStringInput("Điểm đến");
     std::string ngayKhoiHanh = getStringInput("Ngày giờ khởi hành (dd-mm-yy hh:mm:ss)");
-    unsigned int soLuongVe = getIntInput("Số lượng vé");
+    unsigned int soLuongVe = getIntInput("Số lượng vé (8n)");
     int giaVe = getIntInput("Giá vé");
     // Create new Ticket object
     Flight flight = Flight(ID_chuyenBay, diemDi, diemDen, ngayKhoiHanh, soLuongVe, giaVe );
+    taoSoDoGhe(soLuongVe, ID_chuyenBay);
 
     // Save to database
     addFlightToDatabase(flight);
@@ -192,11 +196,6 @@ void updateFlightInDatabase(std::string flightID)
     Flight flight = getFlightFromDatabase(flightID);
     std::string filePath = "./Database/FlightDB/flights.csv";
 
-    char char_filePath[(filePath).length() + 1];
-    strcpy(char_filePath, (filePath).c_str());
-
-    int status = remove(char_filePath);
-
     std::string ID_chuyenBay = updateComponent("ID chuyến bay", flight.getID_chuyenBay());
     std::string diemDi = updateComponent("Điểm đi", flight.getdiemDi());
     std::string diemDen = updateComponent("Điểm đến", flight.getdiemDen());
@@ -213,6 +212,7 @@ void updateFlightInDatabase(std::string flightID)
 
     addFlightToDatabase(flight);
     printSuccess("Succesfully update!");
+    eraseFileLine(filePath, findLine(filePath, flightID));
 }
 
 LinkedList<Flight> getAllFlight() //fix

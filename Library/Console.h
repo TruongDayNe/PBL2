@@ -55,5 +55,13 @@ int updatePrice(int old_price);
 std::string updatePassword(std::string old_pass);
 std::string trim(const std::string& str);
 int findLine(const std::string& filename, const std::string& targetLine);
+std::string getDateFromString(const std::string &dateTime);
+std::string getTimeFromString(const std::string &dateTime);
+std::string extractFlightID(const std::string& ticketID);
+std::string extractNumbers(const std::string& input);
+bool taoSoDoGhe(int soGhe, const std::string& ID_chuyenBay);
+int getSeatIndex(const std::string& seatCode);
+std::string extractSeatFromTicketID(const std::string& ticketID);
+std::string getIssueDate(const std::string& recID);
 
 #endif

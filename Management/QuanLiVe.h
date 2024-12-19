@@ -24,7 +24,7 @@ bool isValidTicketID(std::string ticketID) ;
 
 void getTicketFromDatabase(int KhachHangID, Ticket ticket);
 
-void getAllKhachHangTickets(KhachHang &KhachHang); 
+// void getAllKhachHangTickets(KhachHang &KhachHang); 
 
 void addTicketToDatabase(int KhachHangID, Cart _Cart, LinkedList<std::string> ticketID);
 
@@ -32,4 +32,11 @@ void deleteTicketFromDatabase(int KhachHangID, std::string ticketID);
 
 Ticket findTicketById(const std::string& ticketID);
 
-LinkedList<Ticket> getTicketFromReceipt(std::string recID);
+// LinkedList<Ticket> getTicketFromReceipt(std::string recID);
+
+// LinkedList<std::string> getKhachHangIDFromReceipt(std::string recID);
+
+void removeTicketFromReceipt(std::string recID, std::string ticketID);
+
+//needed
+std::string getKhachHangNameFromDatabase(int KhachHangID);

@@ -1,5 +1,6 @@
 #pragma once // Tránh đụng độ thư viện khi gọi chồng file
 #include <iostream>
+#include <fstream>
 #include <conio.h>     // Thư viện hỗ trợ nhập xuất ký tự từ bàn phím
 #include <cstddef>
 #include <windows.h>   // Thư viện chứa các hàm liên quan đến Windows như SetConsoleTextAttribute, SetConsoleCursorPosition
@@ -95,6 +96,15 @@ inline void resizeConsole(int width, int heigth)
     GetWindowRect(console, &r);
     MoveWindow(console, r.left, r.top, width, heigth, TRUE);
 }
+
+// ===== Đọc file sơ đồ ghế =====
+bool readSeatMapFromFile(const std::string& filename, char seatMap[100][8], int& rows, int& cols);
+// ===== Cập nhật trạng thái ghế trong file =====
+bool updateSeatStatusInFile(const std::string& filename, int row, int col, int status);
+// ===== In sơ đồ ghế có ID ghế =====
+void printSeatMapWithIDs(const char seatMap[100][8], int rows, int cols, int cursorRow, int cursorCol);
+// ===== Tạo sơ đồ ghế tương tác =====
+std::string createSeatMapWithIDs(const std::string& ID_chuyenBay);
 
 #ifndef MENUBOX_H
 #define MENUBOX_H

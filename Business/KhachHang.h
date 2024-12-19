@@ -6,6 +6,7 @@
 #include <iostream>
 #include "Cart.h"
 #include "../Management/QuanLiVe.h"
+#include "../Menu/KhachHangMenu.h"
 
 class KhachHang : public User{
     private:
@@ -36,7 +37,7 @@ class KhachHang : public User{
 
     void newKhachHang();
 
-    void purchase();
+    void purchase(LinkedList<int>);
     void searchByTicketID(std::string);
     // void searchByCompName(std::string);
     void printAllKhachHangPurchases();

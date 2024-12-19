@@ -52,7 +52,7 @@ void addKhachHangToDatabase(KhachHang &KhachHang)
 
 KhachHang addNewKhachHang(bool isLogin)
 {
-    std::cout << spaceLineChoice << "New KhachHang:\n";
+    std::cout << spaceLineChoice << "New KhachHang:" << std::endl;
 
     std::string name = getStringInput("Name");
     std::string email;
@@ -177,30 +177,43 @@ void updateKhachHangInDatabase(int KhachHangID)
 
     std::string name = updateComponent("Name", khachHang.getName());
     std::string email = updateComponent("Email", khachHang.getEmail());
+    std::string cccd = updateComponent("CCCD", khachHang.getCCCD());
+    std::string phone = updateComponent("Phone", khachHang.getMobile());
     std::string password = updatePassword(khachHang.getPassword());
 
     khachHang.setID(KhachHangID);
     khachHang.setName(name);
     khachHang.setEmail(email);
     khachHang.setPassword(password);
+    khachHang.setCCCD(cccd);
+    khachHang.setMobile(phone);
     khachHang.setRec(oldkhachHang.Rec());
 
     addKhachHangToDatabase(khachHang);
-    updateLine("./Database/UserDB/user_ID.txt", std::to_string(oldkhachHang.getID()) + " " + oldkhachHang.getEmail() + " " + oldkhachHang.getPassword(), std::to_string(khachHang.getID()) + " " + khachHang.getEmail() + " " + khachHang.getPassword());
+
+    std::ofstream outFile("./Database/UserDB/user_ID.txt", std::ios::app);
+    outFile << khachHang.getID() << " ";
+    outFile << khachHang.getEmail() << " ";
+    outFile << khachHang.getPassword() << " ";
+    outFile << khachHang.getCCCD() << " ";
+    outFile << khachHang.getMobile() << std::endl;
+    outFile.close();
+
+    updateLine("./Database/UserDB/user_ID.txt",
+    std::to_string(oldkhachHang.getID()) + " " + oldkhachHang.getEmail() + " " + oldkhachHang.getPassword() + " " + oldkhachHang.getCCCD() + " " + oldkhachHang.getMobile(),
+    std::to_string(khachHang.getID()) + " " + khachHang.getEmail() + " " + khachHang.getPassword() + " " + khachHang.getCCCD() + " " + khachHang.getMobile());
 }
 
 void printKhachHang(KhachHang &khachHang)
 {
     TextTable table;
 
-    table.add("ID");
     table.add("Name");
     table.add("Email");
     table.add("CCCD");
     table.add("Mobile");  
     table.endOfRow();
 
-    table.add(std::to_string(khachHang.getID()));
     table.add(khachHang.getName());
     table.add(khachHang.getEmail());
     table.add(khachHang.getCCCD());

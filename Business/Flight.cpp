@@ -20,7 +20,7 @@ Flight::Flight(std::string ID_chuyenBay, std::string diemDi, std::string diemDen
     this->soLuongVe = soLuongVe;
     this->giaVe = giaVe;
     // Khởi tạo danh sách vé
-    for (int i = 0; i < soLuongVe; i) 
+    for (int i = 0; i < soLuongVe; i++) 
     {
         i++;
         std::string ticketID = ID_chuyenBay + "_" + std::to_string(i);
@@ -32,6 +32,7 @@ Flight::Flight(std::string ID_chuyenBay, std::string diemDi, std::string diemDen
 
 Flight::Flight(const Flight& chuyenBay)
 {
+    // Sao chép các thành viên cơ bản
     this->ID_chuyenBay = chuyenBay.ID_chuyenBay;
     this->diemDi = chuyenBay.diemDi;
     this->diemDen = chuyenBay.diemDen;
@@ -39,21 +40,28 @@ Flight::Flight(const Flight& chuyenBay)
     this->soLuongVe = chuyenBay.soLuongVe;
     this->giaVe = chuyenBay.giaVe;
 
-    // for (int i = 0; i < (chuyenBay.tickets).length() ; i++) {
-    //     this->tickets.addLast(chuyenBay.tickets.get(i));
-    // }
+    // Sao chép tham chiếu đến danh sách tickets (shallow copy)
+    this->tickets = chuyenBay.tickets; // Không tạo bản sao mới
 }
 
-Flight& Flight::operator = (const Flight& chuyenBay)
+
+Flight& Flight::operator=(const Flight& chuyenBay)
 {
-    this->ID_chuyenBay = chuyenBay.ID_chuyenBay;
-    this->diemDi = chuyenBay.diemDi;
-    this->diemDen = chuyenBay.diemDen;
-    this->ngayKhoiHanh = chuyenBay.ngayKhoiHanh;
-    this->soLuongVe = chuyenBay.soLuongVe;
-    this->giaVe = chuyenBay.giaVe;
+    if (this != &chuyenBay) { // Kiểm tra tự gán
+        // Sao chép các thành viên cơ bản
+        this->ID_chuyenBay = chuyenBay.ID_chuyenBay;
+        this->diemDi = chuyenBay.diemDi;
+        this->diemDen = chuyenBay.diemDen;
+        this->ngayKhoiHanh = chuyenBay.ngayKhoiHanh;
+        this->soLuongVe = chuyenBay.soLuongVe;
+        this->giaVe = chuyenBay.giaVe;
+
+        // Sao chép tham chiếu đến danh sách tickets (shallow copy)
+        this->tickets = chuyenBay.tickets; // Không tạo bản sao mới
+    }
     return *this;
 }
+
 
 Flight::~Flight()
 {

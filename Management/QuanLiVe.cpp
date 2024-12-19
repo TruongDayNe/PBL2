@@ -83,15 +83,11 @@ void printTicket(int KhachHangID, Ticket ticket)
     // }
 
     //in thông tin vé từ đối tương ticket
-    std::cout << lineTicketFormat(ticket.getChuyenBay().getID_chuyenBay(), ticket.getChuyenBay().getngayKhoiHanh() , ticket.getGhe()) << std::endl;
+    //std::cout << lineTicketFormat(ticket.getChuyenBay().getID_chuyenBay(), getDateFromString(ticket.getChuyenBay().getngayKhoiHanh()) , ticket.getGhe()) << std::endl;
+    std::cout << lineTicketFormat(ticket.getChuyenBay().getID_chuyenBay(), ticket.getGhe()) << std::endl;
 
-    for (int i = 0; i < 1; i++)
-    {
-        getline(inFile, line);
-        std::cout << line << std::endl;
-    }
-
-    // std::cout << lineTicketFormat("TOTAL AMOUNT", formatCurrency(total)) << std::endl;
+    getline(inFile, line);
+    std::cout << line << std::endl;
 
     while (getline(inFile, line))
     {
@@ -117,12 +113,11 @@ void printTicket(int KhachHangID, Ticket ticket)
 bool isValidTicketID(std::string ticketID) 
 {
     LinkedList<Flight> flights = getAllFlight();
-
+    std::string flightID = extractFlightID(ticketID);
     for (int i = 0; i < flights.length(); i++) {
-        for (int j = 0; j < flights.get(i).tickets.length(); j++) {
-            if (flights.get(i).tickets.get(j).getID_ve() == ticketID) {
-                return true;
-            }
+        for (int j = 0; j < 72; j++) {
+            std::string IDcheck = flights.get(i).getID_chuyenBay() + "_" + std::to_string(j);
+            if (IDcheck == ticketID) return true;
         }
     }
     return false;
@@ -167,18 +162,6 @@ void getTicketFromDatabase(int KhachHangID, Ticket ticket)
         std::cout << line << std::endl;
     }
 
-    // in thông tin vé theoo database từng dòng
-    // int quantity, ID_ve, amount;
-    // while (getline(inFileRec, lineRec))
-    // {
-    //     firstIndex = lineRec.find_first_of(" ");
-    //     quantity = std::stoi(lineRec.substr(0, firstIndex));
-    //     ID_ve = std::stoi(lineRec.substr(firstIndex + 1));
-    //     Ticket ve = getTicketFromDatabase(ID_ve);
-    //     amount = quantity * ve.getgiaVe();
-    //     std::cout << lineTicketFormat(std::to_string(quantity), ve.getChuyenBay().getID_chuyenBay(), formatCurrency(amount)) << std::endl;
-    // }
-
     //in thông tin vé từ đối tương ticket
     std::cout << lineTicketFormat(ticket.getChuyenBay().getID_chuyenBay(), ticket.getChuyenBay().getngayKhoiHanh() , ticket.getGhe()) << std::endl;
 
@@ -197,40 +180,6 @@ void getTicketFromDatabase(int KhachHangID, Ticket ticket)
 
     inFileRec.close();
     inFile.close();
-}
-
-void getAllKhachHangTickets(KhachHang &KhachHang)
-{
-    TextTable table;
-    int n = KhachHang.Rec().length();
-    table.add("Ticket ID");
-    table.add("Passenger");
-    table.add("Date of departure");
-    table.add("Price");
-    table.endOfRow();
-
-    int total = 0;
-    for (int i = 0; i < n; i++)
-    {
-        LinkedList<Ticket> KhachHangReceipts = getTicketFromReceipt(KhachHang.Rec().get(i));
-        for (int j = 0; j < KhachHangReceipts.length(); j++)
-        {
-            Ticket KhachHangTicket = KhachHangReceipts.get(j);
-            table.add(KhachHangTicket.getID_ve());
-            table.add(KhachHangTicket.getKhachHang().getName());
-            table.add(KhachHangTicket.getChuyenBay().getngayKhoiHanh());
-            table.add(formatCurrency(KhachHangTicket.getgiaVe()));
-            table.endOfRow();
-            total += KhachHangTicket.getgiaVe();
-        }
-    }
-    table.add("");
-    table.add("");
-    table.add("Total amount");
-    table.add(formatCurrency(total));
-    table.endOfRow();
-
-    std::cout << table << std::endl;
 }
 
 void addTicketToDatabase(int KhachHangID, Cart _Cart, LinkedList<std::string> Rec)
@@ -286,6 +235,7 @@ void deleteTicketFromDatabase(int KhachHangID, std::string recID)
     }
 }
 
+//tìm id chuyến bay
 Ticket findTicketById(const std::string& ticketID) 
 {
     LinkedList<Flight> flights = getAllFlight();
@@ -295,7 +245,7 @@ Ticket findTicketById(const std::string& ticketID)
         for (int j = 0; j < flights.get(i).tickets.length(); j++) {
             if (flights.get(i).tickets.get(j).getID_ve() == ticketID) 
             {
-                // Tìm thấy vé, trả về địa chỉ của nó
+                // Tìm thấy vé, trả về đối tượng vé
                 return flights.get(i).tickets.get(j);
             }
         }
@@ -303,23 +253,58 @@ Ticket findTicketById(const std::string& ticketID)
     throw std::runtime_error("Không tìm thấy vé với ID: " + ticketID);
 }
 
-LinkedList<Ticket> getTicketFromReceipt(std::string recID)
+void removeTicketFromReceipt(std::string recID, std::string ticketID)
 {
-    std::ifstream inFile("./Database/ReceiptDB/" + recID + ".txt");
-    std::string line;
-    int firstIndex;
-    LinkedList<Ticket> tickets;
+    std::string filePath = "./Database/ReceiptDB/" + recID;
 
-    getline(inFile, line);
-    getline(inFile, line);
-    while (getline(inFile, line))
+    std::ifstream inFile(filePath);
+    if (!inFile.is_open())
     {
-        // firstIndex = line.find_first_of(" ");
-        // std::string ID_ve = line.substr(firstIndex);
-        Ticket ve = findTicketById(line);
-        tickets.addLast(ve);
+        std::cerr << "Không thể mở file " << filePath << std::endl;
+        return;
     }
 
-    inFile.close();
-    return tickets;
+    std::string line;
+    getline(inFile, line); // Dòng 1
+    getline(inFile, line); // Dòng 2 (giá trị tổng)
+    int currentValue = std::stoi(line);
+
+    bool found = false;
+    while (getline(inFile, line))
+    {
+        int spaceIndex = line.find(' ');
+        std::string ID = line.substr(0, spaceIndex);
+
+        if (ID == ticketID)
+        {
+            std::string flightID = extractFlightID(ticketID);
+            Flight flight = getFlightFromDatabase(flightID);
+
+            inFile.close(); // Đóng file trước khi ghi
+            eraseFileLine(filePath, line); // Xóa dòng khỏi file
+            updateLine(filePath, 1, currentValue - flight.getgiaVe()); // Cập nhật giá trị tổng
+            found = true;
+            break;
+        }
+    }
+
+    if (!found)
+    {
+        std::cerr << "Ticket ID <" + ticketID + "> không tồn tại trong hóa đơn " << recID << std::endl;
+    }
+}
+
+std::string getKhachHangNameFromDatabase(int KhachHangID) {
+    std::string filePath = "./Database/UserDB/KhachHangDB/";
+    std::string fileName = "KhachHang_" + std::to_string(KhachHangID) + ".txt";
+
+    std::ifstream inFile(filePath + fileName);
+    std::string line;
+
+    std::string name;
+
+    getline(inFile, line);
+    name = line;
+
+    return name;
 }

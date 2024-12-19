@@ -44,13 +44,15 @@ void KhachHang::setRec(LinkedList<std::string> recs)
     this->_Rec = recs;
 }
 
-// Khi lựa xong vé sẽ mua, điền thông tin từng người sở hữu vé
-void KhachHang::purchase()
+// Khi lựa vé và điền thông tin từng người thì mua
+void KhachHang::purchase(LinkedList<int> IDs)
 {
-    std::string recID = "Purchased_" + std::to_string(this->getCart().veMua().length());
+    std::string recID = "Purchased_" + extractNumbers(currentDateTime());
     //Hóa đơn được lưu ở ReceiptDB
 
     std::string fileName = std::to_string(this->getID()) + "_" + recID + ".txt";
+
+    this->_Rec.addLast(fileName);
     std::string filePath = "./Database/ReceiptDB/" + fileName;
 
     //ghi vào file thông tin khách hàng 
@@ -67,7 +69,7 @@ void KhachHang::purchase()
     //in ra tất cả các vé
     for (int i = 0; i < _Cart.veMua().length(); i++)
     {
-        outFile << _Cart.veMua().get(i).getID_ve() << std::endl;
+        outFile << _Cart.veMua().get(i).getChuyenBay().getID_chuyenBay() << "_" << std::to_string(getSeatIndex(_Cart.veMua().get(i).getGhe())) << " " << IDs.get(i) << std::endl;
     }
 
     outFile.close();

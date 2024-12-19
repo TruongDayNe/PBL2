@@ -85,13 +85,6 @@ void KhachHangMenu::login()
 void KhachHangMenu::signUp()
 {
     system("cls");
-    // ifstream inFile("./Page/KhachHangSignUp.txt");
-    // string line;
-    // while (getline(inFile, line))
-    // {
-    //     cout << line << endl;
-    // }
-    // inFile.close();
     KhachHang KhachHang = addNewKhachHang();
     KhachHangMenu::menu(KhachHang);
 }
@@ -140,22 +133,6 @@ void KhachHangMenu::menu(KhachHang &khachHang)
         break;
 
         case 5:
-        {
-            purchaseTicket(khachHang);
-            system("pause");
-            KhachHangMenu::menu(khachHang);
-        }
-        break;
-
-        case 6:
-        {
-            cancelTicket(khachHang);
-            system("pause");
-            KhachHangMenu::menu(khachHang);
-        }
-        break;
-
-        case 7:
             Home::menu();
             break;
         }
@@ -179,12 +156,10 @@ int KhachHangMenu::printTask()
             "\t  Update account information",
             "\t  View your ticket order history",
             "\t  Search tickets",
-            "\t  Purchase ticket",
-            "\t  Cancel ticket",
             "\t  Log out",
         };
 
-    MenuBox MENU(7, data);
+    MenuBox MENU(5, data);
     int key = MENU.menu();
     return key;
 }
@@ -195,6 +170,7 @@ void KhachHangMenu::purchaseTicket(KhachHang &khachHang, LinkedList<Flight> flig
     int soLuongMua, new_soLuongVe;
     std::string ID_chuyenBay;
     std::string request;
+    LinkedList<int> IDs;
 
     do
     {
@@ -230,14 +206,22 @@ void KhachHangMenu::purchaseTicket(KhachHang &khachHang, LinkedList<Flight> flig
         LinkedList<Ticket> ticketsToAdd;
         for (int i = 0; i < soLuongMua; ++i)
         {
+            system("cls");
+            std::cout << "Enter information for ticket " << (i + 1) << "/" << soLuongMua << std::endl;
             KhachHang ticket_owner = addNewKhachHang(false);
+
+            IDs.addLast(ticket_owner.getID());
+
+            //tạo giao diện chọn ghế
+            std::string selectedSeat = createSeatMapWithIDs(ID_chuyenBay);
             
             // Get ticket from flight's ticket list
             if (currentFlight.tickets.length() > 0) {
                 Ticket ticket = currentFlight.tickets.get(i);
                 
                 // Create new ticket with unique ID and owner
-                Ticket newTicket(ticket.getID_ve(), currentFlight, ticket_owner, ticket.getGhe(), ticket.getgiaVe());
+                // Ticket newTicket(ticket.getID_ve(), currentFlight, ticket_owner, ticket.getGhe(), ticket.getgiaVe());
+                Ticket newTicket(ticket.getID_ve(), currentFlight, ticket_owner, selectedSeat, ticket.getgiaVe());
                 
                 ticketsToAdd.addLast(newTicket);
             }
@@ -247,10 +231,10 @@ void KhachHangMenu::purchaseTicket(KhachHang &khachHang, LinkedList<Flight> flig
         new_soLuongVe = flight.getsoLuongVe() - soLuongMua;
         updateTicketQuantityInDatabase(ID_chuyenBay, new_soLuongVe);
         
-        // Remove used tickets from flight
-        for (int i = 0; i < soLuongMua; i++) {
-            currentFlight.tickets.removeAtIndex(0);
-        }
+        // Remove used tickets from flight (no more needed)
+        // for (int i = 0; i < soLuongMua; i++) {
+        //     currentFlight.tickets.removeAtIndex(0);
+        // }
         
         // Add all tickets to cart
         for (int i = 0; i < ticketsToAdd.length(); i++) {
@@ -259,7 +243,7 @@ void KhachHangMenu::purchaseTicket(KhachHang &khachHang, LinkedList<Flight> flig
         request = getYesNoInput(spaceLineChoice + "Do you want to purchase more tickets? (y/n)");
     } while (request == "y" || request == "Y");
     
-    khachHang.purchase();
+    khachHang.purchase(IDs);
 }
 
 void KhachHangMenu::orderTicketHistory(KhachHang &khachHang)
@@ -276,17 +260,10 @@ void KhachHangMenu::orderTicketHistory(KhachHang &khachHang)
         khachHang.printAllKhachHangPurchases();
         // cout << spaceLine << "1. View receipt details by ID\n";
         // cout << spaceLine << "2. Back\n";
-        char data[200][200] =
-            {
-                "\t   View ticket details by ID",
-                "\t   Back",
-            };
-
-        MenuBox MENU(2, data);
-        int key = MENU.menu();
-        switch (key)
-        {
-        case 1:
+        
+        std::cout<< "Choose [V] to View ticket details by ID \nChoose [B] to Back \nChoose [C] to cancel ticket";
+        std::string choice = getStringInput("Enter your choice");
+        if (choice == "V" || choice == "v")
         {
             std::string ticketID = getStringInput("Enter the ticket ID you want to view details");
             while (!isValidTicketID(ticketID))
@@ -296,20 +273,46 @@ void KhachHangMenu::orderTicketHistory(KhachHang &khachHang)
             }
             std::cout << std::endl;
             // Handle Exception
-            printTicket(khachHang.getID(), findTicketById(ticketID));
+            std::string recToFind;
+            Flight flightToView;
+            for (int i = 0; i < khachHang.Rec().length(); i++)  // duyệt qua từng hóa đơn
+            {
+                LinkedList<std::string> KhachHangIDRecs = getKhachHangIDFromReceipt(khachHang.Rec().get(i));
+                LinkedList<std::string> KhachHangTicketIDRecs = getTicketIDFromReceipt(khachHang.Rec().get(i));
+                LinkedList<Flight> KhachHangFlightsFromRec = getFlightFromReceipt(khachHang.Rec().get(i));
+                for (int j = 0; j < KhachHangFlightsFromRec.length(); j++)
+                {
+                    if (ticketID == KhachHangTicketIDRecs.get(j))
+                    {
+                        recToFind = khachHang.Rec().get(i);
+                        flightToView = KhachHangFlightsFromRec.get(j);
+                    }
+                    
+                }
+            }
+
+            Ticket ticketToView(ticketID , flightToView, khachHang, extractSeatFromTicketID(ticketID), flightToView.getgiaVe(), getIssueDate(recToFind));
+            printTicket(khachHang.getID(), ticketToView);
             system("pause");
             orderTicketHistory(khachHang);
         }
-        break;
-
-        case 2:
-            // KhachHangMenu::menu(khachHang);
-            break;
+        else if (choice == "B" || choice == "b")
+        {
+            KhachHangMenu::menu(khachHang);
+        }
+        else if (choice == "C" || choice == "c")
+        {
+            cancelTicket(khachHang);
+        }
+        else{
+            printError("Invalid choice, please enter again!");
+            system("pause");
+            orderTicketHistory(khachHang);
         }
     }
 }
 
-void cancelTicket(KhachHang &khachHang)
+void KhachHangMenu::cancelTicket(KhachHang &khachHang)
 {
     if (khachHang.Rec().length() == 0)
     {
@@ -330,22 +333,27 @@ void cancelTicket(KhachHang &khachHang)
     }
 
     // Find the ticket in the customer's records
-    Ticket ticketToCancel;
+    std::string ticketToCancel;
+    std::string editRec;
     bool found = false;
+    
     for (int i = 0; i < khachHang.Rec().length(); ++i)
     {
-        LinkedList<Ticket> tickets = getTicketFromReceipt(khachHang.Rec().get(i));
-        for (int j = 0; j < tickets.length(); ++j)
+        LinkedList<std::string> ticketsID = getTicketIDFromReceipt(khachHang.Rec().get(i));
+        for (int j = 0; j < ticketsID.length(); ++j)
         {
-            if (tickets.get(j).getID_ve() == ticketID)
+            if (ticketsID.get(j) == ticketID)
             {
-                ticketToCancel = tickets.get(j);
+                ticketToCancel = ticketsID.get(j);
                 found = true;
                 break;
             }
         }
         if (found)
+        {
+            editRec = khachHang.Rec().get(i);
             break;
+        }
     }
 
     if (!found)
@@ -360,77 +368,151 @@ void cancelTicket(KhachHang &khachHang)
     std::string confirm = getYesNoInput("Are you sure you want to cancel this ticket? (y/n)");
     if (confirm != "y" && confirm != "Y")
     {
-        printSuccess("Ticket canceled.");
+        printSuccess("Cancellation aborted.");
         system("pause");
         return;
     }
 
-    // Remove the ticket from the customer's cart
-    // khachHang.getCart().removeTicketFromCart(ticketID);
-
     // Update ticket availability in the flight's record
-    Flight flight = ticketToCancel.getChuyenBay();
+    Flight flight = getFlightFromDatabase(extractFlightID(ticketToCancel));
     int updatedQuantity = flight.getsoLuongVe() + 1;
     updateTicketQuantityInDatabase(flight.getID_chuyenBay(), updatedQuantity);
 
-    // Remove ticket from the customer's receipts
-    for (int i = 0; i < khachHang.Rec().length(); ++i)
+    // Update seat status in the seat map file
+    std::string seatNum = extractSeatFromTicketID(ticketToCancel);
+    int row = (int)std::floor(std::stoi(seatNum)/8); // Parse row
+    int col = std::stoi(seatNum) % 8 - 1;                                  // Parse column
+    
+    std::string seatFile = flight.getID_chuyenBay() + ".txt";
+    std::string seatPath = "./Database/SeatDB/" + seatFile;
+    if (!updateSeatStatusInFile(seatPath, row, col, 0))
     {
-        LinkedList<Ticket> tickets = getTicketFromReceipt(khachHang.Rec().get(i));
-        for (int j = 0; j < tickets.length(); ++j)
-        {
-            if (tickets.get(j).getID_ve() == ticketID)
-            {
-                tickets.removeAtIndex(j);
-                break;
-            }
-        }
+        printError("Failed to update seat status in file.");
+        system("pause");
+        return;
     }
+
+    // Remove ticket from the customer's receipts
+    removeTicketFromReceipt(editRec, ticketToCancel);
 
     printSuccess("Ticket canceled successfully!");
     system("pause");
 }
 
 
-// static void KhachHangMenu::searchTicket(KhachHang &khachHang)
-// {
-//     system("cls");
-//     ifstream inFile("./Page/DoctorSearchDrug.txt");
-//     string line;
-//     while (getline(inFile, line))
-//     {
-//         cout << line << endl;
-//     }
-//     inFile.close();
+LinkedList<std::string> getKhachHangIDFromReceipt(std::string recID)
+{
+    std::ifstream inFile("./Database/ReceiptDB/" + recID);
+    std::string line;
+    LinkedList<std::string> customersID;
 
-//     char data[200][200] =
-//         {
-//             "\t   Search by Ticket ID",
-//             "\t   Search by Name",
-//             "\t   Back",
-//         };
+    // Bỏ qua 2 dòng đầu tiên (thời gian và số hóa đơn)
+    getline(inFile, line);
+    getline(inFile, line);
 
-//     MenuBox MENU(3, data);
-//     int key = MENU.menu();
-//     switch (key)
-//     {
-//     case 1:
-//     {
-//         khachHang.searchByTicketID();
-//         system("pause");
-//         KhachHangMenu::searchTicket(khachHang);
-//     }
-//     break;
-//     case 2:
-//     {
-//         khachHang.searchByReceiptID();
-//         system("pause");
-//         KhachHangMenu::searchTicket(khachHang);
-//     }
-//     break;
+    // Đọc các dòng còn lại
+    while (getline(inFile, line))
+    {
+        // Tìm vị trí khoảng trắng để tách ID vé và ID khách hàng
+        int spaceIndex = line.find(" ");
+        if (spaceIndex == std::string::npos) continue; // Bỏ qua nếu dòng không hợp lệ
 
-//     case 3:
-//         KhachHangMenu::menu(khachHang);
-//         break;
-//     }
-// }
+        // Tách ID khách hàng (phần sau khoảng trắng)
+        std::string ID_khachHang = line.substr(spaceIndex + 1);
+
+        // Thêm ID khách hàng vào danh sách
+        customersID.addLast(ID_khachHang);
+    }
+
+    inFile.close();
+    return customersID;
+}
+
+LinkedList<std::string> getTicketIDFromReceipt(std::string recID)
+{
+    std::ifstream inFile("./Database/ReceiptDB/" + recID);
+    std::string line;
+    LinkedList<std::string> ticketsID;
+
+    // Bỏ qua 2 dòng đầu tiên (thời gian và số hóa đơn)
+    getline(inFile, line);
+    getline(inFile, line);
+
+    // Đọc các dòng còn lại
+    while (getline(inFile, line))
+    {
+        // Tìm vị trí khoảng trắng để tách ID vé và ID khách hàng
+        int spaceIndex = line.find(" ");
+        if (spaceIndex == std::string::npos) continue; // Bỏ qua nếu dòng không hợp lệ
+
+        // Tách ID vé (phần trước khoảng trắng)
+        std::string ID_ve = line.substr(0, spaceIndex);
+
+        // Thêm ID vé vào danh sách
+        ticketsID.addLast(ID_ve);
+    }
+
+    inFile.close();
+    return ticketsID;
+}
+
+LinkedList<Flight> getFlightFromReceipt(std::string recID)
+{
+    std::ifstream inFile("./Database/ReceiptDB/" + recID);
+    std::string line;
+    LinkedList<Flight> flights;
+
+    LinkedList<std::string> TicketIDRecs = getTicketIDFromReceipt(recID);
+
+    // Đọc các dòng còn lại
+    for (int i = 0; i < TicketIDRecs.length(); i++)
+    {
+        std::string ID_ve = TicketIDRecs.get(i);
+
+        int underscoreIndex = ID_ve.find("_");
+        if (underscoreIndex == std::string::npos) continue;
+        std::string ID_chuyenBay = ID_ve.substr(0, underscoreIndex);
+        // Tìm vé theo ID và thêm vào danh sách
+        Flight chuyenBay = getFlightFromDatabase(ID_chuyenBay);
+        flights.addLast(chuyenBay);
+    }
+
+    inFile.close();
+    return flights;
+}
+
+void getAllKhachHangTickets(KhachHang &KhachHang)
+{
+    TextTable table;
+    int n = KhachHang.Rec().length();
+    table.add("Ticket ID");
+    table.add("Passenger");
+    table.add("Date of departure");
+    table.add("Price");
+    table.endOfRow();
+
+    int total = 0;
+    for (int i = 0; i < n; i++)  // duyệt qua từng hóa đơn
+    {
+        LinkedList<std::string> KhachHangIDRecs = getKhachHangIDFromReceipt(KhachHang.Rec().get(i));
+        LinkedList<std::string> KhachHangTicketIDRecs = getTicketIDFromReceipt(KhachHang.Rec().get(i));
+        LinkedList<Flight> KhachHangFlightsFromRec = getFlightFromReceipt(KhachHang.Rec().get(i));
+        for (int j = 0; j < KhachHangFlightsFromRec.length(); j++)
+        {
+            Flight KhachHangFlight = KhachHangFlightsFromRec.get(j);
+            table.add(KhachHangTicketIDRecs.get(j));
+            table.add(getKhachHangNameFromDatabase(std::stoi(KhachHangIDRecs.get(j))));
+            table.add(KhachHangFlight.getngayKhoiHanh());
+            table.add(formatCurrency(KhachHangFlight.getgiaVe()));
+            table.endOfRow();
+            total += KhachHangFlight.getgiaVe();
+        }
+    }
+    table.add("");
+    table.add("");
+    table.add("Total amount");
+    table.add(formatCurrency(total));
+    table.endOfRow();
+
+    std::cout << table << std::endl;
+}

@@ -10,7 +10,7 @@ Ticket::Ticket(std::string ID_ve, Flight chuyenBay, KhachHang khachHang, std::st
 
 // Copy constructor
 Ticket::Ticket(const Ticket& other)
-    : ID_ve(other.ID_ve), chuyenBay(other.chuyenBay), khachHang(other.khachHang), ghe(other.ghe), giaVe(other.giaVe) {}
+    : ID_ve(other.ID_ve), chuyenBay(other.chuyenBay), khachHang(other.khachHang), ghe(other.ghe), giaVe(other.giaVe) ,ngayMua(currentDateTime()){}
 
 // Assignment operator
 Ticket& Ticket::operator=(const Ticket& other) {
