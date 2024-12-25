@@ -65,7 +65,7 @@ void addFlightToDatabase(Flight &flight)
 
 void addNewFlightToDataBase()
 {
-    std::cout << spaceLineChoice + "New flight:" << std::endl;
+    std::cout << spaceLineChoice + "New flight:" << "\n";
     std::string ID_chuyenBay;
     do {
         ID_chuyenBay = getStringInput("ID chuyến bay");
@@ -75,7 +75,7 @@ void addNewFlightToDataBase()
     std::string ngayKhoiHanh = getStringInput("Ngày giờ khởi hành (dd-mm-yy hh:mm:ss)");
     unsigned int soLuongVe = getIntInput("Số lượng vé (8n)");
     int giaVe = getIntInput("Giá vé");
-    // Create new Ticket object
+    // Create new Flight object
     Flight flight = Flight(ID_chuyenBay, diemDi, diemDen, ngayKhoiHanh, soLuongVe, giaVe );
     taoSoDoGhe(soLuongVe, ID_chuyenBay);
 
@@ -203,7 +203,15 @@ void updateFlightInDatabase(std::string flightID)
     int soLuongVe = updateIntComponent("Số lượng vé", flight.getsoLuongVe());
     int giaVe = updateIntComponent("Giá vé", flight.getgiaVe());
 
-    flight.setID_chuyenBay(ID_chuyenBay);
+    if (ID_chuyenBay != flightID)
+    {
+        flight.setID_chuyenBay(ID_chuyenBay);
+        //sửa SeatDB ứng với ID chuyến bay
+        taoSoDoGhe(soLuongVe, ID_chuyenBay);
+        //Xóa SeatDB cũ
+        std::string oldSeatPath = "./Database/SeatDB/" + flightID + ".txt";
+        std::remove(oldSeatPath.c_str());
+    }
     flight.setdiemDi(diemDi);
     flight.setdiemDen(diemDen);
     flight.setngayKhoiHanh(ngayKhoiHanh);
@@ -329,6 +337,8 @@ LinkedList<Flight> searchByFlightCase(std::string StarttoSearch, std::string End
 
 LinkedList<Flight> searchByFlightsPath()
 {
+    //get excess input from std::endl
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     std::string diemDi = getStringInput("Điểm đi: ");
     std::string diemDen = getStringInput("Điểm đến: ");
     LinkedList<Flight> flights = searchByFlightCase(diemDi, diemDen);

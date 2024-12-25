@@ -220,6 +220,53 @@ public:
         }
         return *this; 
     }
+
+    //std:string dateTime: dd:mm:yyyy hh:mm:ss
+    bool compareDateTime(const std::string& dateTime1, const std::string& dateTime2) {
+        int day1, month1, year1, hour1, minute1, second1;
+        int day2, month2, year2, hour2, minute2, second2;
+
+        sscanf(dateTime1.c_str(), "%d:%d:%d %d:%d:%d", &day1, &month1, &year1, &hour1, &minute1, &second1);
+        sscanf(dateTime2.c_str(), "%d:%d:%d %d:%d:%d", &day2, &month2, &year2, &hour2, &minute2, &second2);
+
+        if (year1 != year2) {
+            return year1 < year2;
+        }
+        if (month1 != month2) {
+            return month1 < month2;
+        }
+        if (day1 != day2) {
+            return day1 < day2;
+        }
+        if (hour1 != hour2) {
+            return hour1 < hour2;
+        }
+        if (minute1 != minute2) {
+            return minute1 < minute2;
+        }
+        return second1 < second2;
+    }
+    LinkedList<T>& sortOnDateTime() {
+        if (head == nullptr) {
+            return *this;
+        }
+        Node<T>* current = head;
+        while (current != nullptr) {
+            Node<T>* min = current;
+            Node<T>* temp = current->next;
+            while (temp != nullptr) {
+                if (compareDateTime(temp->data->getDateTime(), min->data->getDateTime())) {
+                    min = temp;
+                }
+                temp = temp->next;
+            }
+            T tempData = current->data;
+            current->data = min->data;
+            min->data = tempData;
+            current = current->next;
+        }
+        return *this;
+    }
 };
 
 #endif

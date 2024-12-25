@@ -40,11 +40,11 @@ void AdminMenu::login()
 
     do
     {
-        std::cout << "\n\t\t=== ADMIN LOGIN ===" << std::endl;
-        std::cout << "\t\t-------------------" << std::endl;
+        std::cout << "\n\t\t=== ADMIN LOGIN ===\n";
+        std::cout << "\t\t-------------------\n";
 
         std::string username;
-        std::cout << "\t\tUsername: ";
+        std::cout << "\tUsername: ";
         std::cin >> username;
 
         std::string password = getPasswordInput("Password");
@@ -86,30 +86,31 @@ void AdminMenu::menu()
         {
         case 1:
         {    
-            system("cls");
-            LinkedList<Flight> allFlights = getAllFlight();
-            printAllFlights(allFlights);
-            if (allFlights.length() == 0)
+            //get all flights
+            LinkedList<Flight> flights = getAllFlight();
+            if (flights.length() == 0)
             {
-                printError("Không tìm thấy chuyến bay nào");
+                printError("Không có chuyến bay nào");
+                AdminMenu::menu();
+                break;
+            }
+            printAllFlights(flights);
+            system("pause");
+            AdminMenu::menu();
+        }
+        case 2:
+        {    
+            //searchbyPath
+            LinkedList<Flight> flights = searchByFlightsPath();
+            printAllFlights(flights);
+            flightID = getStringInput("Nhập mã chuyến bay bạn muốn chỉnh sửa");
+            if (!isValidFlightID(flightID))
+            {
+                printError("Mã chuyến bay không hợp lệ");
                 AdminMenu::menu();
                 break;
             }
         }
-        case 2:
-        {    
-            LinkedList<Flight> flights = searchByFlightsPath();
-            if (flights.length() == 0)
-            {
-                printError("Không tìm thấy chuyến bay");
-                AdminMenu::menu();
-                break;
-            }
-            std::cout << "Nhập ID chuyến bay cần chỉnh sửa";
-            std::cin >> flightID;
-            updateFlightInDatabase(flightID);
-            AdminMenu::menu();
-            break;}
         case 3:
         {    
             addNewFlightToDataBase();

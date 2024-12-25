@@ -368,7 +368,7 @@ std::string getPasswordInput(std::string title)
         }
     }
 
-    std::cout << std::endl;
+    std::cout << "\n";
     return pwd;
 }
 
