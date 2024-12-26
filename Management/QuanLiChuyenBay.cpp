@@ -65,7 +65,6 @@ void addFlightToDatabase(Flight &flight)
 
 void addNewFlightToDataBase()
 {
-    std::cout << spaceLineChoice + "New flight:" << "\n";
     std::string ID_chuyenBay;
     do {
         ID_chuyenBay = getStringInput("ID chuyến bay");
@@ -91,44 +90,6 @@ void addNewFlightToDataBase()
     // outFilesale.close();
 }
 
-// Flight getFlightFromDatabase(std::string flightID)
-// {
-//     //std::string fileName = std::to_string(ticketID) + ".txt";
-//     std::string filePath = "./Database/FlightDB/flights.csv";
-
-//     std::ifstream inFile(filePath);
-//     std::string line;
-//     std::string ID_chuyenBay;
-//     std::string diemDi;
-//     std::string diemDen;
-//     std::string ngayKhoiHanh;
-//     int soLuongVe;
-//     int giaVe;
-
-
-//     getline(inFile, line);
-//     ticketID = std::stoi(line);
-
-//     getline(inFile, line);
-//     ID_chuyenBay = line;
-
-//     getline(inFile, line);
-//     diemDi = line;
-
-//     getline(inFile, line);
-//     diemDen = line;
-
-//     getline(inFile, line);
-//     ngayKhoiHanh = line;
-
-//     getline(inFile, line);
-//     soLuongVe = std::stoi(line);
-
-//     getline(inFile, line);
-//     giaVe = std::stoi(line);
-
-//     return  Ticket(updateLastTicketId(), ID_chuyenBay, diemDi, diemDen, loaiVe, ngayKhoiHanh, soLuongVe, giaVe);
-// }
 Flight getFlightFromDatabase(std::string flightID)
 {
     std::ifstream inFile("./Database/FlightDB/flights.csv");
