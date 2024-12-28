@@ -152,11 +152,31 @@ void deleteFlightFromDatabase(std::string flightID)
     }
 }
 
+std::string getLine(std::string filePath, int line)
+{
+    std::ifstream inFile(filePath);
+    if (!inFile.is_open())
+    {
+        printError("Error open file ticket_ID.txt");
+    }
+    std::string x;
+    for (int i = 0; i < line; i++)
+    {
+        getline(inFile, x);
+    }
+    inFile.close();
+    return x;
+}
+
 void updateFlightInDatabase(std::string flightID)
 {
     Flight flight = getFlightFromDatabase(flightID);
     std::string filePath = "./Database/FlightDB/flights.csv";
 
+    //get full flight info line in file base on flightID
+    int line = findLine(filePath, flightID);
+    std::string flightInfo = getLine(filePath, line);
+    
     std::string ID_chuyenBay = updateComponent("ID chuyến bay", flight.getID_chuyenBay());
     std::string diemDi = updateComponent("Điểm đi", flight.getdiemDi());
     std::string diemDen = updateComponent("Điểm đến", flight.getdiemDen());
@@ -181,7 +201,7 @@ void updateFlightInDatabase(std::string flightID)
 
     addFlightToDatabase(flight);
     printSuccess("Succesfully update!");
-    eraseFileLine(filePath, findLine(filePath, flightID));
+    eraseFileLine(filePath, flightInfo);
 }
 
 LinkedList<Flight> getAllFlight() //fix

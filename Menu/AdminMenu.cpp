@@ -110,11 +110,15 @@ void AdminMenu::menu()
                 AdminMenu::menu();
                 break;
             }
+            updateFlightInDatabase(flightID);
+            system("pause");
+            AdminMenu::menu();
         }
         case 3:
         {    
             addNewFlightToDataBase();
             printSuccess("Thêm chuyến bay thành công");
+            system("pause");
             AdminMenu::menu();
             break;
         }

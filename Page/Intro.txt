@@ -11,7 +11,10 @@
 ║                              ╔════════════════════╗                               ║
 ║                              ║ Mô tả chương trình ║                               ║
 ║                              ╚════════════════════╝                               ║
-║                                                                                   ║
+║  - Chương trình thực hiện các chức năng cập nhật thông tin, tìm kiếm, đặt, hủy    ║
+║  vé máy bay của người dùng                                                        ║
+║  - Chương trình thực hiện các chức năng quản lí của admin như tìm kiếm, chỉnh     ║
+║  sửa, thêm, xóa các chuyến bay.                                                   ║
 ║                                                                                   ║
 ║                                                                                   ║
 ║                                                                                   ║
