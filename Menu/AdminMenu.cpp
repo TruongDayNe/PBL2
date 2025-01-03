@@ -77,50 +77,48 @@ void AdminMenu::login()
 
 void AdminMenu::menu()
 {
-    system("cls");
-    std::string flightID;    
     while (true)
     {
+        system("cls");
+        std::string flightID;    
         int key = AdminMenu::printTask();
+        
         switch (key)
         {
         case 1:
         {    
-            //get all flights
             LinkedList<Flight> flights = getAllFlight();
             if (flights.length() == 0)
             {
                 printError("Không có chuyến bay nào");
-                AdminMenu::menu();
-                break;
+                system("pause");
+                continue;
             }
             printAllFlights(flights);
             system("pause");
-            AdminMenu::menu();
+            continue;
         }
         case 2:
         {    
-            //searchbyPath
             LinkedList<Flight> flights = searchByFlightsPath();
             printAllFlights(flights);
             flightID = getStringInput("Nhập mã chuyến bay bạn muốn chỉnh sửa");
             if (!isValidFlightID(flightID))
             {
                 printError("Mã chuyến bay không hợp lệ");
-                AdminMenu::menu();
-                break;
+                system("pause"); 
+                continue;
             }
             updateFlightInDatabase(flightID);
             system("pause");
-            AdminMenu::menu();
+            continue;
         }
         case 3:
         {    
             addNewFlightToDataBase();
             printSuccess("Thêm chuyến bay thành công");
             system("pause");
-            AdminMenu::menu();
-            break;
+            continue;
         }
         case 4:
         {    
@@ -128,8 +126,9 @@ void AdminMenu::menu()
             break;
         }
         default:
-            break;
+            continue;
         }
+        break;
     }
 }
 

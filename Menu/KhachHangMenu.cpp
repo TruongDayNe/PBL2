@@ -48,13 +48,6 @@ void KhachHangMenu::login()
     int id = -1;
     do
     {
-        // ifstream inFile("./Page/KhachHangLogin.txt");
-        // string line;
-        // while (getline(inFile, line))
-        // {
-        //     cout << line << endl;
-        // }
-        // inFile.close();
         std::string email = getEmailInput();
         std::string password = getPasswordInput("Password");
 
@@ -180,8 +173,7 @@ void KhachHangMenu::purchaseTicket(KhachHang &khachHang, LinkedList<Flight> flig
     std::string request;
     LinkedList<int> IDs;
 
-    do
-    {
+    
         system("cls");
         printAllFlights(flights);
 
@@ -248,8 +240,7 @@ void KhachHangMenu::purchaseTicket(KhachHang &khachHang, LinkedList<Flight> flig
         for (int i = 0; i < ticketsToAdd.length(); i++) {
             khachHang.getCart().addTickettoCart(ticketsToAdd.get(i));
         } 
-        request = getYesNoInput(spaceLineChoice + "Do you want to purchase more tickets? (y/n)");
-    } while (request == "y" || request == "Y");
+        
     
     khachHang.purchase(IDs);
 }

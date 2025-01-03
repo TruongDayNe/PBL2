@@ -63,12 +63,38 @@ void addFlightToDatabase(Flight &flight)
     outFile.close();
 }
 
+bool isExistingFlightID(std::string flightID)
+{
+    std::ifstream inFile("./Database/FlightDB/flights.csv");
+    if (!inFile.is_open()) {
+        throw std::runtime_error("Không thể mở file để kiểm tra tồn tại");
+    }
+
+    std::string line, currentFlightID;
+    while (std::getline(inFile, line)) {
+        std::stringstream ss(line);
+        std::getline(ss, currentFlightID, ','); // Lấy mã chuyến bay
+        if (currentFlightID == flightID) {
+            inFile.close();
+            return true;
+        }
+    }
+    inFile.close();
+    return false;
+}
+
 void addNewFlightToDataBase()
 {
+    //ignore space input
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     std::string ID_chuyenBay;
     do {
         ID_chuyenBay = getStringInput("ID chuyến bay");
-    } while (ID_chuyenBay == "");
+        if (isExistingFlightID(ID_chuyenBay))
+        {
+            std::cout << "ID chuyến bay đã tồn tại. Vui lòng nhập lại." << "\n";
+        }
+    } while (isExistingFlightID(ID_chuyenBay));
     std::string diemDi = getStringInput("Điểm đi");
     std::string diemDen = getStringInput("Điểm đến");
     std::string ngayKhoiHanh = getStringInput("Ngày giờ khởi hành (dd-mm-yy hh:mm:ss)");
@@ -170,6 +196,8 @@ std::string getLine(std::string filePath, int line)
 
 void updateFlightInDatabase(std::string flightID)
 {
+    //ignore space input
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
     Flight flight = getFlightFromDatabase(flightID);
     std::string filePath = "./Database/FlightDB/flights.csv";
 
@@ -184,6 +212,8 @@ void updateFlightInDatabase(std::string flightID)
     int soLuongVe = updateIntComponent("Số lượng vé", flight.getsoLuongVe());
     int giaVe = updateIntComponent("Giá vé", flight.getgiaVe());
 
+    //ignore space input
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     if (ID_chuyenBay != flightID)
     {
         flight.setID_chuyenBay(ID_chuyenBay);
