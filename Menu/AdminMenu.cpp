@@ -37,7 +37,6 @@ void AdminMenu::login()
     const std::string ADMIN_USERNAME = "admin";
     const std::string ADMIN_PASSWORD = "admin123";
     int attempts = 3;
-
     do
     {
         std::cout << "\n\t\t=== ADMIN LOGIN ===\n";
@@ -48,7 +47,6 @@ void AdminMenu::login()
         std::cin >> username;
 
         std::string password = getPasswordInput("Password");
-
         if (username == ADMIN_USERNAME && password == ADMIN_PASSWORD)
         {
             printSuccess("Login successful!");
@@ -150,7 +148,6 @@ int AdminMenu::printTask()
             "\t  Thêm chuyến bay",
             "\t  Đăng xuất",
         };
-
     MenuBox MENU(4, data);
     int key = MENU.menu();
     return key;
